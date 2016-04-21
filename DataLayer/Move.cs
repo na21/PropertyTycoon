@@ -8,14 +8,19 @@ using System.Threading.Tasks;
 
 namespace DataLayer
 {
-    public class Board
+    public class Move
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
-        public ICollection<BoardUser> BoardUsers { get; set; }
-        public ICollection<Move> Moves { get; set; }
-        public ICollection<Property> Properties { get; set; }
+        [Required]
+        public int BoardId { get; set; }
+
+        [ForeignKey("BoardId")]
+        public virtual Board Board { get; set; }
+
+        public int CurrentPos { get; set; }
+        public int Roll { get; set; }
     }
 }
