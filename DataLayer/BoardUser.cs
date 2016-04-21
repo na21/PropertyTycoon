@@ -10,11 +10,11 @@ namespace DataLayer
 {
     public class BoardUser
     {
-        [Key]
-        public string UserName { get; set; }
-
-        [Key]
+        [Key, Column(Order = 1)]
         public int BoardId { get; set; }
+
+        [Key, Column(Order = 2)]
+        public string UserName { get; set; }
 
         public virtual User User { get; set; }
 
