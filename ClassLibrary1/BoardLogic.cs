@@ -24,5 +24,12 @@ namespace ClassLibrary1
                     where bu.BoardId == b.Id && bu.UserName == userName
                     select bu).FirstOrDefault();
         }
+
+        public static string GetNextUserName(this Board b, int turn)
+        {
+            return (from bu in b.BoardUsers
+                    where bu.BoardId == b.Id && bu.Turn == turn
+                    select bu.UserName).FirstOrDefault();
+        }
     }
 }
