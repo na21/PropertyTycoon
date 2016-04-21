@@ -28,7 +28,9 @@ namespace DataLayer
 
 
         public string Name { get; set; }
+
         public int NumHotels { get; set; }
+
         public int NumHouses { get; set; }
     }
 }

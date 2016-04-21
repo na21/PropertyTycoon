@@ -10,18 +10,20 @@ namespace DataLayer
 {
     public class BoardUser
     {
-        [Required]
+        [Key]
         public string UserName { get; set; }
 
-        [ForeignKey("UserName")]
-        public virtual User User { get; set; }
-
-        [Required]
+        [Key]
         public int BoardId { get; set; }
 
-        [ForeignKey("BoardId")]
+        public virtual User User { get; set; }
+
         public virtual Board Board { get; set; }
 
         public int Money { get; set; }
+
+        public bool InJail { get; set; }
+
+        public int TurnsRemaining { get; set; }
     }
 }

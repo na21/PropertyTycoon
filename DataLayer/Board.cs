@@ -15,7 +15,9 @@ namespace DataLayer
         public int Id { get; set; }
 
         public ICollection<BoardUser> BoardUsers { get; set; }
+
         public ICollection<Move> Moves { get; set; }
+
         public ICollection<Property> Properties { get; set; }
     }
 }

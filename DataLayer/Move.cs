@@ -21,6 +21,7 @@ namespace DataLayer
         public virtual Board Board { get; set; }
 
         public int CurrentPos { get; set; }
+
         public int Roll { get; set; }
     }
 }
