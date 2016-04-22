@@ -73,7 +73,6 @@ namespace UnitTests
                 new_board.GenerateBoardProperties();
                 Assert.AreEqual(new_board.Properties.Count, 40);
                 // Create a move on the board.
-
             }
         }
     }

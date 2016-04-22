@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,11 +16,21 @@ namespace DataLayer
 
         public ICollection<BoardUser> BoardUsers { get; set; }
 
+        public ICollection<Friends> Friends { get; set; }
+
         public IEnumerable<Board> Boards
         {
             get
             {
                 return BoardUsers.Select(bu => bu.Board);
+            }
+        }
+
+        public IEnumerable<User> Friendships
+        {
+            get
+            {
+                return Friends.Select(f => f.User1);
             }
         }
     }

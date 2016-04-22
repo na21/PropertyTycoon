@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="BoardUser.cs" />
+    <Compile Include="Friends.cs" />
     <Compile Include="GameContext.cs" />
+    <Compile Include="GameInvitation.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
       <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
