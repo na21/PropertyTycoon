@@ -18,5 +18,7 @@ namespace DataLayer
 
         [MaxLength(2)]
         public bool [] IsAccepted { get; set; }
+
+        public virtual Board Board { get; set; }
     }
 }
