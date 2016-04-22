@@ -99,6 +99,14 @@ namespace BusinessLogic
             }
             
         }
+
+        public static Property GetPropertyFromPosition(this Board b, int pos)
+        {
+            return (from p in b.Properties
+                        where p.Position == pos
+                        select p).FirstOrDefault();
+        }
+
         /// <summary>
         /// This method creates a new move for the current player on the Board.
         /// </summary>
@@ -112,18 +120,51 @@ namespace BusinessLogic
             Move newMove = new Move();
             newMove.Roll = RollValue;
             newMove.Board = b;
-            newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
-            b.Moves = new Collection<Move>();
-            b.Moves.Add(newMove);
 
+            BoardUser bu = b.GetBoardUser(player.UserName);
+
+            if (b.Moves == null)
+                b.Moves = new Collection<Move>();
+
+            // If User currently in Jail, only double can take them out.
+            if (bu.InJail)
+            {
+                if (isDoubles)
+                {
+                    bu.InJail = false;
+                    newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
+                }
+                else
+                    newMove.CurrentPos = player.GetCurrentPositionOnBoard(b);
+
+            } else
+            {
+                newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
+            }
+
+            // If landed on Go to jail.
+            if (newMove.CurrentPos == Board.GoToJailPosition)
+            {
+                newMove.CurrentPos = Board.JailPosition;
+                bu.InJail = true;
+            }
             // If doubles were not rolled the Active Player on the Board will change.
             if (!isDoubles)
             {
                 b.ActiveBoardPlayer = b.GetUserWithNextTurn();
             }
 
+            // If Player passes Go add $200 to his account.
+            // Resets the position after player passes go.
+            if (newMove.HasPassedGo())
+            {
+                b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
+            }
+
+            b.Moves.Add(newMove);
             return newMove;
         }
+
         /// <summary>
         /// Sets the properties and their options to the Game Board.
         /// </summary>

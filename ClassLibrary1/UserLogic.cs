@@ -51,19 +51,15 @@ namespace BusinessLogic
         {
             BoardUser boardUser = b.GetBoardUser(user.UserName);
 
-            // If Player passes Go add $200 to his account.
-            // Resets the position after player passes go.
-            if (move.HasPassedGo())
-            {
-                boardUser.Money += Board.PassGoMoney;
-            }
-
             int pos = move.CurrentPos;
 
             var prop = (from p in b.Properties
                         where p.Position == pos
                         select p).FirstOrDefault();
 
+            // Check if user is in jail.
+            if(boardUser.InJail)
+                return;
 
             //
             // The property is not owned.
