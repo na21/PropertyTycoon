@@ -61,6 +61,18 @@ namespace BusinessLogic
             if(boardUser.InJail)
                 return;
 
+            if (prop.Name == "Chance")
+            {
+                prop.ProcessChanceCard(boardUser);
+                return;
+            }
+
+            if (prop.Name == "Community Chest")
+            {
+                prop.ProcessCommChestCard(boardUser);
+                return;
+            }
+
             //
             // The property is not owned.
             //
@@ -139,6 +151,50 @@ namespace BusinessLogic
                 prop.Mortgaged = true;
                 boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
             }
+        }
+
+        /// <summary>
+        /// This function will check if the user owns all properties in a group.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="b"></param>
+        /// <param name="pgroup"></param>
+        /// <returns></returns>
+        public static bool OwnsGroup(this User user, Board b, string pgroup)
+        {
+            int propsInGroup = (from p in b.Properties
+                                where p.Group == pgroup
+                                select p).Count();
+
+            int propsOwned = (from p in b.Properties
+                              where p.User == user && p.Group == pgroup
+                              select p).Count();
+
+            return propsInGroup == propsOwned;
+        }
+
+        public static bool CanBuildHouse(this User user, Board b, Property p)
+        {
+            return OwnsGroup(user, b, p.Group) && p.NumHouses < 4;
+        }
+
+        public static bool CanBuildHotel(this User user, Board b, Property p)
+        {
+            if (OwnsGroup(user, b, p.Group) && p.NumHouses >= 4)
+                return true;
+
+            return false;
+        }
+
+        public static void BuildHouse(this User user, Property p, int n = 1)
+        {
+            p.NumHouses += n;
+        }
+
+        public static void BuildHotel(this User user, Property p)
+        {
+            p.NumHotels++;
+            p.NumHouses = 0;
         }
     }
 }

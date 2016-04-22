@@ -10,14 +10,6 @@ namespace BusinessLogic
 {
     public static class BoardLogic
     {
-        public static string GetCurrentUserName(this Board b)
-        {
-            string userName = (from bu in b.BoardUsers
-                               where bu.BoardId == b.Id && bu.TurnsRemaining > 0
-                               select bu.UserName).FirstOrDefault();
-
-            return userName;
-        }
 
         public static bool isPlayerAllowedToJoin(this Board b)
         {
@@ -48,13 +40,6 @@ namespace BusinessLogic
                     select bu).FirstOrDefault();
         }
 
-        public static string GetNextUserName(this Board b, int turn)
-        {
-            return (from bu in b.BoardUsers
-                    where bu.BoardId == b.Id && bu.Turn == turn
-                    select bu.UserName).FirstOrDefault();
-        }
-
         /// <summary>
         /// This returns the player with the next turn after the Active Player on the Board.
         /// </summary>
@@ -77,6 +62,19 @@ namespace BusinessLogic
         {
             BoardUser bu = b.GetBoardUser(userName);
             bu.Turn = turnIdx;
+        }
+
+        /// <summary>
+        /// Return Board Users other than the user on the Game Board.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="userName"></param>
+        /// <returns></returns>
+        public static IEnumerable<BoardUser> GetOtherBoardUsersOnBoard(this Board b, string userName)
+        {
+            return (from bu in b.BoardUsers
+                    where bu.UserName != userName
+                    select bu);
         }
 
         /// <summary>

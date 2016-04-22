@@ -46,6 +46,7 @@
     <Compile Include="GameInvitationLogic.cs" />
     <Compile Include="MoveLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PropertyLogic.cs" />
     <Compile Include="UserLogic.cs" />
   </ItemGroup>
   <ItemGroup>
