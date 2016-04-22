@@ -14,10 +14,20 @@ namespace DataLayer
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
+        public int MaximumPlayers { get; set; }
         public ICollection<BoardUser> BoardUsers { get; set; }
 
         public ICollection<Move> Moves { get; set; }
 
         public ICollection<Property> Properties { get; set; }
+
+        public IEnumerable<User> Users
+        {
+            get
+            {
+                return BoardUsers.Select(bu => bu.User);
+            }
+        }
     }
 }

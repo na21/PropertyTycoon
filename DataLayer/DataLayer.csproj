@@ -52,6 +52,11 @@
     <Compile Include="Board.cs" />
     <Compile Include="BoardUser.cs" />
     <Compile Include="GameContext.cs" />
+    <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
+    <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
+      <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property.cs" />
@@ -60,6 +65,11 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201604220213582_AddMaxPlayersToBoard.resx">
+      <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

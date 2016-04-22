@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ClassLibrary1
+namespace BusinessLogic
 {
     public static class BoardLogic
     {
@@ -16,6 +16,28 @@ namespace ClassLibrary1
                                select bu.UserName).FirstOrDefault();
 
             return userName;
+        }
+
+        public static bool isPlayerAllowedToJoin(this Board b)
+        {
+            return b.GetNumberofPlayers() < b.MaximumPlayers;
+        }
+
+        public static User GetBoardUserByUsername(this Board b, string userName)
+        {
+            return (from bu in b.Users
+                    where bu.UserName == userName
+                    select bu).FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Return Number of Players currently on the Board.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static int GetNumberofPlayers(this Board b)
+        {
+            return b.Users.Count();
         }
 
         public static BoardUser GetBoardUser(this Board b, string userName)

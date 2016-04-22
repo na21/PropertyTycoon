@@ -13,5 +13,13 @@ namespace DataLayer
         public string UserName { get; set; }
 
         public ICollection<BoardUser> BoardUsers { get; set; }
+
+        public IEnumerable<Board> Boards
+        {
+            get
+            {
+                return BoardUsers.Select(bu => bu.Board);
+            }
+        }
     }
 }
