@@ -122,14 +122,36 @@ namespace UnitTests
                 Move firstMove = new_board.MakeCurrentPlayerMove(out isDoubles, out rollValue);
                 bc.SaveChanges();
 
+                // For this test, it is assumed that player buys property.
+                // Check if money is deducted for property.
                 BoardUser bu = new_board.GetBoardUser(player1.UserName);
-                bu.Money = 100;
+                bu.Money = 1000;
 
                 Property p = new_board.GetPropertyFromPosition(firstMove.CurrentPos);
-                int expectedMoney = bu.Money + p.Price;
+                int expectedMoney = bu.Money - p.Price;
 
                 player1.LandedOn(new_board, firstMove);
                 bc.SaveChanges();
+                Assert.AreEqual(expectedMoney, bu.Money);
+
+                // Player owns property p now.
+                // Test mortgage property.
+
+                expectedMoney = bu.Money + (int)(p.Price * Property.MortgagePercentage);
+                player1.MortgageProperty(new_board, p);
+                bc.SaveChanges();
+
+                Assert.AreEqual(expectedMoney, bu.Money);
+
+                // Now that property is mortgaged, it shouldn't
+                // deduct money from player2 for landing on it.
+                bu = new_board.GetBoardUser(player2.UserName);
+                bu.Money = 500;
+
+                expectedMoney = bu.Money;
+                player2.LandedOn(new_board, firstMove);
+                bc.SaveChanges();
+
                 Assert.AreEqual(expectedMoney, bu.Money);
 
             }
