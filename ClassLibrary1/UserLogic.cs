@@ -175,12 +175,23 @@ namespace BusinessLogic
 
         public static bool CanBuildHouse(this User user, Board b, Property p)
         {
-            return OwnsGroup(user, b, p.Group) && p.NumHouses < 4;
+            BoardUser bu = b.GetBoardUser(user.UserName);
+
+            int housePrice = (int)(p.Price * Property.HouseCostPercentage);
+
+            if (OwnsGroup(user, b, p.Group) && p.NumHouses < 4 && bu.Money >= housePrice)
+                return true;
+
+            return false;
         }
 
         public static bool CanBuildHotel(this User user, Board b, Property p)
         {
-            if (OwnsGroup(user, b, p.Group) && p.NumHouses >= 4)
+            BoardUser bu = b.GetBoardUser(user.UserName);
+
+            int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
+
+            if (OwnsGroup(user, b, p.Group) && p.NumHouses >= 4 && bu.Money >= hotelPrice)
                 return true;
 
             return false;

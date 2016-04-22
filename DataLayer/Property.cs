@@ -10,7 +10,9 @@ namespace DataLayer
 {
     public class Property
     {
-        public static double MortgagePercentage;
+        public static double MortgagePercentage = 0.2;
+        public static double HouseCostPercentage = 1.5;
+        public static double HotelCostPercentage = 2.0;
 
         public static int NumberOfProperties = 40;
 
