@@ -46,8 +46,27 @@ namespace UnitTests
                 player2.UserName = "player2";
                 bc.Users.Add(player2);
 
+                // Since there is only one player on the board and max is 2 
+                // isPlayerAllowedToJoin() should return true.
+                Assert.AreEqual(true, new_board.isPlayerAllowedToJoin());
 
-                //new_board.
+                bc.AddPlayerToBoard(player2, new_board);
+
+                // After Adding a new player the count should increase to 2.
+                Assert.AreEqual(2, new_board.GetNumberofPlayers());
+
+                bool isDoubles;
+                var rollVal = player1.Roll(out isDoubles);
+
+                // Check if Roll of Dice is in the correct range.
+                Assert.IsTrue(rollVal > 0 && rollVal < 13);
+                Assert.IsNotNull(isDoubles);
+
+                new_board.AssignPlayerTurn(player1.UserName, 2);
+                new_board.AssignPlayerTurn(player2.UserName, 1);
+
+                // The Player with the current Turn should be player 2 as the Turn Index = 1
+                Assert.AreEqual(new_board.GetPlayerWithCurrentTurn(), player2);
             }
         }
     }

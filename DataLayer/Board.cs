@@ -16,6 +16,9 @@ namespace DataLayer
 
         [Required]
         public int MaximumPlayers { get; set; }
+
+        public User ActiveBoardPlayer { get; set; }
+
         public ICollection<BoardUser> BoardUsers { get; set; }
 
         public ICollection<Move> Moves { get; set; }

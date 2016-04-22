@@ -56,6 +56,10 @@
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
       <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604220307522_AddActiveBoardPlayerToBoard.cs" />
+    <Compile Include="Migrations\201604220307522_AddActiveBoardPlayerToBoard.Designer.cs">
+      <DependentUpon>201604220307522_AddActiveBoardPlayerToBoard.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,6 +73,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604220213582_AddMaxPlayersToBoard.resx">
       <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604220307522_AddActiveBoardPlayerToBoard.resx">
+      <DependentUpon>201604220307522_AddActiveBoardPlayerToBoard.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

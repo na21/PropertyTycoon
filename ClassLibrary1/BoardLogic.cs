@@ -53,5 +53,37 @@ namespace BusinessLogic
                     where bu.BoardId == b.Id && bu.Turn == turn
                     select bu.UserName).FirstOrDefault();
         }
+
+        /// <summary>
+        /// Assigns a Turn index to the given User.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="userName"></param>
+        public static void AssignPlayerTurn(this Board b, string userName, int turnIdx)
+        {
+            BoardUser bu = b.GetBoardUser(userName);
+            bu.Turn = turnIdx;
+        }
+
+        /// <summary>
+        /// This returns the player with the current move on the board.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static User GetPlayerWithCurrentTurn(this Board b)
+        {
+            if(b.ActiveBoardPlayer == null)
+            {
+
+                b.ActiveBoardPlayer =  (from bu in b.BoardUsers
+                        orderby bu.Turn ascending
+                        select bu.User).FirstOrDefault();
+                return b.ActiveBoardPlayer;
+            } else
+            {
+                return b.ActiveBoardPlayer;
+            }
+            
+        }
     }
 }
