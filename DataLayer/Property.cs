@@ -10,6 +10,8 @@ namespace DataLayer
 {
     public class Property
     {
+        public static double MortgagePercentage;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -38,5 +40,7 @@ namespace DataLayer
         public int NumHotels { get; set; }
 
         public int NumHouses { get; set; }
+
+        public bool Mortgaged { get; set; }
     }
 }

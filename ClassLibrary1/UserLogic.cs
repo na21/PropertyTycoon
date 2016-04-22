@@ -47,8 +47,9 @@ namespace BusinessLogic
         /// <param name="user"></param>
         /// <param name="b"></param>
         /// <param name="pos"></param>
-        public static void PlayerLandedOn(this User user, Board b, int pos)
+        public static void PlayerLandedOn(this User user, Board b, Move move)
         {
+            int pos = move.CurrentPos;
 
             var boardUser = (from bu in user.BoardUsers
                              where bu.BoardId == b.Id
@@ -64,8 +65,8 @@ namespace BusinessLogic
             //
             if (prop.User == null)
             {
-                // give option player to buy
-
+                // give player option to buy
+                // TODO: check player funds before offering to buy property
                 bool buy = true;
 
                 if (buy)
@@ -93,25 +94,49 @@ namespace BusinessLogic
                 // Someone else owns the property.
                 if (prop.User != user)
                 {
-                    int payment = prop.Rent;
-
-                    payment += prop.NumHotels * 10;
-                    payment += prop.NumHouses * 5;
-
-                    // Player has enough money to pay.
-                    if(boardUser.Money >= payment)
-                        boardUser.Money -= payment;
-
-                    // Player doesn't enough money to pay.
-                    //
-                    else
+                    if (!prop.Mortgaged)
                     {
-                        //TODO: Give player option to trade or mortgage properties
+                        int payment = prop.Rent;
+
+                        payment += prop.NumHotels * 10;
+                        payment += prop.NumHouses * 5;
+
+                        // Player has enough money to pay.
+                        if (boardUser.Money >= payment)
+                            boardUser.Money -= payment;
+
+                        // Player doesn't enough money to pay.
+                        //
+                        else
+                        {
+                            //TODO: Give player option to trade or mortgage properties
+                        }
                     }
+
+                    // else property is mortgaged. player pays no rent.
 
                 }
 
-                // else player owns the property; do nothing
+                // else player owns the property. do nothing
+            }
+        }
+
+        /// <summary>
+        /// This function is called when the player mortgages a property.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="prop"></param>
+        public static void MortgageProperty(this User user, Board b, Property prop)
+        {
+            var boardUser = (from bu in user.BoardUsers
+                             where bu.BoardId == b.Id
+                             select bu).FirstOrDefault();
+
+            // User owns this property and it's not currently mortgaged.
+            if(!prop.Mortgaged && prop.User == user)
+            {
+                prop.Mortgaged = true;
+                boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
             }
         }
     }
