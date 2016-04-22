@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using DataLayer;
 using BusinessLogic;
+using System.Linq;
 
 namespace UnitTests
 {
@@ -81,7 +82,7 @@ namespace UnitTests
         }
 
         [TestMethod]
-        public void TestLandedOn()
+        public void TestProperties()
         {
             resetDbContext();
 
@@ -154,6 +155,21 @@ namespace UnitTests
 
                 Assert.AreEqual(expectedMoney, bu.Money);
 
+                // Check if player owns a group of properties.
+                Assert.AreEqual(false, player1.OwnsGroup(new_board, "Purple"));
+
+                var props = (from prop in new_board.Properties
+                             where prop.Group == "Purple"
+                             select prop);
+
+                foreach(Property property in props)
+                {
+                    property.User = player1;
+                }
+                bc.SaveChanges();
+
+                // Player should now own all purple
+                Assert.AreEqual(true, player1.OwnsGroup(new_board, "Purple"));
             }
         }
     }

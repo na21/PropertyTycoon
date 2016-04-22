@@ -140,5 +140,25 @@ namespace BusinessLogic
                 boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
             }
         }
+
+        /// <summary>
+        /// This function will check if the user owns all properties in a group.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="b"></param>
+        /// <param name="pgroup"></param>
+        /// <returns></returns>
+        public static bool OwnsGroup(this User user, Board b, string pgroup)
+        {
+            int propsInGroup = (from p in b.Properties
+                                where p.Group == pgroup
+                                select p).Count();
+
+            int propsOwned = (from p in b.Properties
+                              where p.User == user && p.Group == pgroup
+                              select p).Count();
+
+            return propsInGroup == propsOwned;
+        }
     }
 }
