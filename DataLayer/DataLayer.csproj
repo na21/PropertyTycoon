@@ -66,6 +66,14 @@
     <Compile Include="Migrations\201604220352029_AddPropertyAttributes.Designer.cs">
       <DependentUpon>201604220352029_AddPropertyAttributes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604221739080_AddedPositionToBoardUser.cs" />
+    <Compile Include="Migrations\201604221739080_AddedPositionToBoardUser.Designer.cs">
+      <DependentUpon>201604221739080_AddedPositionToBoardUser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604221754593_MakePropertyUsernameNotRequired.cs" />
+    <Compile Include="Migrations\201604221754593_MakePropertyUsernameNotRequired.Designer.cs">
+      <DependentUpon>201604221754593_MakePropertyUsernameNotRequired.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -85,6 +93,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604220352029_AddPropertyAttributes.resx">
       <DependentUpon>201604220352029_AddPropertyAttributes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604221739080_AddedPositionToBoardUser.resx">
+      <DependentUpon>201604221739080_AddedPositionToBoardUser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604221754593_MakePropertyUsernameNotRequired.resx">
+      <DependentUpon>201604221754593_MakePropertyUsernameNotRequired.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

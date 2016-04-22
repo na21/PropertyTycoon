@@ -10,6 +10,8 @@ namespace DataLayer
 {
     public class Board
     {
+        public static int PassGoMoney = 200;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

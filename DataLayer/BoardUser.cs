@@ -22,6 +22,8 @@ namespace DataLayer
 
         public int Turn { get; set; }
 
+        public int Position { get; set; }
+
         public int Money { get; set; }
 
         public bool InJail { get; set; }

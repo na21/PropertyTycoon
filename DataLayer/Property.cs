@@ -10,6 +10,10 @@ namespace DataLayer
 {
     public class Property
     {
+        public static double MortgagePercentage;
+
+        public static int NumberOfProperties = 40;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
@@ -20,7 +24,6 @@ namespace DataLayer
         [ForeignKey("BoardId")]
         public virtual Board Board { get; set; }
 
-        [Required]
         public string UserName { get; set; }
 
         [ForeignKey("UserName")]
@@ -39,5 +42,7 @@ namespace DataLayer
         public int NumHotels { get; set; }
 
         public int NumHouses { get; set; }
+
+        public bool Mortgaged { get; set; }
     }
 }

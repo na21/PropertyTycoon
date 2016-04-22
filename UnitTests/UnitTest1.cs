@@ -37,8 +37,8 @@ namespace UnitTests
                 // Test 1 - A player should be able to create a new Board.
                 var new_board = bc.CreateNewGameBoard(player1, 2);
 
-                var a = new_board.GetBoardUserByUsername(player1.UserName);
-                Assert.AreEqual(a, player1);
+                var AddedPlayer = new_board.GetPlayerByUsername(player1.UserName);
+                Assert.AreEqual(AddedPlayer, player1);
 
                 // Test 2 - A player should be able to join an existing Board.
 
@@ -67,12 +67,34 @@ namespace UnitTests
 
                 // The Player with the current Turn should be player 2 as the Turn Index = 1
                 Assert.AreEqual(new_board.GetPlayerWithCurrentTurn(), player2);
+                bc.SaveChanges();
 
                 // Initialize all the Properties on the Board.
-
                 new_board.GenerateBoardProperties();
+                bc.SaveChanges();
+
                 Assert.AreEqual(new_board.Properties.Count, 40);
+
                 // Create a move on the board.
+                int rollValue;
+                Move firstMove = new_board.MakeCurrentPlayerMove(out isDoubles, out rollValue);
+                bc.SaveChanges();
+
+                Assert.AreEqual(new_board.Moves.Count, 1);
+                Assert.AreEqual(rollValue, firstMove.Roll);
+
+                if (isDoubles)
+                {
+                    Assert.AreEqual(new_board.ActiveBoardPlayer, player2);
+                    Assert.AreEqual(firstMove.CurrentPos, 
+                        firstMove.Roll + player2.GetCurrentPositionOnBoard(new_board));
+                } else
+                {
+                    Assert.AreEqual(new_board.ActiveBoardPlayer, player1);
+                    Assert.AreEqual(firstMove.CurrentPos,
+                        firstMove.Roll + player1.GetCurrentPositionOnBoard(new_board));
+                }
+
             }
         }
     }
