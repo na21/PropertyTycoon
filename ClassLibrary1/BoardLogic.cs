@@ -122,11 +122,6 @@ namespace BusinessLogic
                 b.ActiveBoardPlayer = b.GetUserWithNextTurn();
             }
 
-            // If Player passes Go add $200 to his account.
-            if (newMove.HasPassedGo())
-            {
-                b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
-            }
             return newMove;
         }
         /// <summary>

@@ -47,13 +47,18 @@ namespace BusinessLogic
         /// <param name="user"></param>
         /// <param name="b"></param>
         /// <param name="pos"></param>
-        public static void PlayerLandedOn(this User user, Board b, Move move)
+        public static void LandedOn(this User user, Board b, Move move)
         {
-            int pos = move.CurrentPos;
+            BoardUser boardUser = b.GetBoardUser(user.UserName);
 
-            var boardUser = (from bu in user.BoardUsers
-                             where bu.BoardId == b.Id
-                             select bu).FirstOrDefault();
+            // If Player passes Go add $200 to his account.
+            // Resets the position after player passes go.
+            if (move.HasPassedGo())
+            {
+                boardUser.Money += Board.PassGoMoney;
+            }
+
+            int pos = move.CurrentPos;
 
             var prop = (from p in b.Properties
                         where p.Position == pos
