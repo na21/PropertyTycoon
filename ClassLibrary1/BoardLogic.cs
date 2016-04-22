@@ -104,15 +104,15 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Move MakeCurrentPlayerMove(this Board b, out bool isDoubles)
+        public static Move MakeCurrentPlayerMove(this Board b, out bool isDoubles, out int RollValue)
         {
             User player = b.GetPlayerWithCurrentTurn();
-            int RollValue = player.Roll(out isDoubles);
+            RollValue = player.Roll(out isDoubles);
 
             Move newMove = new Move();
             newMove.Roll = RollValue;
             newMove.Board = b;
-
+            newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
             b.Moves = new Collection<Move>();
             b.Moves.Add(newMove);
 
