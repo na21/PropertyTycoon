@@ -26,6 +26,13 @@ namespace DataLayer
         [ForeignKey("UserName")]
         public virtual User User { get; set; }
 
+        public int Position { get; set; }
+
+        public int Rent { get; set; }
+
+        public int Price { get; set; }
+
+        public string Group { get; set; }
 
         public string Name { get; set; }
 

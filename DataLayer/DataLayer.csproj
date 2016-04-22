@@ -60,6 +60,10 @@
     <Compile Include="Migrations\201604220307522_AddActiveBoardPlayerToBoard.Designer.cs">
       <DependentUpon>201604220307522_AddActiveBoardPlayerToBoard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201604220352029_AddPropertyAttributes.cs" />
+    <Compile Include="Migrations\201604220352029_AddPropertyAttributes.Designer.cs">
+      <DependentUpon>201604220352029_AddPropertyAttributes.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -76,6 +80,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604220307522_AddActiveBoardPlayerToBoard.resx">
       <DependentUpon>201604220307522_AddActiveBoardPlayerToBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604220352029_AddPropertyAttributes.resx">
+      <DependentUpon>201604220352029_AddPropertyAttributes.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,6 +1,7 @@
 ﻿using DataLayer;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -84,6 +85,363 @@ namespace BusinessLogic
                 return b.ActiveBoardPlayer;
             }
             
+        }
+
+        public static void GenerateBoardProperties(this Board b)
+        {
+            // http://www.math.yorku.ca/~zabrocki/math2042/Monopoly/prices.html
+            Property p = new Property();
+            b.Properties = new Collection<Property>();
+
+            p.Name = "Mediterranean Ave.";
+            p.Position = 2;
+            p.Price = 60;
+            p.Rent = 2;
+            p.Group = "Purple";
+            p.Board = b;
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Baltic Ave.";
+            p.Position = 4;
+            p.Price = 60;
+            p.Rent = 4;
+            p.Group = "Purple";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Oriental Ave.";
+            p.Position = 7;
+            p.Price = 100;
+            p.Rent = 6;
+            p.Group = "Light-Green";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Vermont Ave.";
+            p.Position = 9;
+            p.Price = 100;
+            p.Rent = 6;
+            p.Group = "Light-Green";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Connecticut Ave.";
+            p.Position = 10;
+            p.Price = 120;
+            p.Rent = 8;
+            p.Group = "Light-Green";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "St. Charles Place";
+            p.Position = 12;
+            p.Price = 140;
+            p.Rent = 10;
+            p.Group = "Violet";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+
+            p.Name = "States Ave.";
+            p.Position = 14;
+            p.Price = 140;
+            p.Rent = 10;
+            p.Group = "Violet";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Virginia Ave.";
+            p.Position = 15;
+            p.Price = 160;
+            p.Rent = 12;
+            p.Group = "Violet";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "St. James Place";
+            p.Position = 17;
+            p.Price = 180;
+            p.Rent = 14;
+            p.Group = "Orange";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Tennessee Ave.";
+            p.Position = 19;
+            p.Price = 180;
+            p.Rent = 14;
+            p.Group = "Orange";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "New York Ave.";
+            p.Position = 20;
+            p.Price = 200;
+            p.Rent = 16;
+            p.Group = "Orange";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Kentucky Ave.";
+            p.Position = 22;
+            p.Price = 220;
+            p.Rent = 18;
+            p.Group = "Red";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Indiana Ave.";
+            p.Position = 24;
+            p.Price = 220;
+            p.Rent = 18;
+            p.Group = "Red";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Illinois Ave.";
+            p.Position = 25;
+            p.Price = 240;
+            p.Rent = 20;
+            p.Group = "Red";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Atlantic Ave.";
+            p.Position = 27;
+            p.Price = 260;
+            p.Rent = 22;
+            p.Group = "Yellow";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+
+            p.Name = "Ventnor Ave.";
+            p.Position = 28;
+            p.Price = 260;
+            p.Rent = 22;
+            p.Group = "Yellow";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Marvin Gardens";
+            p.Position = 30;
+            p.Price = 280;
+            p.Rent = 22;
+            p.Group = "Yellow";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Pacific Ave.";
+            p.Position = 32;
+            p.Price = 300;
+            p.Rent = 26;
+            p.Group = "Dark-Green";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "North Carolina Ave.";
+            p.Position = 33;
+            p.Price = 300;
+            p.Rent = 26;
+            p.Group = "Dark-Green";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Pennsylvania Ave.";
+            p.Position = 35;
+            p.Price = 320;
+            p.Rent = 28;
+            p.Group = "Dark-Green";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Park Place";
+            p.Position = 38;
+            p.Price = 350;
+            p.Rent = 35;
+            p.Group = "Dark-Blue";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Boardwalk";
+            p.Position = 40;
+            p.Price = 400;
+            p.Rent = 50;
+            p.Group = "Dark-Blue";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Electric Company";
+            p.Position = 13;
+            p.Price = 150;
+            p.Rent = 0;
+            p.Group = "Utilities";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Water Works";
+            p.Position = 29;
+            p.Price = 150;
+            p.Rent = 0;
+            p.Group = "Utilities";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Reading Railroad";
+            p.Position = 6;
+            p.Price = 200;
+            p.Rent = 0;
+            p.Group = "Railroad";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Pennsylvania Railroad";
+            p.Position = 16;
+            p.Price = 200;
+            p.Rent = 0;
+            p.Group = "Railroad";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "B. & O. Railroad";
+            p.Position = 26;
+            p.Price = 200;
+            p.Rent = 0;
+            p.Group = "Railroad";
+
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Short Line Railroad";
+            p.Position = 36;
+            p.Price = 200;
+            p.Rent = 0;
+            p.Group = "Railroad";
+
+            b.Properties.Add(p);
+
+            // Other properties like chance, community chest etc.
+
+            p = new Property();
+            p.Name = "Go";
+            p.Position = 1;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Just Visiting/Jail";
+            p.Position = 11;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Free Parking";
+            p.Position = 21;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Income Tax";
+            p.Position = 5;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Chance";
+            p.Position = 8;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Chance";
+            p.Position = 23;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Chance";
+            p.Position = 37;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Community Chest";
+            p.Position = 3;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Community Chest";
+            p.Position = 18;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Community Chest";
+            p.Position = 34;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Luxury Tax";
+            p.Position = 34;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
+
+            p = new Property();
+            p.Name = "Go to Jail";
+            p.Position = 31;
+            p.Price = 0;
+            p.Rent = 0;
+            p.Group = "No-Group";
+            b.Properties.Add(p);
         }
     }
 }

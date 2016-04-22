@@ -67,6 +67,13 @@ namespace UnitTests
 
                 // The Player with the current Turn should be player 2 as the Turn Index = 1
                 Assert.AreEqual(new_board.GetPlayerWithCurrentTurn(), player2);
+
+                // Initialize all the Properties on the Board.
+
+                new_board.GenerateBoardProperties();
+                Assert.AreEqual(new_board.Properties.Count, 40);
+                // Create a move on the board.
+
             }
         }
     }
