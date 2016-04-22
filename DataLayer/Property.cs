@@ -12,6 +12,8 @@ namespace DataLayer
     {
         public static double MortgagePercentage;
 
+        public static int NumberOfProperties = 40;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }

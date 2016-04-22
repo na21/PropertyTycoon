@@ -37,7 +37,7 @@ namespace UnitTests
                 // Test 1 - A player should be able to create a new Board.
                 var new_board = bc.CreateNewGameBoard(player1, 2);
 
-                var AddedPlayer = new_board.GetBoardUserByUsername(player1.UserName);
+                var AddedPlayer = new_board.GetPlayerByUsername(player1.UserName);
                 Assert.AreEqual(AddedPlayer, player1);
 
                 // Test 2 - A player should be able to join an existing Board.
@@ -95,7 +95,6 @@ namespace UnitTests
                         firstMove.Roll + player1.GetCurrentPositionOnBoard(new_board));
                 }
 
-                
             }
         }
     }

@@ -24,7 +24,7 @@ namespace BusinessLogic
             return b.GetNumberofPlayers() < b.MaximumPlayers;
         }
 
-        public static User GetBoardUserByUsername(this Board b, string userName)
+        public static User GetPlayerByUsername(this Board b, string userName)
         {
             return (from bu in b.Users
                     where bu.UserName == userName
@@ -44,7 +44,7 @@ namespace BusinessLogic
         public static BoardUser GetBoardUser(this Board b, string userName)
         {
             return (from bu in b.BoardUsers
-                    where bu.BoardId == b.Id && bu.UserName == userName
+                    where bu.UserName == userName
                     select bu).FirstOrDefault();
         }
 
@@ -122,6 +122,11 @@ namespace BusinessLogic
                 b.ActiveBoardPlayer = b.GetUserWithNextTurn();
             }
 
+            // If Player passes Go add $200 to his account.
+            if (newMove.HasPassedGo())
+            {
+                b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
+            }
             return newMove;
         }
         /// <summary>
