@@ -16,7 +16,7 @@ namespace DataLayer
 
         public ICollection<BoardUser> BoardUsers { get; set; }
 
-        public ICollection<Friends> Friends { get; set; }
+        public ICollection<Friends> Friendships { get; set; }
 
         public IEnumerable<Board> Boards
         {
@@ -26,11 +26,11 @@ namespace DataLayer
             }
         }
 
-        public IEnumerable<User> Friendships
+        public IEnumerable<User> Friends
         {
             get
             {
-                return Friends.Select(f => f.User1);
+                return Friendships.Select(f => f.User1);
             }
         }
     }

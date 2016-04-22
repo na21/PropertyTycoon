@@ -13,12 +13,16 @@ namespace DataLayer
     {
         public virtual DbSet<User> Friendships { get; set; }
 
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
+
         [ForeignKey("User1")]
         public string UserName1 { get; set; }
         public User User1 { get; set; }
 
         [ForeignKey("User2")]
         public string UserName2 { get; set; }
-        public User Friend { get; set; }
+        public User User2 { get; set; }
     }
 }
