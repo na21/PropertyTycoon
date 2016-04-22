@@ -56,6 +56,19 @@ namespace BusinessLogic
         }
 
         /// <summary>
+        /// This returns the player with the next turn after the Active Player on the Board.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static User GetUserWithNextTurn(this Board b)
+        {
+            return (from bu in b.BoardUsers
+                                   orderby bu.Turn ascending
+                                   where bu.User != b.ActiveBoardPlayer
+                                   select bu.User).FirstOrDefault();
+        }
+
+        /// <summary>
         /// Assigns a Turn index to the given User.
         /// </summary>
         /// <param name="b"></param>
@@ -86,11 +99,14 @@ namespace BusinessLogic
             }
             
         }
-
-        public static Move MakeCurrentPlayerMove(this Board b)
+        /// <summary>
+        /// This method creates a new move for the current player on the Board.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static Move MakeCurrentPlayerMove(this Board b, out bool isDoubles)
         {
             User player = b.GetPlayerWithCurrentTurn();
-            bool isDoubles;
             int RollValue = player.Roll(out isDoubles);
 
             Move newMove = new Move();
@@ -99,6 +115,12 @@ namespace BusinessLogic
 
             b.Moves = new Collection<Move>();
             b.Moves.Add(newMove);
+
+            // If doubles were not rolled the Active Player on the Board will change.
+            if (!isDoubles)
+            {
+                b.ActiveBoardPlayer = b.GetUserWithNextTurn();
+            }
 
             return newMove;
         }

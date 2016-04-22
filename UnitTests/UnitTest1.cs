@@ -76,11 +76,19 @@ namespace UnitTests
                 Assert.AreEqual(new_board.Properties.Count, 40);
                 
                 // Create a move on the board.
-                Move firstMove = new_board.MakeCurrentPlayerMove();
+                Move firstMove = new_board.MakeCurrentPlayerMove(out isDoubles);
                 bc.SaveChanges();
 
+                if (isDoubles)
+                {
+                    Assert.AreEqual(new_board.ActiveBoardPlayer, player2);
+                } else
+                {
+                    Assert.AreEqual(new_board.ActiveBoardPlayer, player1);
+                }
+
                 Assert.AreEqual(new_board.Moves.Count, 1);
-                var a = 1;
+             
             }
         }
     }
