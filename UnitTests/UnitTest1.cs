@@ -198,6 +198,15 @@ namespace UnitTests
                 Assert.AreEqual(true, purpleProp.NumHouses == 0);
                 Assert.AreEqual(true, purpleProp.NumHotels == 1);
 
+                bu = new_board.GetBoardUser(player1.UserName);
+                bu.Money = 10;
+
+                purpleProp.NumHouses = 0;
+                purpleProp.NumHotels = 0;
+                bc.SaveChanges();
+
+                Assert.AreEqual(false, player1.CanBuildHotel(new_board, purpleProp));
+                Assert.AreEqual(false, player1.CanBuildHouse(new_board, purpleProp));
 
             }
         }
