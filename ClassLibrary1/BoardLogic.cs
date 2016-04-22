@@ -120,10 +120,34 @@ namespace BusinessLogic
             Move newMove = new Move();
             newMove.Roll = RollValue;
             newMove.Board = b;
-            newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
-            b.Moves = new Collection<Move>();
-            b.Moves.Add(newMove);
 
+            BoardUser bu = b.GetBoardUser(player.UserName);
+
+            if (b.Moves == null)
+                b.Moves = new Collection<Move>();
+
+            // If User currently in Jail, only double can take them out.
+            if (bu.InJail)
+            {
+                if (isDoubles)
+                {
+                    bu.InJail = false;
+                    newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
+                }
+                else
+                    newMove.CurrentPos = player.GetCurrentPositionOnBoard(b);
+
+            } else
+            {
+                newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
+            }
+
+            // If landed on Go to jail.
+            if (newMove.CurrentPos == Board.GoToJailPosition)
+            {
+                newMove.CurrentPos = Board.JailPosition;
+                bu.InJail = true;
+            }
             // If doubles were not rolled the Active Player on the Board will change.
             if (!isDoubles)
             {
@@ -137,6 +161,7 @@ namespace BusinessLogic
                 b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
             }
 
+            b.Moves.Add(newMove);
             return newMove;
         }
 

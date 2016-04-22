@@ -20,9 +20,5 @@ namespace BusinessLogic
             return false;
         }
 
-        public static bool HasLandedOnChange()
-        {
-            return true;
-        }
     }
 }

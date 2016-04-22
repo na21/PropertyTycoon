@@ -11,6 +11,8 @@ namespace DataLayer
     public class Board
     {
         public static int PassGoMoney = 200;
+        public static int GoToJailPosition = 31;
+        public static int JailPosition = 11;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
