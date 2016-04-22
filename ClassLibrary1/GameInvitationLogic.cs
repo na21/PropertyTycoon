@@ -18,8 +18,8 @@ namespace BusinessLogic
         public static GameInvitation CreateNewInvitation(User u, User[] invitedUsers)
         {
             var invitation = new GameInvitation();
-            invitation.UserName = u.UserName;
 
+            invitation.UserName = u.UserName;
             var i = 0;
             foreach (User invitedUser in invitedUsers)
             {
