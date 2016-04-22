@@ -57,6 +57,9 @@ namespace BusinessLogic
                         where p.Position == pos
                         select p).FirstOrDefault();
 
+            // Check if user is in jail.
+            if(boardUser.InJail)
+                return;
 
             //
             // The property is not owned.
