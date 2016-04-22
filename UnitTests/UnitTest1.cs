@@ -182,11 +182,21 @@ namespace UnitTests
                 //Check if player can build hotel after owning group with no houses.
                 Assert.AreEqual(false, player1.CanBuildHotel(new_board, purpleProp));
 
-                purpleProp.NumHouses = 4;
+                purpleProp.NumHouses = 3;
+                player1.BuildHouse(purpleProp);
                 bc.SaveChanges();
+
+                //Check that player has built a house with BuildHouse()
+                Assert.AreEqual(true, purpleProp.NumHouses == 4);
 
                 // Check that player can build hotel after owning 4 houses on property.
                 Assert.AreEqual(true, player1.CanBuildHotel(new_board, purpleProp));
+
+                //Build a hotel now that we have 4 houses.
+                player1.BuildHotel(purpleProp);
+
+                Assert.AreEqual(true, purpleProp.NumHouses == 0);
+                Assert.AreEqual(true, purpleProp.NumHotels == 1);
 
 
             }

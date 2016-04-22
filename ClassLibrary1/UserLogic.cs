@@ -163,7 +163,7 @@ namespace BusinessLogic
 
         public static bool CanBuildHouse(this User user, Board b, Property p)
         {
-            return OwnsGroup(user, b, p.Group);
+            return OwnsGroup(user, b, p.Group) && p.NumHouses < 4;
         }
 
         public static bool CanBuildHotel(this User user, Board b, Property p)
@@ -172,6 +172,17 @@ namespace BusinessLogic
                 return true;
 
             return false;
+        }
+
+        public static void BuildHouse(this User user, Property p, int n = 1)
+        {
+            p.NumHouses += n;
+        }
+
+        public static void BuildHotel(this User user, Property p)
+        {
+            p.NumHotels++;
+            p.NumHouses = 0;
         }
     }
 }
