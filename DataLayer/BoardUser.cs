@@ -28,6 +28,8 @@ namespace DataLayer
 
         public bool InJail { get; set; }
 
+        public bool HasGetOutOfJail { get; set; }
+
         public int TurnsRemaining { get; set; }
     }
 }
