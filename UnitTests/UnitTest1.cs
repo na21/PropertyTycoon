@@ -158,6 +158,9 @@ namespace UnitTests
                 // Check if player owns a group of properties.
                 Assert.AreEqual(false, player1.OwnsGroup(new_board, "Purple"));
 
+                //Check if player can build a house before owning group.
+                Assert.AreEqual(false, player1.CanBuildHouse(new_board, p));
+
                 var props = (from prop in new_board.Properties
                              where prop.Group == "Purple"
                              select prop);
@@ -170,6 +173,22 @@ namespace UnitTests
 
                 // Player should now own all purple
                 Assert.AreEqual(true, player1.OwnsGroup(new_board, "Purple"));
+
+                Property purpleProp = props.FirstOrDefault();
+
+                //Check if player can build a house after owning group.
+                Assert.AreEqual(true, player1.CanBuildHouse(new_board, purpleProp));
+
+                //Check if player can build hotel after owning group with no houses.
+                Assert.AreEqual(false, player1.CanBuildHotel(new_board, purpleProp));
+
+                purpleProp.NumHouses = 4;
+                bc.SaveChanges();
+
+                // Check that player can build hotel after owning 4 houses on property.
+                Assert.AreEqual(true, player1.CanBuildHotel(new_board, purpleProp));
+
+
             }
         }
     }

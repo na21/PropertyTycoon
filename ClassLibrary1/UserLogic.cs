@@ -160,5 +160,18 @@ namespace BusinessLogic
 
             return propsInGroup == propsOwned;
         }
+
+        public static bool CanBuildHouse(this User user, Board b, Property p)
+        {
+            return OwnsGroup(user, b, p.Group);
+        }
+
+        public static bool CanBuildHotel(this User user, Board b, Property p)
+        {
+            if (OwnsGroup(user, b, p.Group) && p.NumHouses >= 4)
+                return true;
+
+            return false;
+        }
     }
 }
