@@ -87,6 +87,25 @@ namespace BusinessLogic
             
         }
 
+        public static Move MakeCurrentPlayerMove(this Board b)
+        {
+            User player = b.GetPlayerWithCurrentTurn();
+            bool isDoubles;
+            int RollValue = player.Roll(out isDoubles);
+
+            Move newMove = new Move();
+            newMove.Roll = RollValue;
+            newMove.Board = b;
+
+            b.Moves = new Collection<Move>();
+            b.Moves.Add(newMove);
+
+            return newMove;
+        }
+        /// <summary>
+        /// Sets the properties and their options to the Game Board.
+        /// </summary>
+        /// <param name="b"></param>
         public static void GenerateBoardProperties(this Board b)
         {
             // http://www.math.yorku.ca/~zabrocki/math2042/Monopoly/prices.html
@@ -99,6 +118,7 @@ namespace BusinessLogic
             p.Rent = 2;
             p.Group = "Purple";
             p.Board = b;
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -107,7 +127,7 @@ namespace BusinessLogic
             p.Price = 60;
             p.Rent = 4;
             p.Group = "Purple";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -116,7 +136,7 @@ namespace BusinessLogic
             p.Price = 100;
             p.Rent = 6;
             p.Group = "Light-Green";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -125,7 +145,7 @@ namespace BusinessLogic
             p.Price = 100;
             p.Rent = 6;
             p.Group = "Light-Green";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -134,7 +154,7 @@ namespace BusinessLogic
             p.Price = 120;
             p.Rent = 8;
             p.Group = "Light-Green";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -143,7 +163,7 @@ namespace BusinessLogic
             p.Price = 140;
             p.Rent = 10;
             p.Group = "Violet";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -153,7 +173,7 @@ namespace BusinessLogic
             p.Price = 140;
             p.Rent = 10;
             p.Group = "Violet";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -161,7 +181,7 @@ namespace BusinessLogic
             p.Position = 15;
             p.Price = 160;
             p.Rent = 12;
-            p.Group = "Violet";
+            p.Group = "Violet"; p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -170,7 +190,7 @@ namespace BusinessLogic
             p.Price = 180;
             p.Rent = 14;
             p.Group = "Orange";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -179,7 +199,7 @@ namespace BusinessLogic
             p.Price = 180;
             p.Rent = 14;
             p.Group = "Orange";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -188,7 +208,7 @@ namespace BusinessLogic
             p.Price = 200;
             p.Rent = 16;
             p.Group = "Orange";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -197,7 +217,7 @@ namespace BusinessLogic
             p.Price = 220;
             p.Rent = 18;
             p.Group = "Red";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -206,7 +226,7 @@ namespace BusinessLogic
             p.Price = 220;
             p.Rent = 18;
             p.Group = "Red";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -215,7 +235,7 @@ namespace BusinessLogic
             p.Price = 240;
             p.Rent = 20;
             p.Group = "Red";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -224,7 +244,7 @@ namespace BusinessLogic
             p.Price = 260;
             p.Rent = 22;
             p.Group = "Yellow";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -234,7 +254,7 @@ namespace BusinessLogic
             p.Price = 260;
             p.Rent = 22;
             p.Group = "Yellow";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -243,7 +263,7 @@ namespace BusinessLogic
             p.Price = 280;
             p.Rent = 22;
             p.Group = "Yellow";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -252,7 +272,7 @@ namespace BusinessLogic
             p.Price = 300;
             p.Rent = 26;
             p.Group = "Dark-Green";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -261,7 +281,7 @@ namespace BusinessLogic
             p.Price = 300;
             p.Rent = 26;
             p.Group = "Dark-Green";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -270,7 +290,7 @@ namespace BusinessLogic
             p.Price = 320;
             p.Rent = 28;
             p.Group = "Dark-Green";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -279,7 +299,7 @@ namespace BusinessLogic
             p.Price = 350;
             p.Rent = 35;
             p.Group = "Dark-Blue";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -288,7 +308,7 @@ namespace BusinessLogic
             p.Price = 400;
             p.Rent = 50;
             p.Group = "Dark-Blue";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -297,7 +317,7 @@ namespace BusinessLogic
             p.Price = 150;
             p.Rent = 0;
             p.Group = "Utilities";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -306,7 +326,7 @@ namespace BusinessLogic
             p.Price = 150;
             p.Rent = 0;
             p.Group = "Utilities";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -315,7 +335,7 @@ namespace BusinessLogic
             p.Price = 200;
             p.Rent = 0;
             p.Group = "Railroad";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -324,7 +344,7 @@ namespace BusinessLogic
             p.Price = 200;
             p.Rent = 0;
             p.Group = "Railroad";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -333,7 +353,7 @@ namespace BusinessLogic
             p.Price = 200;
             p.Rent = 0;
             p.Group = "Railroad";
-
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -342,7 +362,7 @@ namespace BusinessLogic
             p.Price = 200;
             p.Rent = 0;
             p.Group = "Railroad";
-
+            p.User = null;
             b.Properties.Add(p);
 
             // Other properties like chance, community chest etc.
@@ -353,6 +373,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -361,6 +382,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -369,6 +391,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -377,6 +400,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -385,6 +409,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -393,6 +418,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -401,6 +427,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -409,6 +436,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -417,6 +445,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -425,6 +454,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -433,6 +463,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
 
             p = new Property();
@@ -441,6 +472,7 @@ namespace BusinessLogic
             p.Price = 0;
             p.Rent = 0;
             p.Group = "No-Group";
+            p.User = null;
             b.Properties.Add(p);
         }
     }

@@ -20,7 +20,6 @@ namespace DataLayer
         [ForeignKey("BoardId")]
         public virtual Board Board { get; set; }
 
-        [Required]
         public string UserName { get; set; }
 
         [ForeignKey("UserName")]

@@ -26,5 +26,18 @@ namespace BusinessLogic
 
             return dice1 + dice2;
         }
+
+        /// <summary>
+        /// Return the position of the Player on the Game Board.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="board"></param>
+        /// <returns></returns>
+        public static int GetCurrentPositionOnBoard(this User user, Board board)
+        {
+            return (from bu in user.BoardUsers
+                    where bu.Board == board
+                    select bu.Position).FirstOrDefault();
+        }
     }
 }
