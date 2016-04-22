@@ -99,6 +99,14 @@ namespace BusinessLogic
             }
             
         }
+
+        public static Property GetPropertyFromPosition(this Board b, int pos)
+        {
+            return (from p in b.Properties
+                        where p.Position == pos
+                        select p).FirstOrDefault();
+        }
+
         /// <summary>
         /// This method creates a new move for the current player on the Board.
         /// </summary>
@@ -122,8 +130,16 @@ namespace BusinessLogic
                 b.ActiveBoardPlayer = b.GetUserWithNextTurn();
             }
 
+            // If Player passes Go add $200 to his account.
+            // Resets the position after player passes go.
+            if (newMove.HasPassedGo())
+            {
+                b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
+            }
+
             return newMove;
         }
+
         /// <summary>
         /// Sets the properties and their options to the Game Board.
         /// </summary>

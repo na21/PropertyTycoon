@@ -97,5 +97,60 @@ namespace UnitTests
 
             }
         }
+
+        [TestMethod]
+        public void TestLandedOn()
+        {
+            resetDbContext();
+
+            using (var bc = new GameContext())
+            {
+                var player1 = new User();
+                player1.UserName = "player1";
+                bc.Users.Add(player1);
+
+                // Test 1 - A player should be able to create a new Board.
+                var new_board = bc.CreateNewGameBoard(player1, 2);
+
+                var AddedPlayer = new_board.GetPlayerByUsername(player1.UserName);
+
+                // Test 2 - A player should be able to join an existing Board.
+
+                var player2 = new User();
+                player2.UserName = "player2";
+                bc.Users.Add(player2);
+
+                bc.AddPlayerToBoard(player2, new_board);
+
+                bool isDoubles;
+                var rollVal = player1.Roll(out isDoubles);
+
+                new_board.AssignPlayerTurn(player1.UserName, 2);
+                new_board.AssignPlayerTurn(player2.UserName, 1);
+
+                // The Player with the current Turn should be player 2 as the Turn Index = 1
+                bc.SaveChanges();
+
+                // Initialize all the Properties on the Board.
+                new_board.GenerateBoardProperties();
+                bc.SaveChanges();
+
+                // Create a move on the board.
+                int rollValue;
+                Move firstMove = new_board.MakeCurrentPlayerMove(out isDoubles, out rollValue);
+                bc.SaveChanges();
+
+                BoardUser bu = new_board.GetBoardUser(player1.UserName);
+                bu.Money = 100;
+
+                Property p = new_board.GetPropertyFromPosition(firstMove.CurrentPos);
+                int expectedMoney = bu.Money + p.Price;
+
+                player1.LandedOn(new_board, firstMove);
+                bc.SaveChanges();
+                Assert.AreEqual(expectedMoney, bu.Money);
+
+            }
+        }
     }
 }
