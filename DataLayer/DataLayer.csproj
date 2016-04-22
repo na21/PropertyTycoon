@@ -51,7 +51,9 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="BoardUser.cs" />
+    <Compile Include="Friends.cs" />
     <Compile Include="GameContext.cs" />
+    <Compile Include="GameInvitation.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
       <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
@@ -71,6 +73,10 @@
     <Compile Include="Migrations\201604221754593_MakePropertyUsernameNotRequired.cs" />
     <Compile Include="Migrations\201604221754593_MakePropertyUsernameNotRequired.Designer.cs">
       <DependentUpon>201604221754593_MakePropertyUsernameNotRequired.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604222108193_AddFriendsModels.cs" />
+    <Compile Include="Migrations\201604222108193_AddFriendsModels.Designer.cs">
+      <DependentUpon>201604222108193_AddFriendsModels.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Move.cs" />
@@ -97,6 +103,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604221754593_MakePropertyUsernameNotRequired.resx">
       <DependentUpon>201604221754593_MakePropertyUsernameNotRequired.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604222108193_AddFriendsModels.resx">
+      <DependentUpon>201604222108193_AddFriendsModels.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
