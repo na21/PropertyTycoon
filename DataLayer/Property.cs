@@ -10,6 +10,8 @@ namespace DataLayer
 {
     public class Property
     {
+        public static int NumberOfProperties = 40;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
