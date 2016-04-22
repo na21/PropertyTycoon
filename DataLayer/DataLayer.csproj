@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Board.cs" />
     <Compile Include="BoardUser.cs" />
+    <Compile Include="FriendRequest.cs" />
     <Compile Include="Friends.cs" />
     <Compile Include="GameContext.cs" />
     <Compile Include="GameInvitation.cs" />
