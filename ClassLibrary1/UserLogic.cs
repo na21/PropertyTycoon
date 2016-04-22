@@ -61,6 +61,18 @@ namespace BusinessLogic
             if(boardUser.InJail)
                 return;
 
+            if (prop.Name == "Chance")
+            {
+                prop.ProcessChanceCard(boardUser);
+                return;
+            }
+
+            if (prop.Name == "Community Chest")
+            {
+                prop.ProcessCommChestCard(boardUser);
+                return;
+            }
+
             //
             // The property is not owned.
             //

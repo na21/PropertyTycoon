@@ -25,7 +25,7 @@ namespace BusinessLogic
                         bu.HasGetOutOfJail = true;
                         break;
                     case "PAY_EACH_PLAYER_50":
-                        foreach(BoardUser otherPlayer in p.Board.GetOtherBoardUsersOnBoard(bu.User.UserName){
+                        foreach(BoardUser otherPlayer in p.Board.GetOtherBoardUsersOnBoard(bu.User.UserName)){
                             otherPlayer.Money += 50;
                             bu.Money -= 50;
                         }
@@ -57,7 +57,7 @@ namespace BusinessLogic
 
                         break;
                     case "COLLECT_FROM_EACH_PLAYER_100":
-                        foreach (BoardUser otherPlayer in p.Board.GetOtherBoardUsersOnBoard(bu.User.UserName){
+                        foreach (BoardUser otherPlayer in p.Board.GetOtherBoardUsersOnBoard(bu.User.UserName)){
                             otherPlayer.Money -= 100;
                             bu.Money += 100;
                         }
