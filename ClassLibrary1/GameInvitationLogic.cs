@@ -28,7 +28,35 @@ namespace BusinessLogic
                 i++;
             }
 
+            // TODO: Create new Game Board for the User u. Max game size will be the size of invitedUser array. Assign it to invitation.Board
+            // If no one accepts the invites within 24 hours, the invitation and board are dropped.
             return invitation;
+        }
+
+        /// <summary>
+        /// This method allows a User to accept a specific invitation
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="u"></param>
+        public static void AcceptInvitation(GameInvitation i, User u)
+        {
+            int pos = Array.IndexOf(i.InvitedUsers, u.UserName);
+            i.IsAccepted[pos] = true;
+
+            //TODO: Add this user to the game board created by the invitation (i.Board)
+        }
+
+        /// <summary>
+        /// This method allows a User to decline a specific invitation
+        /// </summary>
+        /// <param name="i"></param>
+        /// <param name="u"></param>
+        public static void DeclineInvitation(GameInvitation i, User u)
+        {
+            var invitedUsers = i.InvitedUsers.ToList();
+            invitedUsers.Remove(u.UserName);
+            string[] updatedUsers = invitedUsers.ToArray();
+            i.InvitedUsers = updatedUsers;
         }
     }
 }
