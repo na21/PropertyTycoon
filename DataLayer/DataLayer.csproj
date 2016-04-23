@@ -55,6 +55,11 @@
     <Compile Include="Friends.cs" />
     <Compile Include="GameContext.cs" />
     <Compile Include="GameInvitation.cs" />
+    <Compile Include="Migrations\201604230106263_AddedPointsEarnedToBoard.cs" />
+    <Compile Include="Migrations\201604230106263_AddedPointsEarnedToBoard.Designer.cs">
+      <DependentUpon>201604230106263_AddedPointsEarnedToBoard.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PointsEarned.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
       <DependentUpon>201604220213582_AddMaxPlayersToBoard.cs</DependentUpon>
@@ -78,6 +83,10 @@
     <Compile Include="Migrations\201604222108193_AddFriendsModels.cs" />
     <Compile Include="Migrations\201604222108193_AddFriendsModels.Designer.cs">
       <DependentUpon>201604222108193_AddFriendsModels.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604230030084_AddedPointsEarned.cs" />
+    <Compile Include="Migrations\201604230030084_AddedPointsEarned.Designer.cs">
+      <DependentUpon>201604230030084_AddedPointsEarned.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Move.cs" />
@@ -107,6 +116,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604222108193_AddFriendsModels.resx">
       <DependentUpon>201604222108193_AddFriendsModels.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604230030084_AddedPointsEarned.resx">
+      <DependentUpon>201604230030084_AddedPointsEarned.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604230106263_AddedPointsEarnedToBoard.resx">
+      <DependentUpon>201604230106263_AddedPointsEarnedToBoard.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

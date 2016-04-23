@@ -458,7 +458,7 @@ namespace BusinessLogic
             p = new Property();
             p.Name = "Income Tax";
             p.Position = 5;
-            p.Price = 0;
+            p.Price = 200;
             p.Rent = 0;
             p.Group = "No-Group";
             p.User = null;
@@ -521,7 +521,7 @@ namespace BusinessLogic
             p = new Property();
             p.Name = "Luxury Tax";
             p.Position = 34;
-            p.Price = 0;
+            p.Price = 100;
             p.Rent = 0;
             p.Group = "No-Group";
             p.User = null;

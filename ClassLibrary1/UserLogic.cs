@@ -28,6 +28,19 @@ namespace BusinessLogic
         }
 
         /// <summary>
+        /// Get number of game user has won since a given date.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="DateSince"></param>
+        /// <returns></returns>
+        public static int GetNumberOfGamesWonSince(this User user, DateTime DateSince)
+        {
+            return (from b in user.Boards
+             where b.Winner == user
+             select b.Id).Count();
+        }
+
+        /// <summary>
         /// Return the position of the Player on the Game Board.
         /// </summary>
         /// <param name="user"></param>
