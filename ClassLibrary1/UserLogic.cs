@@ -73,30 +73,41 @@ namespace BusinessLogic
                 return;
             }
 
+            if(prop.Name == "Income Tax")
+            {
+                boardUser.Money -= prop.Price;
+                return;
+            }
+
+            if(prop.Name == "Luxury Tax")
+            {
+                boardUser.Money -= prop.Price;
+                return;
+            }
+
             //
             // The property is not owned.
             //
             if (prop.User == null)
             {
-                // give player option to buy
-                // TODO: check player funds before offering to buy property
-                bool buy = true;
-
-                if (buy)
+                // give player option to buy if they have enough money
+                if (boardUser.Money >= prop.Price)
                 {
+                    bool buy = true;
 
-                    // if they can afford it
-                    if (boardUser.Money >= prop.Price)
+                    if (buy)
                     {
                         boardUser.Money -= prop.Price;
                         prop.User = user;
 
-                        // set prop.User ??
                     }
 
-                    // else player can't afford property
-
+                    // else player declined to buy property
                 }
+
+                // else player can't afford property
+
+
             }
 
             //
@@ -107,9 +118,18 @@ namespace BusinessLogic
                 // Someone else owns the property.
                 if (prop.User != user)
                 {
-                    if (!prop.Mortgaged)
+                    BoardUser buOwner = b.GetBoardUser(prop.User.UserName);
+
+                    // Only pay rent if the property isn't mortgaged and the owner
+                    // isn't in jail.
+                    if (!prop.Mortgaged && !buOwner.InJail)
                     {
+
                         int payment = prop.Rent;
+
+                        //Check if owners owns the entire group, if so rent is doubled.
+                        if (prop.User.OwnsGroup(b, prop.Group))
+                            payment *= 2;
 
                         payment += prop.NumHotels * 10;
                         payment += prop.NumHouses * 5;
@@ -148,8 +168,33 @@ namespace BusinessLogic
             // User owns this property and it's not currently mortgaged.
             if(!prop.Mortgaged && prop.User == user)
             {
-                prop.Mortgaged = true;
-                boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
+                // Player can't mortgage the house if there are houses or hotels.
+                // They must sell the houses/hotels to the bank first.
+                if (prop.NumHouses > 0 || prop.NumHotels > 0)
+                {
+                    //Ask player if he wants to sell houses/hotel
+                    bool sell = true;
+
+                    if (sell)
+                    {
+                        if (prop.NumHotels > 0)
+                            user.SellHotel(b, prop);
+
+                        else if (prop.NumHouses > 0)
+                            user.SellHouse(b, prop);
+
+                        return;
+                    }
+
+                    // else user has declined to sell houses/hotels
+
+                }
+
+                else
+                {
+                    prop.Mortgaged = true;
+                    boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
+                }
             }
         }
 
@@ -197,15 +242,51 @@ namespace BusinessLogic
             return false;
         }
 
-        public static void BuildHouse(this User user, Property p, int n = 1)
+        public static void BuildHouse(this User user, Board b, Property p, int n = 1)
         {
+            BoardUser bu = b.GetBoardUser(user.UserName);
+
+            int housePrice = (int)(p.Price * Property.HouseCostPercentage);
+
+            bu.Money -= n * housePrice;
             p.NumHouses += n;
         }
 
-        public static void BuildHotel(this User user, Property p)
+        public static void BuildHotel(this User user, Board b, Property p)
         {
+            BoardUser bu = b.GetBoardUser(user.UserName);
+
+            int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
+
+            bu.Money -= hotelPrice;
             p.NumHotels++;
             p.NumHouses = 0;
+        }
+
+        public static void SellHouse(this User user, Board b, Property p, int n = 1)
+        {
+            BoardUser bu = b.GetBoardUser(user.UserName);
+
+            if (p.NumHouses > 0)
+            {
+                int housePrice = (int)(p.Price * Property.HouseCostPercentage);
+
+                bu.Money += n * housePrice;
+                p.NumHouses -= n;
+            }
+        }
+
+        public static void SellHotel(this User user, Board b, Property p)
+        {
+            BoardUser bu = b.GetBoardUser(user.UserName);
+
+            if (p.NumHotels > 0)
+            {
+                int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
+
+                bu.Money += hotelPrice;
+                p.NumHotels = 0;
+            }
         }
     }
 }
