@@ -181,33 +181,8 @@ namespace BusinessLogic
             // User owns this property and it's not currently mortgaged.
             if(!prop.Mortgaged && prop.User == user)
             {
-                // Player can't mortgage the house if there are houses or hotels.
-                // They must sell the houses/hotels to the bank first.
-                if (prop.NumHouses > 0 || prop.NumHotels > 0)
-                {
-                    //Ask player if he wants to sell houses/hotel
-                    bool sell = true;
-
-                    if (sell)
-                    {
-                        if (prop.NumHotels > 0)
-                            user.SellHotel(b, prop);
-
-                        else if (prop.NumHouses > 0)
-                            user.SellHouse(b, prop);
-
-                        return;
-                    }
-
-                    // else user has declined to sell houses/hotels
-
-                }
-
-                else
-                {
                     prop.Mortgaged = true;
                     boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
-                }
             }
         }
 
