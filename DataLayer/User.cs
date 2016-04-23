@@ -18,6 +18,10 @@ namespace DataLayer
 
         public ICollection<Friends> Friendships { get; set; }
 
+        public int SkillPoints { get; set; }
+
+        public ICollection<PointsEarned> PointsEarned { get; set; }
+
         public IEnumerable<Board> Boards
         {
             get

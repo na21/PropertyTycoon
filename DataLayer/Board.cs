@@ -13,6 +13,8 @@ namespace DataLayer
         public static int PassGoMoney = 200;
         public static int GoToJailPosition = 31;
         public static int JailPosition = 11;
+        public static int StartinSkillPoints = 100;
+        public static int LowestSkillPoints = 50;
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -23,11 +25,15 @@ namespace DataLayer
 
         public User ActiveBoardPlayer { get; set; }
 
+        public User Winner { get; set; }
+
         public ICollection<BoardUser> BoardUsers { get; set; }
 
         public ICollection<Move> Moves { get; set; }
 
         public ICollection<Property> Properties { get; set; }
+
+        public ICollection<PointsEarned>  PointsEarned { get; set; }
 
         public IEnumerable<User> Users
         {
@@ -36,5 +42,13 @@ namespace DataLayer
                 return BoardUsers.Select(bu => bu.User);
             }
         }
+        
+        public string Status { get; set; }
+
+        [Required]
+        public int minSkillRange { get; set; }
+
+        [Required]
+        public int maxSkillRange { get; set; }
     }
 }

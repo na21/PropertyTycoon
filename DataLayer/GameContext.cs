@@ -22,6 +22,7 @@ namespace DataLayer
         public Board CreateNewGameBoard(User player, int maxPlayers)
         {
             var board = new Board();
+            board.Status = "New";
             board.MaximumPlayers = maxPlayers;
 
             Boards.Add(board);

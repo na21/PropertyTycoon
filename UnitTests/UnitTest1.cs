@@ -37,6 +37,8 @@ namespace UnitTests
 
                 // Test 1 - A player should be able to create a new Board.
                 var new_board = bc.CreateNewGameBoard(player1, 2);
+                new_board.minSkillRange = Board.LowestSkillPoints;
+                new_board.maxSkillRange = Board.LowestSkillPoints + 500;
 
                 var AddedPlayer = new_board.GetPlayerByUsername(player1.UserName);
                 Assert.AreEqual(AddedPlayer, player1);
@@ -94,6 +96,8 @@ namespace UnitTests
 
                 // Test 1 - A player should be able to create a new Board.
                 var new_board = bc.CreateNewGameBoard(player1, 2);
+                new_board.minSkillRange = Board.LowestSkillPoints;
+                new_board.maxSkillRange = Board.LowestSkillPoints + 500;
 
                 var AddedPlayer = new_board.GetPlayerByUsername(player1.UserName);
 
@@ -165,7 +169,7 @@ namespace UnitTests
                              where prop.Group == "Purple"
                              select prop);
 
-                foreach(Property property in props)
+                foreach (Property property in props)
                 {
                     property.User = player1;
                 }
@@ -208,6 +212,41 @@ namespace UnitTests
                 Assert.AreEqual(false, player1.CanBuildHotel(new_board, purpleProp));
                 Assert.AreEqual(false, player1.CanBuildHouse(new_board, purpleProp));
 
+            }
+        }
+
+        [TestMethod]
+        public void TestPointsEarned()
+        {
+            resetDbContext();
+
+            using (var bc = new GameContext())
+            {
+                var player1 = new User();
+                player1.UserName = "player1";
+                bc.Users.Add(player1);
+
+                var new_board = bc.CreateNewGameBoard(player1, 2);
+                new_board.minSkillRange = Board.LowestSkillPoints;
+                new_board.maxSkillRange = Board.LowestSkillPoints + 500;
+
+                var AddedPlayer = new_board.GetPlayerByUsername(player1.UserName);
+
+                var player2 = new User();
+                player2.UserName = "player2";
+                bc.Users.Add(player2);
+
+                bc.AddPlayerToBoard(player2, new_board);
+                new_board.Status = "Completed";
+                new_board.Winner = player1;
+
+                PointsEarned pe = new PointsEarned();
+                pe.Board = new_board;
+                pe.User = player1;
+                pe.CreatedAt = DateTime.Now.AddDays(-1);
+                bc.SaveChanges();
+
+                Assert.AreEqual(player1.GetNumberOfGamesWonSince(DateTime.Now.AddDays(-5)), 1);
             }
         }
     }
