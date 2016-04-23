@@ -125,6 +125,7 @@ namespace UnitTests
                 // Create a move on the board.
                 int rollValue;
                 Move firstMove = new_board.MakeCurrentPlayerMove(out isDoubles, out rollValue);
+                firstMove.CurrentPos = 2;
                 bc.SaveChanges();
 
                 // For this test, it is assumed that player buys property.
