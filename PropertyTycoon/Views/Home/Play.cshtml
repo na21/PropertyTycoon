@@ -1,0 +1,53 @@
+﻿@model PropertyTycoon.Models.PlayViewModel
+
+@{
+    ViewBag.Title = "Play";
+}
+
+<h2>@Model.Status</h2>
+
+
+if (Model.MyTurn)
+{
+    @using (Html.BeginForm(FormMethod.Post))
+    {
+        @if (Model.CanRoll)
+        {
+            <button type="submit" name="button" value="Roll">Roll</button>
+        }
+
+        @if (Model.CanBuyProperty)
+        {
+            <button type="submit" name="button" value="BuyProperty">Buy Property</button>
+        }
+
+        @if (Model.CanMortgageProperty)
+        {
+            <button type="submit" name="button" value="MortgageProperty">Mortgage Property</button>
+        }
+
+        @if (Model.CanBuyHouse)
+        {
+            <button type="submit" name="button" value="BuyHouse">Buy House</button>
+        }
+
+        @if (Model.CanBuyHotel)
+        {
+            <button type="submit" name="button" value="BuyHotel">Buy Hotel</button>
+        }
+
+        @if (Model.CanSellHouse)
+        {
+            <button type="submit" name="button" value="SellHouse">Sell House</button>
+        }
+
+        @if (Model.CanSellHotel)
+        {
+            <button type="submit" name="button" value="SellHotel">Sell Hotel</button>
+        }
+    }
+
+    else
+    {
+        <h3>Not your turn, please wait for other player(s).</h3>
+    }
