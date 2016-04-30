@@ -33,6 +33,50 @@ namespace PropertyTycoon.Controllers
             return View();
         }
 
+        public ActionResult Ranking(string display)
+        {
+            User user = (from u in gc.Users
+                         where u.UserName == User.Identity.Name
+                         select u).FirstOrDefault();
+
+            PointsEarned myPoints = (from pe in gc.UserPointsEarned
+                                         where pe.User == user
+                                         select pe).FirstOrDefault();
+
+            if (display == null || display == "me")
+            {
+                // Default page will show your rank and 9 users above you.
+
+                var peAbove = (from pe in gc.UserPointsEarned
+                                   orderby pe.Points
+                                   where pe.Points < myPoints.Points
+                                   select pe).Take(9);
+
+                var userPE = (from pe in gc.UserPointsEarned
+                              where pe.User == user
+                              select pe).FirstOrDefault();
+
+                List<PointsEarned> pel = peAbove.ToList();
+                pel.Add(userPE);
+
+                if(peAbove.Count() < 9)
+                {
+                    int n = 9 - peAbove.Count();
+
+                    var peBelow = (from pe in gc.UserPointsEarned
+                                       orderby pe.Points
+                                       where pe.Points >= myPoints.Points && pe.User != user
+                                       select pe).Take(n);
+
+                    pel.AddRange(peBelow.ToList());
+                }
+
+                return View(pel);
+            }
+
+            return View();
+        }
+
         public ActionResult Play()
         {
             if (!User.Identity.IsAuthenticated)

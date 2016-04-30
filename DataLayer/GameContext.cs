@@ -15,6 +15,8 @@ namespace DataLayer
 
         public virtual DbSet<BoardUser> BoardUsers { get; set; }
 
+        public virtual DbSet<PointsEarned> UserPointsEarned { get; set; }
+
         /// <summary>
         /// This function creates a new Board for a User.
         /// </summary>

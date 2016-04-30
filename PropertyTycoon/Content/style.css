@@ -1,0 +1,16 @@
+﻿p {
+    font-family: Verdana;
+    font-size: small;
+}
+
+tr:nth-child(even){
+    background-color: lightgray;
+}
+
+tr {
+outline: thin solid;
+}
+
+th, td{
+    padding: 20px;
+}
