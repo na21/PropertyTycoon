@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -50,6 +51,13 @@ namespace DataLayer
             board.BoardUsers.Add(boardUser);
 
             SaveChanges();
+        }
+
+        public User GetUserFromIdentity(IPrincipal user)
+        {
+            return (from u in Users
+                    where u.UserName == user.Identity.Name
+                    select u).FirstOrDefault();
         }
     }
 }

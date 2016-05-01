@@ -12,7 +12,7 @@ namespace PropertyTycoon.Controllers
 {
     public class HomeController : Controller
     {
-        private static GameContext gc = new GameContext();
+        private GameContext gc = new GameContext();
 
         public ActionResult Index()
         {
@@ -33,45 +33,108 @@ namespace PropertyTycoon.Controllers
             return View();
         }
 
+        public ActionResult RegistrationComplete()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return View("NotAuthorized");
+
+            //
+            // We redirect to this action immediately following registration.
+            // This is where we add the user to our custom user table.
+            // Our custom user table contains application-specific user information.
+            //
+            // This technique was demonstrated in class with the TicTacToe example.
+            // From this point forward, we should be able to pull the Identity user from
+            // our custom user table as user records are never deleted.
+            //
+            if (gc.GetUserFromIdentity(User) == null)
+            {
+                User u = new User();
+                u.UserName = User.Identity.Name;
+
+                gc.Users.Add(u);
+                gc.SaveChanges();
+            }
+
+            return View();
+        }
+
         public ActionResult Ranking(string display)
         {
-            User user = (from u in gc.Users
-                         where u.UserName == User.Identity.Name
-                         select u).FirstOrDefault();
+            if (!User.Identity.IsAuthenticated)
+                return View("NotAuthorized");
 
-            PointsEarned myPoints = (from pe in gc.UserPointsEarned
-                                         where pe.User == user
-                                         select pe).FirstOrDefault();
+            User user = gc.GetUserFromIdentity(User);
 
-            if (display == null || display == "me")
+            //
+            // Display your rank and up to 9 users above you.
+            //
+            if (display == "me")
             {
-                // Default page will show your rank and 9 users above you.
-
-                var peAbove = (from pe in gc.UserPointsEarned
-                                   orderby pe.Points
-                                   where pe.Points < myPoints.Points
-                                   select pe).Take(9);
-
-                var userPE = (from pe in gc.UserPointsEarned
+                var myPoints = (from pe in gc.UserPointsEarned
                               where pe.User == user
                               select pe).FirstOrDefault();
 
-                List<PointsEarned> pel = peAbove.ToList();
-                pel.Add(userPE);
+                var peAbove = (from pe in gc.UserPointsEarned
+                                   where pe.Points > myPoints.Points
+                               orderby pe.Points ascending
+                               select pe).Take(9);
 
+                peAbove.Reverse();
+                List<PointsEarned> pel = peAbove.ToList();
+                
+                pel.Add(myPoints);
+
+                // If there aren't 9 users ranked above you, show 9 - n users ranked below.
                 if(peAbove.Count() < 9)
                 {
                     int n = 9 - peAbove.Count();
 
                     var peBelow = (from pe in gc.UserPointsEarned
-                                       orderby pe.Points
-                                       where pe.Points >= myPoints.Points && pe.User != user
-                                       select pe).Take(n);
+                                       where pe.Points <= myPoints.Points && pe.User != user
+                                   orderby pe.Points descending
+                                   select pe).Take(n);
 
                     pel.AddRange(peBelow.ToList());
                 }
 
                 return View(pel);
+            }
+
+            //
+            // Display all-time point leaders.
+            //
+            else if(display == "alltime")
+            {
+                var peAllTime = (from pe in gc.UserPointsEarned
+                                orderby pe.Points descending
+                                select pe).Take(10);
+
+                return View(peAllTime.ToList());
+            }
+
+            else if(display == "week")
+            {
+                DateTime weekStart = DateTime.Now.AddDays(-7);
+
+                var peWeek = (from pe in gc.UserPointsEarned
+                              where pe.CreatedAt >= weekStart
+                              orderby pe.Points descending
+                              select pe).Take(10);
+
+                return View(peWeek.ToList());
+            }
+
+            else if(display == "month")
+            {
+                DateTime monthStart = DateTime.Now.AddMonths(-1);
+
+                var peMonth = (from pe in gc.UserPointsEarned
+                               where pe.CreatedAt >= monthStart
+                               orderby pe.Points descending
+                               select pe).Take(10);
+
+                return View(peMonth.ToList());
             }
 
             return View();
@@ -83,9 +146,7 @@ namespace PropertyTycoon.Controllers
                 return View("NotAuthorized");
 
 
-            User user = (from u in gc.Users
-                         where u.UserName == User.Identity.Name
-                         select u).FirstOrDefault();
+            User user = gc.GetUserFromIdentity(User);
 
             Board board = (from bu in gc.BoardUsers
                            where bu.User == user
@@ -106,9 +167,7 @@ namespace PropertyTycoon.Controllers
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
 
-            User user = (from u in gc.Users
-                         where u.UserName == User.Identity.Name
-                         select u).FirstOrDefault();
+            User user = gc.GetUserFromIdentity(User);
 
             Board board = (from bu in gc.BoardUsers
                            where bu.User == user
