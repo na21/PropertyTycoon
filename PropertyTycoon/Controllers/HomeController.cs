@@ -145,17 +145,18 @@ namespace PropertyTycoon.Controllers
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
 
-
             User user = gc.GetUserFromIdentity(User);
 
             Board board = (from bu in gc.BoardUsers
-                           where bu.User == user
+                           where bu.UserName == user.UserName
                            select bu.Board).FirstOrDefault();
 
-            PlayViewModel pvm = new PlayViewModel()
-            {
-                MyTurn = board.GetPlayerWithCurrentTurn() == user
-            };
+            PlayViewModel pvm = new PlayViewModel();
+            pvm.MyTurn = false;
+
+            if (board != null)
+                pvm.MyTurn = board.GetPlayerWithCurrentTurn() == user;
+           
 
             return View(pvm);
         }

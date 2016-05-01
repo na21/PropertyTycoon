@@ -7,9 +7,9 @@
 <h2>@Model.Status</h2>
 
 
-if (Model.MyTurn)
+@if (Model.MyTurn)
 {
-    @using (Html.BeginForm(FormMethod.Post))
+    using (Html.BeginForm(FormMethod.Post))
     {
         if (Model.CanRoll)
         {
@@ -46,8 +46,9 @@ if (Model.MyTurn)
             <button type="submit" name="button" value="SellHotel">Sell Hotel</button>
         }
     }
+}
 
-    else
-    {
-        <h3>Not your turn, please wait for other player(s).</h3>
+else
+{
+        <h3> Not your turn, please wait for other player(s).</h3>
     }
