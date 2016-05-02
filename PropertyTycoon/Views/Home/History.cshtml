@@ -1,0 +1,51 @@
+﻿@model List<DataLayer.PointsEarned>
+
+@{
+    ViewBag.Title = "History";
+}
+
+<h2>Ranking</h2>
+
+@if (Model == null || Model.Count == 0)
+{
+    <p>
+        No history information to display.
+    </p>
+}
+
+else
+{
+
+    <table>
+        <tr>
+            <th>Date</th>
+            <th>(W)in/(L)oss/(D)raw</th>
+            <th>Points</th>
+        </tr>
+
+        @for (int i = 0; i < Model.Count; ++i)
+        {
+            var pe = Model[i];
+
+            <tr>
+                <td>@pe.CreatedAt</td>
+                <td>
+                    @if(pe.Points > 0)
+                    {
+                        <b>W</b>
+                    }
+                    else if(pe.Points == 0)
+                    {
+                        <b>D</b>
+                    }
+                    else
+                    {
+                        <b>L</b>
+                    }
+                </td>
+                <td>@pe.Points</td>
+            </tr>
+
+        }
+    </table>
+}

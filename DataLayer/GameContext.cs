@@ -53,10 +53,10 @@ namespace DataLayer
             SaveChanges();
         }
 
-        public User GetUserFromIdentity(IPrincipal user)
+        public User GetUser(string userName)
         {
             return (from u in Users
-                    where u.UserName == user.Identity.Name
+                    where u.UserName == userName
                     select u).FirstOrDefault();
         }
     }

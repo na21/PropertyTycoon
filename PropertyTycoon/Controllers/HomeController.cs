@@ -47,7 +47,7 @@ namespace PropertyTycoon.Controllers
             // From this point forward, we should be able to pull the Identity user from
             // our custom user table as user records are never deleted.
             //
-            if (gc.GetUserFromIdentity(User) == null)
+            if (gc.GetUser(User.Identity.Name) == null)
             {
                 User u = new User();
                 u.UserName = User.Identity.Name;
@@ -64,7 +64,7 @@ namespace PropertyTycoon.Controllers
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
 
-            User user = gc.GetUserFromIdentity(User);
+            User user = gc.GetUser(User.Identity.Name);
 
             //
             // Display your rank and up to 9 users above you.
@@ -155,12 +155,74 @@ namespace PropertyTycoon.Controllers
             return View();
         }
 
+        public ActionResult History(string userName)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return View("NotAuthorized");
+
+            User user = userName == null ? gc.GetUser(User.Identity.Name) : gc.GetUser(userName);
+
+            //
+            // Requested user not found.
+            //
+            if (user == null)
+                return View();
+
+            //
+            // Requested user found, get match history.
+            //
+            var matchHistory = (from pe in gc.UserPointsEarned
+                                where pe.UserName == user.UserName
+                                orderby pe.CreatedAt descending
+                                select pe);
+
+            List<PointsEarned> pel = new List<PointsEarned>();
+
+            if (matchHistory != null)
+                pel.AddRange(matchHistory.ToList());
+
+            return View(pel);
+        }
+
+        public ActionResult Game(int? id)
+        {
+            if (!User.Identity.IsAuthenticated)
+                return View("NotAuthorized");
+
+            if (id == null)
+                return View();
+
+            var game = (from pe in gc.UserPointsEarned
+                        where pe.BoardId == id
+                        select pe).FirstOrDefault();
+
+            var board = (from b in gc.Boards
+                         where b.Id == id
+                         select b).FirstOrDefault();
+
+            if (game == null || board == null)
+                return View();
+
+            GameDetailViewModel gdvm = new GameDetailViewModel()
+            {
+                Winner = board.Winner.UserName,
+                MinSkillRange = board.minSkillRange,
+                MaxSkillRange = board.maxSkillRange,
+                MaxPlayers = board.MaximumPlayers,
+                Date = game.CreatedAt,
+                Points = game.Points
+            };
+
+
+            return View(gdvm);
+        }
+
         public ActionResult Play()
         {
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
 
-            User user = gc.GetUserFromIdentity(User);
+            User user = gc.GetUser(User.Identity.Name);
 
             Board board = (from bu in gc.BoardUsers
                            where bu.UserName == user.UserName
@@ -189,7 +251,7 @@ namespace PropertyTycoon.Controllers
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
 
-            User user = gc.GetUserFromIdentity(User);
+            User user = gc.GetUser(User.Identity.Name);
 
             Board board = (from bu in gc.BoardUsers
                            where bu.User == user

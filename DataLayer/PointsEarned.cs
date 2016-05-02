@@ -19,6 +19,9 @@ namespace DataLayer
         [ForeignKey("UserName")]
         public User User { get; set; }
 
+        public int BoardId { get; set; }
+
+        [ForeignKey("BoardId")]
         public Board Board { get; set; }
 
         public DateTime CreatedAt { get; set; }

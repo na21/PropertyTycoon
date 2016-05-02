@@ -1,0 +1,41 @@
+﻿@model PropertyTycoon.Models.GameDetailViewModel
+
+@{
+    ViewBag.Title = "Game";
+}
+
+<h2>Game</h2>
+
+@if (Model == null)
+{
+    <p>
+        An invalid game id has been specified.
+    </p>
+}
+
+else
+{
+
+    <table>
+        <tr>
+            <th>Game ID</th>
+            <th>Date</th>
+            <th>Winner</th>
+            <th>Points</th>
+            <th>Max Players</th>
+            <th>Min Skill</th>
+            <th>Max Skill</th>
+        </tr>
+
+            <tr>
+                <td>@Model.BoardId</td>
+                <td>@Model.Date</td>
+                <td>@Model.Winner</td>
+                <td>@Model.Points</td>
+                <td>@Model.MaxPlayers</td>
+                <td>@Model.MinSkillRange</td>
+                <td>@Model.MaxSkillRange</td>
+            </tr>
+    </table>
+}
+
