@@ -71,34 +71,39 @@ namespace PropertyTycoon.Controllers
             //
             if (display == "me")
             {
-                var myPoints = (from pe in gc.UserPointsEarned
-                              where pe.User == user
-                              select pe).FirstOrDefault();
 
-                var peAbove = (from pe in gc.UserPointsEarned
-                                   where pe.Points > myPoints.Points
-                               orderby pe.Points ascending
-                               select pe).Take(9);
+                var usersAbove = (from u in gc.Users
+                                   where u.SkillPoints > user.SkillPoints
+                               orderby u.SkillPoints ascending
+                               select u).Take(9);
 
-                peAbove.Reverse();
-                List<PointsEarned> pel = peAbove.ToList();
+                List<User> ul = new List<User>();
+
+                if (usersAbove != null)
+                {
+                    usersAbove.Reverse();
+                    ul.AddRange(usersAbove.ToList());
+                }
                 
-                pel.Add(myPoints);
+                ul.Add(user);
+
+                int aboveCount = usersAbove == null ? 0 : usersAbove.Count();
 
                 // If there aren't 9 users ranked above you, show 9 - n users ranked below.
-                if(peAbove.Count() < 9)
+                if(aboveCount < 9)
                 {
-                    int n = 9 - peAbove.Count();
+                    int n = 9 - aboveCount;
 
-                    var peBelow = (from pe in gc.UserPointsEarned
-                                       where pe.Points <= myPoints.Points && pe.User != user
-                                   orderby pe.Points descending
-                                   select pe).Take(n);
+                    var usersBelow = (from u in gc.Users
+                                   where u.SkillPoints <= user.SkillPoints && u.UserName != user.UserName
+                                   orderby u.SkillPoints descending
+                                   select u).Take(n);
 
-                    pel.AddRange(peBelow.ToList());
+                    if(usersBelow != null)
+                        ul.AddRange(usersBelow.ToList());
                 }
 
-                return View(pel);
+                return View(ul);
             }
 
             //
@@ -106,35 +111,45 @@ namespace PropertyTycoon.Controllers
             //
             else if(display == "alltime")
             {
-                var peAllTime = (from pe in gc.UserPointsEarned
-                                orderby pe.Points descending
-                                select pe).Take(10);
+                var usersAllTime = (from u in gc.Users
+                                orderby u.SkillPoints descending
+                                select u).Take(10);
 
-                return View(peAllTime.ToList());
+                List<User> ul = new List<User>();
+
+
+                if (usersAllTime != null)
+                    ul.AddRange(usersAllTime.ToList());
+
+                return View(ul);
             }
 
             else if(display == "week")
             {
                 DateTime weekStart = DateTime.Now.AddDays(-7);
 
-                var peWeek = (from pe in gc.UserPointsEarned
-                              where pe.CreatedAt >= weekStart
-                              orderby pe.Points descending
-                              select pe).Take(10);
+                var groupPEbyUser = (from pe in gc.UserPointsEarned
+                                 where pe.CreatedAt >= weekStart
+                                 group pe by pe.UserName);
 
-                return View(peWeek.ToList());
+                // TODO: Get sum of user's weekly totals
+                // take top 10
+
+                return View();
             }
 
             else if(display == "month")
             {
                 DateTime monthStart = DateTime.Now.AddMonths(-1);
 
-                var peMonth = (from pe in gc.UserPointsEarned
-                               where pe.CreatedAt >= monthStart
-                               orderby pe.Points descending
-                               select pe).Take(10);
+                var groupPEbyUser = (from pe in gc.UserPointsEarned
+                                     where pe.CreatedAt >= monthStart
+                                     group pe by pe.UserName);
 
-                return View(peMonth.ToList());
+                // TODO: Get sum of user's monthly totals
+                // Take top 10
+
+                return View();
             }
 
             return View();
