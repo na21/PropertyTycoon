@@ -16,8 +16,10 @@ namespace DataLayer
         [Key, Column(Order = 2)]
         public string UserName { get; set; }
 
+        [ForeignKey("UserName")]
         public virtual User User { get; set; }
 
+        [ForeignKey("BoardId")]
         public virtual Board Board { get; set; }
 
         public int Turn { get; set; }

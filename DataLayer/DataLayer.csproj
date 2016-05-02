@@ -59,6 +59,10 @@
     <Compile Include="Migrations\201604230106263_AddedPointsEarnedToBoard.Designer.cs">
       <DependentUpon>201604230106263_AddedPointsEarnedToBoard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605020009283_AddedForeignKeyToPointsEarnedAndFKAnnotations.cs" />
+    <Compile Include="Migrations\201605020009283_AddedForeignKeyToPointsEarnedAndFKAnnotations.Designer.cs">
+      <DependentUpon>201605020009283_AddedForeignKeyToPointsEarnedAndFKAnnotations.cs</DependentUpon>
+    </Compile>
     <Compile Include="PointsEarned.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
@@ -122,6 +126,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201604230106263_AddedPointsEarnedToBoard.resx">
       <DependentUpon>201604230106263_AddedPointsEarnedToBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605020009283_AddedForeignKeyToPointsEarnedAndFKAnnotations.resx">
+      <DependentUpon>201605020009283_AddedForeignKeyToPointsEarnedAndFKAnnotations.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

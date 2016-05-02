@@ -14,6 +14,9 @@ namespace DataLayer
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        public string UserName { get; set; }
+
+        [ForeignKey("UserName")]
         public User User { get; set; }
 
         public Board Board { get; set; }
