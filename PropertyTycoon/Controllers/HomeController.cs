@@ -166,8 +166,14 @@ namespace PropertyTycoon.Controllers
                            where bu.UserName == user.UserName
                            select bu.Board).FirstOrDefault();
 
-            PlayViewModel pvm = new PlayViewModel();
-            pvm.MyTurn = false;
+            PlayViewModel pvm = new PlayViewModel()
+            {
+                HasActiveGame = board != null,
+                MyTurn = false
+
+                // TODO:
+                // need function GetCurrentProperty(user)
+            };
 
             if (board != null)
                 pvm.MyTurn = board.GetPlayerWithCurrentTurn() == user;

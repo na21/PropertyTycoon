@@ -6,49 +6,56 @@
 
 <h2>@Model.Status</h2>
 
-
-@if (Model.MyTurn)
+@if (Model.HasActiveGame)
 {
-    using (Html.BeginForm(FormMethod.Post))
+    if (Model.MyTurn)
     {
-        if (Model.CanRoll)
+        using (Html.BeginForm(FormMethod.Post))
         {
+            if (Model.CanRoll)
+            {
             <button type="submit" name="button" value="Roll">Roll</button>
-        }
+            }
 
-        if (Model.CanBuyProperty)
-        {
+            if (Model.CanBuyProperty)
+            {
             <button type="submit" name="button" value="BuyProperty">Buy Property</button>
-        }
+            }
 
-        if (Model.CanMortgageProperty)
-        {
+            if (Model.CanMortgageProperty)
+            {
             <button type="submit" name="button" value="MortgageProperty">Mortgage Property</button>
-        }
+            }
 
-        if (Model.CanBuyHouse)
-        {
+            if (Model.CanBuyHouse)
+            {
             <button type="submit" name="button" value="BuyHouse">Buy House</button>
-        }
+            }
 
-        if (Model.CanBuyHotel)
-        {
+            if (Model.CanBuyHotel)
+            {
             <button type="submit" name="button" value="BuyHotel">Buy Hotel</button>
-        }
+            }
 
-        if (Model.CanSellHouse)
-        {
+            if (Model.CanSellHouse)
+            {
             <button type="submit" name="button" value="SellHouse">Sell House</button>
-        }
+            }
 
-        if (Model.CanSellHotel)
-        {
+            if (Model.CanSellHotel)
+            {
             <button type="submit" name="button" value="SellHotel">Sell Hotel</button>
+            }
         }
+    }
+
+    else
+    {
+        <h3> Not your turn, please wait for other player(s).</h3>
     }
 }
 
 else
 {
-        <h3> Not your turn, please wait for other player(s).</h3>
-    }
+<h3> No active games found! Create a new game to start playing!</h3>
+}

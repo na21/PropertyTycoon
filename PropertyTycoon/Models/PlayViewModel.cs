@@ -9,6 +9,8 @@ namespace PropertyTycoon.Models
     {
         public string Status { get; set; }
 
+        public bool HasActiveGame { get; set; }
+
         public bool MyTurn { get; set; }
 
         public bool CanRoll { get; set; }
