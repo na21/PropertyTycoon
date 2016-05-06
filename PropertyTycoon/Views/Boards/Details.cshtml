@@ -1,4 +1,4 @@
-﻿@model DataLayer.Board
+﻿@model PropertyTycoon.Models.GameBoardViewModel
 
 @{
     ViewBag.Title = "Details";
@@ -11,45 +11,45 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.MaximumPlayers)
+            @Html.DisplayNameFor(model => model.GameBoard.MaximumPlayers)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.MaximumPlayers)
+            @Html.DisplayFor(model => model.GameBoard.MaximumPlayers)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Status)
+            @Html.DisplayNameFor(model => model.GameBoard.Status)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Status)
+            @Html.DisplayFor(model => model.GameBoard.Status)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.minSkillRange)
+            @Html.DisplayNameFor(model => model.GameBoard.minSkillRange)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.minSkillRange)
+            @Html.DisplayFor(model => model.GameBoard.minSkillRange)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.maxSkillRange)
+            @Html.DisplayNameFor(model => model.GameBoard.maxSkillRange)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.maxSkillRange)
+            @Html.DisplayFor(model => model.GameBoard.maxSkillRange)
         </dd>
 
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Edit", "Edit", new { id = Model.GameBoard.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
  
-@foreach (var contract in Model.Properties)
+@foreach (var contract in Model.GameBoard.Properties)
 {
     <ul>
         <li>@contract.Name</li>
@@ -63,6 +63,11 @@
 <style>
     .table tbody>tr>td{
     vertical-align: middle !important;
+}
+    #p11{
+    height:10px;
+    width:10px;
+    background:red;
 }
 </style>
     
@@ -220,39 +225,42 @@
                    </td>
                </tr>
                <tr>
-                   <td style="height:60px;">In Jail/Just Visiting</td>
-                   <td style="border-top:solid 12px SkyBlue">
-                       Connecticut Avenue<br />
-                       $120
+                   <td id="pos11" style="height:60px;">@{ @Model.GetPropertyFromPosition(11).Name }</td>
+                   <td id="pos10" style="border-top:solid 12px SkyBlue">
+                       @{ @Model.GetPropertyFromPosition(10).Name }<br />
+                    $@{ @Model.GetPropertyFromPosition(10).Price }
                    </td>
-                   <td style="border-top:solid 12px SkyBlue">
-                       Vermont Avenue<br />
-                       $100
+                   <td id="pos9" style="border-top:solid 12px SkyBlue">
+                       @{ @Model.GetPropertyFromPosition(9).Name }<br />
+                    $@{ @Model.GetPropertyFromPosition(9).Price }
                    </td>
-                   <td style="">Chance</td>
-                   <td style="border-top:solid 12px SkyBlue">
-                       Oriental Avenue<br />
-                       $100
+                   <td id="pos8" style="">@{ @Model.GetPropertyFromPosition(8).Name }</td>
+                   <td id="pos7" style="border-top:solid 12px SkyBlue">
+                       @{ @Model.GetPropertyFromPosition(7).Name }<br />
+                    $@{ @Model.GetPropertyFromPosition(7).Price }
                    </td>
-                   <td style="">
-                       Reading Railroad<br />
-                       $200
+                   <td id="pos6" style="">
+                       @{ @Model.GetPropertyFromPosition(6).Name }<br />
+                       $@{ @Model.GetPropertyFromPosition(6).Price }
                    </td>
-                   <td style="">
-                       Income Tax<br />
-                       (pay $200)
+                   <td id="pos5" style="">
+                       @{ @Model.GetPropertyFromPosition(5).Name }<br />
+                       (pay $@{ @Model.GetPropertyFromPosition(5).Price})
                    </td>
-                   <td style="border-top:solid 12px SaddleBrown">
-                       Baltic Avenue<br />
-                       $60
+                   <td id="pos4" style="border-top:solid 12px SaddleBrown">
+                      @{ @Model.GetPropertyFromPosition(4).Name }<br />
+                      $@{ @Model.GetPropertyFromPosition(4).Price }
                    </td>
-                   <td style="">Community Chest</td>
-                   <td style="border-top:solid 12px SaddleBrown">
-                       Mediter-ranean Avenue<br />
-                       $60
+                   <td id="pos3" style="">
+                       @{ @Model.GetPropertyFromPosition(3).Name }
                    </td>
-                   <td>
-                       <b>Go</b><br />
+                   <td id="pos2" style="border-top:solid 12px SaddleBrown">
+                       @{ @Model.GetPropertyFromPosition(2).Name }<br />
+                       $@{ @Model.GetPropertyFromPosition(2).Price }
+                   </td>
+                   <td id="pos1">
+                       <div id="p11"></div>
+                       <b>@{ @Model.GetPropertyFromPosition(1).Name }</b><br />
                        (collect $200)<br />
                        <a href="/wiki/File:Monopoly_Go_Arrow.png" class="image"><img alt="Monopoly Go Arrow.png" src="//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Monopoly_Go_Arrow.png/44px-Monopoly_Go_Arrow.png" width="44" height="8" srcset="//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Monopoly_Go_Arrow.png/66px-Monopoly_Go_Arrow.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/96/Monopoly_Go_Arrow.png/88px-Monopoly_Go_Arrow.png 2x" data-file-width="793" data-file-height="151" /></a>
                    </td>
@@ -328,8 +336,13 @@
                <li class="list-group-item">Porta ac consectetur ac</li>
                <li class="list-group-item">Vestibulum at eros</li>
            </ul>
+
+           <button id="move">Move</button>
        </div>
    </div>
+
+<!-- http://jsfiddle.net/axelmichel/QXdbK/2/ -->
+
 
 <script type="text/javascript">
     var diceImageUrl = '@Url.Content("~/Content/dice.png")';
@@ -351,6 +364,38 @@ $(function(){
         $("#dice1").dice("roll", diceRolled);
         $("#dice2").dice("roll", diceRolled);
     });
+
+    $("#move").bind("click", animate);
+
+    var direction = [4, 7, 8, 11]
+    function animate() {
+        moveAnimate("#p11", 0);
+    }
+
+
+    function moveAnimate(element, count) {
+        console.log(count);
+        if (count >= direction.length) { return; }
+        newParent = '#pos' + direction[count];
+        element = $(element); //Allow passing in either a JQuery object or selector
+        newParent = $(newParent); //Allow passing in either a JQuery object or selector
+        var oldOffset = element.offset();
+        element.appendTo(newParent);
+        var newOffset = element.offset();
+
+        var temp = element.clone().appendTo('body');
+        temp.css('position', 'absolute')
+                .css('left', oldOffset.left)
+                .css('top', oldOffset.top)
+                .css('zIndex', 1000);
+        element.hide();
+        temp.animate({ 'top': newOffset.top, 'left': newOffset.left }, 'slow', function () {
+            element.show();
+            temp.remove();
+            count++;
+            moveAnimate(element, count);
+        });
+    }
 
 });
 </script>

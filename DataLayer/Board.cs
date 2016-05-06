@@ -39,7 +39,10 @@ namespace DataLayer
         {
             get
             {
-                return BoardUsers.Select(bu => bu.User);
+                if (BoardUsers == null)
+                    return null;
+                else
+                    return BoardUsers.Select(bu => bu.User);
             }
         }
         
