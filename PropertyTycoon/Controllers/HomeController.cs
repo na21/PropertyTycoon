@@ -69,7 +69,7 @@ namespace PropertyTycoon.Controllers
             //
             // Display your rank and up to 9 users above you.
             //
-            if (display == "me")
+            if (display == null || display == "me")
             {
 
                 var usersAbove = (from u in gc.Users
@@ -254,7 +254,7 @@ namespace PropertyTycoon.Controllers
             User user = gc.GetUser(User.Identity.Name);
 
             Board board = (from bu in gc.BoardUsers
-                           where bu.User == user
+                           where bu.UserName == user.UserName
                            select bu.Board).FirstOrDefault();
 
             switch (button)
