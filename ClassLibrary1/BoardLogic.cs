@@ -179,6 +179,7 @@ namespace BusinessLogic
             p.Rent = 2;
             p.Group = "Purple";
             p.Board = b;
+            p.BoardId = b.Id;
             p.User = null;
             b.Properties.Add(p);
 

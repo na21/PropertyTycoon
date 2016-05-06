@@ -26,16 +26,16 @@ namespace DataLayer
         public User ActiveBoardPlayer { get; set; }
 
         public User Winner { get; set; }
+        
+        public virtual ICollection<BoardUser> BoardUsers { get; set; }
 
-        public ICollection<BoardUser> BoardUsers { get; set; }
+        public virtual ICollection<Move> Moves { get; set; }
 
-        public ICollection<Move> Moves { get; set; }
+        public virtual ICollection<Property> Properties { get; set; }
 
-        public ICollection<Property> Properties { get; set; }
+        public virtual ICollection<PointsEarned>  PointsEarned { get; set; }
 
-        public ICollection<PointsEarned>  PointsEarned { get; set; }
-
-        public IEnumerable<User> Users
+        public virtual IEnumerable<User> Users
         {
             get
             {
