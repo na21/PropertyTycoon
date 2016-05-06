@@ -10,6 +10,7 @@ namespace BusinessLogic
     public static class UserLogic
     {
         private static Random rnd = new Random();
+
         /// <summary>
         /// generating a random number for each of the dice because
         /// we need to check for doubles.

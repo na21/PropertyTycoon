@@ -28,16 +28,18 @@ namespace DataLayer
             board.Status = "New";
             board.MaximumPlayers = maxPlayers;
 
-            Boards.Add(board);
-
             var boardUser = new BoardUser();
 
             boardUser.Board = board;
+            boardUser.BoardId = board.Id;
             boardUser.User = player;
             BoardUsers.Add(boardUser);
+            board.BoardUsers.Add(boardUser);
+
+            Boards.Add(board);
 
             SaveChanges();
-            // TODO: Need to associate list of properties to this game board.
+            
             return board;
         }
 
@@ -57,6 +59,13 @@ namespace DataLayer
         {
             return (from u in Users
                     where u.UserName == userName
+                    select u).FirstOrDefault();
+        }
+
+        public User getUserFromIdentity(IPrincipal iUser)
+        {
+            return (from u in Users
+                    where u.UserName == iUser.Identity.Name
                     select u).FirstOrDefault();
         }
     }
