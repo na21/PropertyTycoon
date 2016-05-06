@@ -18,7 +18,50 @@ namespace PropertyTycoon.Controllers
         // GET: Boards
         public ActionResult Index()
         {
-            return View(db.Boards.ToList());
+            User u = db.GetUser(User.Identity.Name);
+
+            var boards = (from b in db.Boards
+                                 where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange
+                                 select b);
+
+            List<Board> boardList = boards.ToList();
+            List<Board> eligibleBoards = new List<Board>();
+
+            foreach(Board b in boardList)
+            {
+                if (b.GetBoardUser(User.Identity.Name) == null)
+                    eligibleBoards.Add(b);
+            }
+
+
+            if(eligibleBoards != null)
+                ViewBag.eligibleBoards = eligibleBoards.ToList();
+
+            if (u.Boards != null)
+                ViewBag.yourBoards = u.Boards.ToList();
+
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Join(int? id)
+        {
+            User u = db.GetUser(User.Identity.Name);
+
+            if (id == null)
+                return View("BoardError");
+
+            var board = (from b in db.Boards
+                         where b.Id == id
+                         select b).FirstOrDefault();
+
+            if (board == null)
+                return View("BoardError");
+
+            db.AddPlayerToBoard(u, board);
+
+            return RedirectToAction("Details", new { id = board.Id });
         }
 
         // GET: Boards/Details/5

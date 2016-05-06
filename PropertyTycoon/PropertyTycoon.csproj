@@ -257,6 +257,7 @@
     <Content Include="Views\Boards\Details.cshtml" />
     <Content Include="Views\Boards\Edit.cshtml" />
     <Content Include="Views\Boards\Index.cshtml" />
+    <Content Include="Views\Boards\BoardError.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

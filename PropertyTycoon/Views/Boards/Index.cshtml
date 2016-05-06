@@ -2,9 +2,13 @@
 
 @{
     ViewBag.Title = "Index";
+
+    List<DataLayer.Board> eligibleBoards = ((List<DataLayer.Board>)(ViewBag.eligibleBoards));
+    List<DataLayer.Board> yourBoards = ((List<DataLayer.Board>)(ViewBag.yourBoards));
 }
 
-<h2>Index</h2>
+
+<h2>Join a new game:</h2>
 
 <p>
     @Html.ActionLink("Create New", "Create")
@@ -26,7 +30,7 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach (var item in eligibleBoards) {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.MaximumPlayers)
@@ -41,11 +45,63 @@
             @Html.DisplayFor(modelItem => item.maxSkillRange)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
             @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+
+            @using (Html.BeginForm("Join", "Boards", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@item.Id">
+            <button type="submit" name="button" value="Join">Join</button>
+            }
+            
+
         </td>
     </tr>
 }
+
+</table>
+
+<br />
+
+<h2>Your current games:</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.MaximumPlayers)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.minSkillRange)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.maxSkillRange)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in yourBoards)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaximumPlayers)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.minSkillRange)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.maxSkillRange)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
