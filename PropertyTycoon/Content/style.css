@@ -8,9 +8,16 @@ tr:nth-child(even){
 }
 
 tr {
-outline: thin solid;
+/* outline: thin solid;*/
 }
+
+table { border-collapse:collapse }
 
 th, td{
     padding: 20px;
+}
+
+.container-fluid {
+    padding-left: 150px;
+    padding-right: 150px;
 }
