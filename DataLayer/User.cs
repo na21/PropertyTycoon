@@ -37,7 +37,10 @@ namespace DataLayer
         {
             get
             {
-                return Friendships.Select(f => f.User1);
+                if (Friendships == null)
+                    return null;
+                else
+                    return Friendships.Select(f => f.User1);
             }
         }
     }

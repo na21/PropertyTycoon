@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.Mvc;
 using DataLayer;
 using BusinessLogic;
+using PropertyTycoon.Models;
 
 namespace PropertyTycoon.Controllers
 {   [Authorize]
@@ -78,7 +79,7 @@ namespace PropertyTycoon.Controllers
                 return HttpNotFound();
             }
             
-            return View(board);
+            return View(new GameBoardViewModel(board));
         }
 
         // GET: Boards/Create
