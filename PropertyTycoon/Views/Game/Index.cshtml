@@ -8,9 +8,8 @@
     vertical-align: middle !important;
 }
 </style>
-<h2>Game</h2>
-
-   <div class="row">
+    
+   <div class="row" style="margin-top:50px;">
 
        <div class="col-md-8 table-responsive">
 
@@ -64,12 +63,25 @@
                        $200
                    </td>
                    <td border="1" rowspan="9" colspan="9" align="center" class="nothing" style="background-color: lightsteelblue;">
-                       <table cellpadding="0" cellspacing="2" style="border:solid 2px #ff0000;">
-                           <tr>
+                       <table cellpadding="0" cellspacing="2" >
+                           <tr style="border:solid 2px #ff0000;">
                                <td style="padding: 0px;">
                                    <div style="background-color:#ff0000;color:#ffffff;font:normal 22px verdana,arial;letter-spacing:+5px;padding:6px 12px 6px 12px;">
                                        PROPERTY TYCOON
                                    </div>
+                               </td>
+                           </tr>
+                           <tr style="border:solid 2px black;">
+                               <td style="height: 200px;">
+                                   
+                                   <div class="row">
+                                       <div class="col-md-4">
+                                           <button type="button" id="btn_roll" class="btn btn-success">Roll Dice!</button>
+                                       </div>
+                                       <div class="col-md-4" id='dice1'></div>
+                                       <div class="col-md-4" id='dice2'></div>
+                                   </div>
+                                   
                                </td>
                            </tr>
                        </table>
@@ -261,6 +273,27 @@
            </ul>
        </div>
    </div>
-   
 
+<script type="text/javascript">
+    var diceImageUrl = '@Url.Content("~/Content/dice.png")';
+</script>
 
+<script src="~/Scripts/jquery.dice.js"></script>
+
+<script>
+$(function(){
+
+    function diceRolled(event) {
+        console.log(event);
+    }
+
+    $("#dice1").dice();
+    $("#dice2").dice();
+
+    $("#btn_roll").click(function () {
+        $("#dice1").dice("roll", diceRolled);
+        $("#dice2").dice("roll", diceRolled);
+    });
+
+});
+</script>
