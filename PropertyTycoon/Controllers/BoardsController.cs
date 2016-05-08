@@ -62,6 +62,13 @@ namespace PropertyTycoon.Controllers
 
             db.AddPlayerToBoard(u, board);
 
+            // Start the game once all players have joined.
+            if(board.GetNumberofPlayers() == board.MaximumPlayers)
+            {
+                board.Status = "Active";
+            }
+
+            db.SaveChanges();
             return RedirectToAction("Details", new { id = board.Id });
         }
 
@@ -140,6 +147,46 @@ namespace PropertyTycoon.Controllers
             return View(board);
         }
 
+        public ActionResult Forfeit(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            Board board = db.Boards.Find(id);
+
+            if (board == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(board);
+        }
+
+        [HttpPost, ActionName("Forfeit")]
+        [ValidateAntiForgeryToken]
+        public ActionResult ForfeitConfirmed(int id)
+        {
+            Board board = db.Boards.Find(id);
+            User u = db.GetUser(User.Identity.Name);
+
+            if (board == null)
+            {
+                return HttpNotFound();
+            }
+
+            // Only active games can be forfeit.
+            if (board.Status != "Active")
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            board.PlayerForfeit(u);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
         // GET: Boards/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -161,6 +208,18 @@ namespace PropertyTycoon.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Board board = db.Boards.Find(id);
+
+            if(board == null)
+            {
+                return HttpNotFound();
+            }
+
+            // In progress or completed games cannot be deleted.
+            if(board.Status != "New")
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
             db.Boards.Remove(board);
             db.SaveChanges();
             return RedirectToAction("Index");

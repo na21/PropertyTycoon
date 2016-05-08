@@ -73,6 +73,10 @@
     <Compile Include="Migrations\201605021549230_AddBoardIdFKToPointsEarned.Designer.cs">
       <DependentUpon>201605021549230_AddBoardIdFKToPointsEarned.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605082305327_AddedGameOverPropertyToBoardUser.cs" />
+    <Compile Include="Migrations\201605082305327_AddedGameOverPropertyToBoardUser.Designer.cs">
+      <DependentUpon>201605082305327_AddedGameOverPropertyToBoardUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="PointsEarned.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
@@ -142,6 +146,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605021549230_AddBoardIdFKToPointsEarned.resx">
       <DependentUpon>201605021549230_AddBoardIdFKToPointsEarned.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605082305327_AddedGameOverPropertyToBoardUser.resx">
+      <DependentUpon>201605082305327_AddedGameOverPropertyToBoardUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
