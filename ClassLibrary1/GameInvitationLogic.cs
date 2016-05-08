@@ -18,8 +18,17 @@ namespace BusinessLogic
         public static GameInvitation CreateNewInvitation(User u, User[] invitedUsers)
         {
             var invitation = new GameInvitation();
-
+            Board b = new Board();
+            invitation.Board = b;
             invitation.UserName = u.UserName;
+
+            BoardUser bu = new BoardUser();
+            bu.Board = b;
+            bu.User = u;
+            bu.UserName = u.UserName;
+
+            b.BoardUsers.Add(bu);
+
             var i = 0;
             foreach (User invitedUser in invitedUsers)
             {
@@ -27,9 +36,7 @@ namespace BusinessLogic
                 invitation.IsAccepted[i] = false;
                 i++;
             }
-
-            // TODO: Create new Game Board for the User u. Max game size will be the size of invitedUser array. Assign it to invitation.Board
-            // If no one accepts the invites within 24 hours, the invitation and board are dropped.
+            
             return invitation;
         }
 
@@ -43,7 +50,11 @@ namespace BusinessLogic
             int pos = Array.IndexOf(i.InvitedUsers, u.UserName);
             i.IsAccepted[pos] = true;
 
-            //TODO: Add this user to the game board created by the invitation (i.Board)
+            BoardUser bu = new BoardUser();
+            bu.User = u;
+            bu.UserName = u.UserName;
+            bu.BoardId = i.Board.Id;
+            i.Board.BoardUsers.Add(bu);
         }
 
         /// <summary>
