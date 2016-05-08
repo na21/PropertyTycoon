@@ -19,10 +19,16 @@
             vertical-align: middle !important;
         }
 
-        #p11 {
+        #player1 {
             height: 10px;
             width: 10px;
             background: red;
+        }
+
+        #player2 {
+            height: 10px;
+            width: 10px;
+            background: blue;
         }
     </style>
     @helper ViewHelper(DataLayer.Property property, string id, string style, bool isPriceHidden, string addElements)
@@ -292,20 +298,19 @@
         </div>
         <div class="col-md-4">
 
-            @helper PlayerInfoHelper(DataLayer.BoardUser bu)
+        @helper PlayerInfoHelper(DataLayer.BoardUser bu)
         {
-        <div class="col-md-6 ">
-            <div class="panel" ng-class="{'panel-success': '@bu.UserName' == activePlayer, 'panel-primary': '@bu.UserName' != activePlayer}">
-                <div class="panel-heading">
-                    <h3 class="panel-title">@bu.UserName</h3>
-                </div>
-                <div class="panel-body">
-                    <div>Current Balance: $ @bu.Money</div>
+            <div class="col-md-6 ">
+                <div class="panel" ng-class="{'panel-success': '@bu.UserName' == activePlayer, 'panel-primary': '@bu.UserName' != activePlayer}">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">@bu.UserName</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div>Current Balance: $ @bu.Money</div>
+                    </div>
                 </div>
             </div>
-        </div>
-}
-
+        }
             <!-- Player Information -->
             <h3>Players - {{activePlayer}}'s Turn</h3>
 
@@ -317,44 +322,15 @@
             }
 
 
-            <!--div class="row">
-                <div class="col-md-6 ">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Player 3</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div>Current Balance: $ 5000</div>
-                            <div># Houses: 2</div>
-                            <div># Hotels: 3</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 ">
-                    <div class="panel panel-success">
-                        <div class="panel-heading">
-                            <h3 class="panel-title">Player 4</h3>
-                        </div>
-                        <div class="panel-body">
-                            <div>Current Balance: $ 2500</div>
-                            <div># Houses: 2</div>
-                            <div># Hotels: 3</div>
-                        </div>
-                    </div>
-                </div>
-            </div-->
-
-
-
             <h3>Moves List</h3>
             <ul class="list-group">
-                <li class="list-group-item">Cras justo odio</li>
-                <li class="list-group-item">Dapibus ac facilisis in</li>
-                <li class="list-group-item">Morbi leo risus</li>
-                <li class="list-group-item">Porta ac consectetur ac</li>
-                <li class="list-group-item">Vestibulum at eros</li>
+                <li class="list-group-item" ng-repeat="move in moves">
+                {{ move }} </li>
+                <li ng-if="moves.length == 0" class="list-group-item">
+                    No moves made.
+                </li>
             </ul>
-
+            {{ boardUsers}}
             <button id="move">Move</button>
            
         </div>
@@ -371,87 +347,86 @@
 <script src="~/Scripts/jquery.dice.js"></script>
 
 <script>
-$(function(){
-    /*
-    function diceRolled(event) {
-        console.log(event);
-    }
-
-    $("#pos1").append("<div id=\"p11\"></div>");
-
-    $("#dice1").dice();
-    $("#dice2").dice();
-
-    $("#btn_roll").click(function () {
-        $("#dice1").dice("roll", diceRolled);
-        $("#dice2").dice("roll", diceRolled);
-    });
-    */
-
-    $("#pos1").append("<div id=\"p11\"></div>");
-    $("#move").bind("click", animate);
-
-    var direction = [4, 7, 15, 35]
-    function animate() {
-        moveAnimate("#p11", 0);
-    }
-
-    function moveAnimate(element, count) {
-        console.log(count);
-        if (count >= direction.length) { return; }
-        newParent = '#pos' + direction[count];
-        element = $(element); //Allow passing in either a JQuery object or selector
-        newParent = $(newParent); //Allow passing in either a JQuery object or selector
-        var oldOffset = element.offset();
-        element.appendTo(newParent);
-        var newOffset = element.offset();
-
-        var temp = element.clone().appendTo('body');
-        temp.css('position', 'absolute')
-                .css('left', oldOffset.left)
-                .css('top', oldOffset.top)
-                .css('zIndex', 1000);
-
-        element.hide();
-        temp.animate({ 'top': newOffset.top, 'left': newOffset.left }, 'slow', function () {
-            element.show();
-            temp.remove();
-            count++;
-            moveAnimate(element, count);
-        });
-    }
-
-});
-</script>
-<script>
     angular.module('GameApp', [])
         .controller('GameController', ["$scope", "$http", function ($scope, $http) {
             $scope.test = "Hello World";
             var gameId = @Html.Raw(@Model.GameBoard.Id);
             console.log(gameId);
             
+            $("#pos1").append("<div id=\"player1\"></div>");
+            $("#pos1").append("<div id=\"player2\"></div>");
+
             $scope.activePlayer = '';
             $scope.dice1 = -1;
             $scope.dice2 = -1;
+            $scope.moves = [];
+            $scope.boardUsers = [];
 
             $http({
                 method: 'GET',
                 url: '/api/Game/' + String(gameId) + '/GetActivePlayer'
             }).then(function successCallback(response) {
-                // this callback will be called asynchronously
-                // when the response is available
+                //Success
                 console.log(response);
                 $scope.activePlayer = response.data.UserName;
             }, function errorCallback(response) {
-                // called asynchronously if an error occurs
-                // or server returns response with an error status.
+                console.log(response);
+            });
+
+            $http({
+                method: 'GET',
+                url: '/api/Game/' + String(gameId) + '/GetMovesList'
+            }).then(function successCallback(response) {
+                //Success
+                console.log(response);
+                $scope.moves = response.data;
+            }, function errorCallback(response) {
+                console.log(response);
+            });
+
+            $http({
+                method: 'GET',
+                url: '/api/Game/' + String(gameId) + '/BoardUsers'
+            }).then(function successCallback(response) {
+                //Success
+                console.log(response);
+                $scope.boardUsers = response.data;
+            }, function errorCallback(response) {
+                console.log(response);
             });
 
             $scope.DiceRolled = function(){
                 console.log("DICE ROLLED");
                 console.log($scope.dice1)
                 console.log($scope.dice2)
+                moveAnimate("#player1", 0, [4, 7, 15, 35]);
             }
+            
+            function moveAnimate(element, count, direction) {
+                
+                if (count >= direction.length) { return; }
+                newParent = '#pos' + direction[count];
+                element = $(element); //Allow passing in either a JQuery object or selector
+                newParent = $(newParent); //Allow passing in either a JQuery object or selector
+                var oldOffset = element.offset();
+                element.appendTo(newParent);
+                var newOffset = element.offset();
+
+                var temp = element.clone().appendTo('body');
+                temp.css('position', 'absolute')
+                        .css('left', oldOffset.left)
+                        .css('top', oldOffset.top)
+                        .css('zIndex', 1000);
+
+                element.hide();
+                temp.animate({ 'top': newOffset.top, 'left': newOffset.left }, 'slow', function () {
+                    element.show();
+                    temp.remove();
+                    count++;
+                    moveAnimate(element, count, direction);
+                });
+            }
+            
         }]).directive('dice', function($parse, $q) {
             return {
                 restrict: "E",

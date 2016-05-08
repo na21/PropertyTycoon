@@ -28,6 +28,12 @@ namespace PropertyTycoon
             );
 
             config.Routes.MapHttpRoute(
+                name: "GetMovesListRoute",
+                routeTemplate: "api/{controller}/{id}/GetMovesList",
+                defaults: new { controller = "Game", action = "GetMovesList" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }
