@@ -1,406 +1,367 @@
 ﻿@model PropertyTycoon.Models.GameBoardViewModel
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Game Board";
 }
 
-<h2>Details</h2>
+<div ng-app="GameApp">
+    <div>
+        <h4>Game Board - Created by @Model.GameBoard.ActiveBoardPlayer.UserName</h4>
+        
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.GameBoard.Id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+        <hr />
+    </div>
 
-<div>
-    <h4>Board</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.GameBoard.MaximumPlayers)
-        </dt>
+    <style>
+        .table tbody > tr > td {
+            vertical-align: middle !important;
+        }
 
-        <dd>
-            @Html.DisplayFor(model => model.GameBoard.MaximumPlayers)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.GameBoard.Status)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.GameBoard.Status)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.GameBoard.minSkillRange)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.GameBoard.minSkillRange)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.GameBoard.maxSkillRange)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.GameBoard.maxSkillRange)
-        </dd>
-
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.GameBoard.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
-
-@{
-    ViewBag.Title = "Game";
-}
-
-<style>
-    .table tbody>tr>td{
-    vertical-align: middle !important;
-}
-    #p11{
-    height:10px;
-    width:10px;
-    background:red;
-}
-</style>
+        #p11 {
+            height: 10px;
+            width: 10px;
+            background: red;
+        }
+    </style>
     @helper ViewHelper(DataLayer.Property property, string id, string style, bool isPriceHidden, string addElements)
     {
     <td id="@(id)" style="@(style)">
         @property.Name
-        @if(!isPriceHidden){
+        @if (!isPriceHidden)
+        {
             <br /> @Html.Raw("$") @property.Price
         }
         @Html.Raw(addElements)
     </td>
-    }
-   <div class="row" style="margin-top:50px;">
+}
+    <div class="row" style="margin-top:50px;">
 
-       <div class="col-md-8 table-responsive">
+        <div class="col-md-8 table-responsive">
 
-           <table class="table" border="1" cellspacing="0" cellpadding="3" style="text-align:center;font:normal 8pt/9pt arial;border-collapse:separate; background-color:#F0FFF0;">
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(21), 
+            <table class="table" border="1" cellspacing="0" cellpadding="3" style="height: 800px; text-align:center;font:normal 8pt/9pt arial;border-collapse:separate; background-color:#F0FFF0;">
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(21),
                                 "pos21",
-                                "height:60px;", 
-                                true, 
+                                "height:60px;",
+                                true,
                                 "<div style=\"width:60px;height:0px;\"></div>")
-                   @ViewHelper(@Model.GetPropertyFromPosition(22),
+                    @ViewHelper(@Model.GetPropertyFromPosition(22),
                                 "pos22",
                                 "border-bottom:solid 12px Red",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(23),
+                    @ViewHelper(@Model.GetPropertyFromPosition(23),
                                 "pos23",
                                 "",
                                 true,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(24),
+                    @ViewHelper(@Model.GetPropertyFromPosition(24),
                                 "pos24",
                                 "border-bottom:solid 12px Red",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(25),
+                    @ViewHelper(@Model.GetPropertyFromPosition(25),
                                 "pos25",
                                 "border-bottom:solid 12px Red",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(26),
+                    @ViewHelper(@Model.GetPropertyFromPosition(26),
                                 "pos26",
                                 "",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(27),
+                    @ViewHelper(@Model.GetPropertyFromPosition(27),
                                 "pos27",
                                 "border-bottom:solid 12px Yellow",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(28),
+                    @ViewHelper(@Model.GetPropertyFromPosition(28),
                                 "pos28",
                                 "border-bottom:solid 12px Yellow",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(29),
+                    @ViewHelper(@Model.GetPropertyFromPosition(29),
                                 "pos29",
                                 "",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(30),
+                    @ViewHelper(@Model.GetPropertyFromPosition(30),
                                 "pos30",
                                 "border-bottom:solid 12px Yellow",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(31),
+                    @ViewHelper(@Model.GetPropertyFromPosition(31),
                                 "pos31",
                                 "",
                                 true,
                                 "<div style=\"width: 60px; height: 0px; \"></div>")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(20),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(20),
                                 "pos20",
                                 "height:34px; border-right:solid 12px Orange",
                                 false,
                                 "")
-                   <td border="1" rowspan="9" colspan="9" align="center" class="nothing" style="background-color: lightsteelblue;">
-                       <table cellpadding="0" cellspacing="2" >
-                           <tr style="border:solid 2px #ff0000;">
-                               <td style="padding: 0px;">
-                                   <div style="background-color:#ff0000;color:#ffffff;font:normal 22px verdana,arial;letter-spacing:+5px;padding:6px 12px 6px 12px;">
-                                       PROPERTY TYCOON
-                                   </div>
-                               </td>
-                           </tr>
-                           <tr style="border:solid 2px black;">
-                               <td style="height: 200px;">
-                                   
-                                   <div class="row">
-                                       <div class="col-md-4">
-                                           <button type="button" id="btn_roll" class="btn btn-success">Roll Dice!</button>
-                                       </div>
-                                       <div class="col-md-4" id='dice1'></div>
-                                       <div class="col-md-4" id='dice2'></div>
-                                   </div>
-                                   
-                               </td>
-                           </tr>
-                       </table>
-                   </td>
-                   @ViewHelper(@Model.GetPropertyFromPosition(32),
+                    <td border="1" rowspan="9" colspan="9" align="center" class="nothing" style="background-color: lightsteelblue;">
+                        <table cellpadding="0" cellspacing="2">
+                            <tr style="border:solid 2px #ff0000;">
+                                <td style="padding: 0px;">
+                                    <div style="background-color:#ff0000;color:#ffffff;font:normal 22px verdana,arial;letter-spacing:+5px;padding:6px 12px 6px 12px;">
+                                        PROPERTY TYCOON
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr style="border:solid 2px black;">
+                                <td style="height: 200px;">
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <button type="button" id="btn_roll" class="btn btn-success">Roll Dice!</button>
+                                        </div>
+                                        <div class="col-md-4" id='dice1'></div>
+                                        <div class="col-md-4" id='dice2'></div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    @ViewHelper(@Model.GetPropertyFromPosition(32),
                                 "pos32",
                                 "border-left:solid 12px Green",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(19),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(19),
                                 "pos19",
                                 "height:34px; border-right:solid 12px Orange",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(33),
+                    @ViewHelper(@Model.GetPropertyFromPosition(33),
                                 "pos33",
                                 "border-left:solid 12px Green",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(18),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(18),
                                 "pos18",
                                 "height:34px;",
                                 true,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(34),
+                    @ViewHelper(@Model.GetPropertyFromPosition(34),
                                 "pos34",
                                 "",
                                 true,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(17),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(17),
                                 "pos17",
                                 "height:34px; border-right:solid 12px Orange",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(35),
+                    @ViewHelper(@Model.GetPropertyFromPosition(35),
                                 "pos35",
                                 "border-left:solid 12px Green",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(16),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(16),
                                 "pos16",
                                 "height:34px;",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(36),
+                    @ViewHelper(@Model.GetPropertyFromPosition(36),
                                 "pos36",
                                 "",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(15),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(15),
                                 "pos15",
                                 "height:34px; border-right:solid 12px DarkOrchid",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(37),
+                    @ViewHelper(@Model.GetPropertyFromPosition(37),
                                 "pos37",
                                 "",
                                 true,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(14),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(14),
                                 "pos14",
                                 "height:34px; border-right:solid 12px DarkOrchid",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(38),
+                    @ViewHelper(@Model.GetPropertyFromPosition(38),
                                 "pos38",
                                 "border-left:solid 12px Blue",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(13),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(13),
                                 "pos13",
                                 "height:34px;",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(39),
+                    @ViewHelper(@Model.GetPropertyFromPosition(39),
                                 "pos39",
                                 "",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(12),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(12),
                                 "pos12",
                                 "height:34px; border-right:solid 12px DarkOrchid",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(40),
+                    @ViewHelper(@Model.GetPropertyFromPosition(40),
                                 "pos40",
                                 "border-left:solid 12px Blue",
                                 false,
                                 "")
-               </tr>
-               <tr>
-                   @ViewHelper(@Model.GetPropertyFromPosition(11),
+                </tr>
+                <tr>
+                    @ViewHelper(@Model.GetPropertyFromPosition(11),
                                 "pos11",
                                 "height:60px;",
                                 true,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(10),
+                    @ViewHelper(@Model.GetPropertyFromPosition(10),
                                 "pos10",
                                 "border-top:solid 12px SkyBlue",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(9),
+                    @ViewHelper(@Model.GetPropertyFromPosition(9),
                                 "pos9",
                                 "border-top:solid 12px SkyBlue",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(8),
+                    @ViewHelper(@Model.GetPropertyFromPosition(8),
                                 "pos8",
                                 "",
                                 true,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(7),
+                    @ViewHelper(@Model.GetPropertyFromPosition(7),
                                 "pos7",
                                 "border-top:solid 12px SkyBlue",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(6),
+                    @ViewHelper(@Model.GetPropertyFromPosition(6),
                                 "pos6",
                                 "",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(5),
+                    @ViewHelper(@Model.GetPropertyFromPosition(5),
                                 "pos5",
                                 "",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(4),
+                    @ViewHelper(@Model.GetPropertyFromPosition(4),
                                 "pos4",
                                 "border-top:solid 12px SaddleBrown",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(3),
+                    @ViewHelper(@Model.GetPropertyFromPosition(3),
                                 "pos3",
                                 "",
-                                false,
+                                true,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(2),
+                    @ViewHelper(@Model.GetPropertyFromPosition(2),
                                 "pos2",
                                 "border-top:solid 12px SaddleBrown",
                                 false,
                                 "")
-                   @ViewHelper(@Model.GetPropertyFromPosition(1),
+                    @ViewHelper(@Model.GetPropertyFromPosition(1),
                                 "pos1",
                                 "",
                                 true,
                                 "(collect $200)<br /><img alt=\"Monopoly Go Arrow.png\" src=\"//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Monopoly_Go_Arrow.png/44px-Monopoly_Go_Arrow.png\" width=\"44px\" height=\"8px\" srcset=\"//upload.wikimedia.org/wikipedia/commons/thumb/9/96/Monopoly_Go_Arrow.png/66px-Monopoly_Go_Arrow.png 1.5x, //upload.wikimedia.org/wikipedia/commons/thumb/9/96/Monopoly_Go_Arrow.png/88px-Monopoly_Go_Arrow.png 2x\" data-file-width=\"793\" data-file-height=\"151\" />")
-                   
-               </tr>
-           </table>
 
-       </div>
-       <div class="col-md-4">
+                </tr>
+            </table>
 
-           <!-- Player Information -->
-           <h3>Players</h3>
-           <div class="row">
-               <div class="col-md-6 ">
-                   <div class="panel panel-primary">
-                       <div class="panel-heading">
-                           <h3 class="panel-title">Player 1</h3>
-                       </div>
-                       <div class="panel-body">
-                           <div>Current Balance: $ 5000</div>
-                           <div># Houses: 2</div>
-                           <div># Hotels: 3</div>
-                       </div>
-                   </div>
-               </div>
-               <div class="col-md-6 ">
-                   <div class="panel panel-primary">
-                       <div class="panel-heading">
-                           <h3 class="panel-title">Player 2</h3>
-                       </div>
-                       <div class="panel-body">
-                           <div>Current Balance: $ 5000</div>
-                           <div># Houses: 2</div>
-                           <div># Hotels: 3</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
-           
-           <div class="row">
-               <div class="col-md-6 ">
-                   <div class="panel panel-primary">
-                       <div class="panel-heading">
-                           <h3 class="panel-title">Player 3</h3>
-                       </div>
-                       <div class="panel-body">
-                           <div>Current Balance: $ 5000</div>
-                           <div># Houses: 2</div>
-                           <div># Hotels: 3</div>
-                       </div>
-                   </div>
-               </div>
-               <div class="col-md-6 ">
-                   <div class="panel panel-success">
-                       <div class="panel-heading">
-                           <h3 class="panel-title">Player 4</h3>
-                       </div>
-                       <div class="panel-body">
-                           <div>Current Balance: $ 2500</div>
-                           <div># Houses: 2</div>
-                           <div># Hotels: 3</div>
-                       </div>
-                   </div>
-               </div>
-           </div>
+        </div>
+        <div class="col-md-4">
 
-           
+            @helper PlayerInfoHelper(DataLayer.BoardUser bu)
+        {
+        <div class="col-md-6 ">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <h3 class="panel-title">@bu.UserName</h3>
+                </div>
+                <div class="panel-body">
+                    <div>Current Balance: $ @bu.Money</div>
+                </div>
+            </div>
+        </div>
+}
 
-           <h3>Moves List</h3>
-           <ul class="list-group">
-               <li class="list-group-item">Cras justo odio</li>
-               <li class="list-group-item">Dapibus ac facilisis in</li>
-               <li class="list-group-item">Morbi leo risus</li>
-               <li class="list-group-item">Porta ac consectetur ac</li>
-               <li class="list-group-item">Vestibulum at eros</li>
-           </ul>
+            <!-- Player Information -->
+            <h3>Players</h3>
 
-           <button id="move">Move</button>
-       </div>
-   </div>
+            @foreach (var item in @Model.GameBoard.BoardUsers)
+            {
+                <div class="row">
+                    @PlayerInfoHelper(item)
+                </div>
+            }
 
+
+            <!--div class="row">
+                <div class="col-md-6 ">
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Player 3</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div>Current Balance: $ 5000</div>
+                            <div># Houses: 2</div>
+                            <div># Hotels: 3</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 ">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">Player 4</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div>Current Balance: $ 2500</div>
+                            <div># Houses: 2</div>
+                            <div># Hotels: 3</div>
+                        </div>
+                    </div>
+                </div>
+            </div-->
+
+
+
+            <h3>Moves List</h3>
+            <ul class="list-group">
+                <li class="list-group-item">Cras justo odio</li>
+                <li class="list-group-item">Dapibus ac facilisis in</li>
+                <li class="list-group-item">Morbi leo risus</li>
+                <li class="list-group-item">Porta ac consectetur ac</li>
+                <li class="list-group-item">Vestibulum at eros</li>
+            </ul>
+
+            <button id="move">Move</button>
+        </div>
+    </div>
+
+</div>
 <!-- http://jsfiddle.net/axelmichel/QXdbK/2/ -->
 
 
@@ -429,11 +390,10 @@ $(function(){
 
     $("#move").bind("click", animate);
 
-    var direction = [4, 7]
+    var direction = [4, 7, 15, 35]
     function animate() {
         moveAnimate("#p11", 0);
     }
-
 
     function moveAnimate(element, count) {
         console.log(count);
@@ -461,4 +421,7 @@ $(function(){
     }
 
 });
+</script>
+<script>
+    angular.module('GameApp', [])
 </script>

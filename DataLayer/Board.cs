@@ -23,9 +23,9 @@ namespace DataLayer
         [Required]
         public int MaximumPlayers { get; set; }
 
-        public User ActiveBoardPlayer { get; set; }
+        public virtual User ActiveBoardPlayer { get; set; }
 
-        public User Winner { get; set; }
+        public virtual User Winner { get; set; }
         
         public virtual ICollection<BoardUser> BoardUsers { get; set; }
 

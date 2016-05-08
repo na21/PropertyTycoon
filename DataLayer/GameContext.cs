@@ -35,6 +35,7 @@ namespace DataLayer
             boardUser.User = player;
             BoardUsers.Add(boardUser);
             board.BoardUsers.Add(boardUser);
+            board.ActiveBoardPlayer = player;
 
             Boards.Add(board);
 

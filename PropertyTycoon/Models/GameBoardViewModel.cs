@@ -10,7 +10,7 @@ namespace PropertyTycoon.Models
     public class GameBoardViewModel
     {
         public Board GameBoard;
-
+        
         public Hashtable propTable;
         public GameBoardViewModel(Board b)
         {
