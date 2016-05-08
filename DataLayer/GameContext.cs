@@ -18,6 +18,10 @@ namespace DataLayer
 
         public virtual DbSet<PointsEarned> UserPointsEarned { get; set; }
 
+        public virtual DbSet<Friends> Friendships { get; set; }
+
+        public virtual DbSet<FriendRequest> FriendRequests { get; set; }
+
         /// <summary>
         /// This function creates a new Board for a User.
         /// </summary>

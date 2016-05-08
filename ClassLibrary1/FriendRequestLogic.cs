@@ -14,14 +14,14 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="u"></param>
         /// <param name="friend"></param>
-        /// <returns></returns>
-        public static FriendRequest CreateFriendRequest(User u, User friend)
+        public static void CreateFriendRequest(User u, User friend)
         {
             var friendRequest = new FriendRequest();
             friendRequest.User = u;
             friendRequest.Friend = friend;
 
-            return friendRequest;
+            GameContext gc = new GameContext();
+            gc.FriendRequests.Add(friendRequest);
         }
 
         /// <summary>
@@ -30,15 +30,14 @@ namespace BusinessLogic
         /// <param name="fr"></param>
         public static void AcceptFriendRequest(FriendRequest fr)
         {
-            User user1 = fr.User;
-            User user2 = fr.Friend;
+            GameContext gc = new GameContext();
 
             Friends f = new Friends();
-            f.User1 = user1;
-            f.User2 = user2;
+            f.User1 = fr.User;
+            f.User2 = fr.Friend;
 
-            f.Friendships.Add(user1);
-            f.Friendships.Add(user1);         
+            gc.Friendships.Add(f);
+            gc.FriendRequests.Remove(fr);     
         }
 
         /// <summary>
@@ -47,8 +46,8 @@ namespace BusinessLogic
         /// <param name="fr"></param>
         public static void DeclineFriendRequest(FriendRequest fr)
         {
-            FriendRequest f = new FriendRequest();
-            f.FriendRequests.Remove(fr);
+            GameContext gc = new GameContext();
+            gc.FriendRequests.Remove(fr);
         }
     }
 }

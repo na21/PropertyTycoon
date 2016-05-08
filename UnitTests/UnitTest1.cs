@@ -19,6 +19,8 @@ namespace UnitTests
                 bc.Users.RemoveRange(bc.Users);
                 bc.BoardUsers.RemoveRange(bc.BoardUsers);
                 bc.Boards.RemoveRange(bc.Boards);
+                bc.Friendships.RemoveRange(bc.Friendships);
+                bc.FriendRequests.RemoveRange(bc.FriendRequests);
 
                 bc.SaveChanges();
             }
@@ -248,6 +250,32 @@ namespace UnitTests
                 bc.SaveChanges();
 
                 Assert.AreEqual(player1.GetNumberOfGamesWonSince(DateTime.Now.AddDays(-5)), 1);
+            }
+        }
+
+        [TestMethod]
+        public void TestCreateFriendRequest()
+        {
+            resetDbContext();
+
+            using (var bc = new GameContext())
+            {
+                User u1 = new User();
+                u1.UserName = "Test";
+
+                User u2 = new User();
+                u2.UserName = "TestFriend";
+
+                FriendRequest fr = new FriendRequest();
+                fr.User = u1;
+                fr.Friend = u2;
+                
+                bc.FriendRequests.Add(fr);
+
+                FriendRequest expected = new FriendRequest();
+                expected = bc.FriendRequests.Find(fr.Id);
+
+                Assert.AreEqual(expected, fr);
             }
         }
     }

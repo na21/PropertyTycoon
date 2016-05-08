@@ -9,10 +9,8 @@ using System.Threading.Tasks;
 
 namespace DataLayer
 {
-    public class Friends : DbContext
+    public class Friends
     {
-        public virtual DbSet<User> Friendships { get; set; }
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
