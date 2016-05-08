@@ -79,7 +79,7 @@ namespace PropertyTycoon.Controllers
                 return HttpNotFound();
             }
             
-            return View(new GameBoardViewModel(board));
+            return View(new GameBoardViewModel(board, User));
         }
 
         // GET: Boards/Create

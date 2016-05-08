@@ -4,15 +4,14 @@
     ViewBag.Title = "Game Board";
 }
 
-<div ng-app="GameApp">
+<div ng-app="GameApp" ng-controller="GameController" ng-cloak>
     <div>
-        <h4>Game Board - Created by @Model.GameBoard.ActiveBoardPlayer.UserName</h4>
-        
+        <hr />
         <p>
             @Html.ActionLink("Edit", "Edit", new { id = Model.GameBoard.Id }) |
             @Html.ActionLink("Back to List", "Index")
         </p>
-        <hr />
+       
     </div>
 
     <style>
@@ -116,16 +115,15 @@
                             </tr>
                             <tr style="border:solid 2px black;">
                                 <td style="height: 200px;">
-
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <button type="button" id="btn_roll" class="btn btn-success">Roll Dice!</button>
-                                        </div>
-                                        <div class="col-md-4" id='dice1'></div>
-                                        <div class="col-md-4" id='dice2'></div>
+                                    {{dice1}} , {{ dice2 }}, {{ activePlayer }}
+                                    <div ng-if="'@Model.currentUsername' == activePlayer">
+                                        <dice dice1-model="$parent.dice1" dice2-model="$parent.dice2"></dice>
                                     </div>
-
-                                </td>
+                                    
+                                    <div ng-if="'@Model.currentUsername' != activePlayer" class="row">
+                                        <h3 class="col-md-12 text-center">It is not your turn right now.</h3>
+                                    </div>
+</td>
                             </tr>
                         </table>
                     </td>
@@ -297,7 +295,7 @@
             @helper PlayerInfoHelper(DataLayer.BoardUser bu)
         {
         <div class="col-md-6 ">
-            <div class="panel panel-primary">
+            <div class="panel" ng-class="{'panel-success': '@bu.UserName' == activePlayer, 'panel-primary': '@bu.UserName' != activePlayer}">
                 <div class="panel-heading">
                     <h3 class="panel-title">@bu.UserName</h3>
                 </div>
@@ -309,7 +307,7 @@
 }
 
             <!-- Player Information -->
-            <h3>Players</h3>
+            <h3>Players - {{activePlayer}}'s Turn</h3>
 
             @foreach (var item in @Model.GameBoard.BoardUsers)
             {
@@ -358,6 +356,7 @@
             </ul>
 
             <button id="move">Move</button>
+           
         </div>
     </div>
 
@@ -373,7 +372,7 @@
 
 <script>
 $(function(){
-
+    /*
     function diceRolled(event) {
         console.log(event);
     }
@@ -387,7 +386,9 @@ $(function(){
         $("#dice1").dice("roll", diceRolled);
         $("#dice2").dice("roll", diceRolled);
     });
+    */
 
+    $("#pos1").append("<div id=\"p11\"></div>");
     $("#move").bind("click", animate);
 
     var direction = [4, 7, 15, 35]
@@ -424,4 +425,87 @@ $(function(){
 </script>
 <script>
     angular.module('GameApp', [])
+        .controller('GameController', ["$scope", "$http", function ($scope, $http) {
+            $scope.test = "Hello World";
+            var gameId = @Html.Raw(@Model.GameBoard.Id);
+            console.log(gameId);
+            
+            $scope.activePlayer = '';
+            $scope.dice1 = -1;
+            $scope.dice2 = -1;
+
+            $http({
+                method: 'GET',
+                url: '/api/Game/' + String(gameId) + '/GetActivePlayer'
+            }).then(function successCallback(response) {
+                // this callback will be called asynchronously
+                // when the response is available
+                console.log(response);
+                $scope.activePlayer = response.data.UserName;
+            }, function errorCallback(response) {
+                // called asynchronously if an error occurs
+                // or server returns response with an error status.
+            });
+
+            $scope.DiceRolled = function(){
+                console.log("DICE ROLLED");
+                console.log($scope.dice1)
+                console.log($scope.dice2)
+            }
+        }]).directive('dice', function($parse, $q) {
+            return {
+                restrict: "E",
+                replace: true,
+                transclude: false,
+                compile: function (element, attrs) {
+                
+                    var modelAccessor = $parse(attrs.ngModel);
+                    var dice1Model = $parse(attrs.dice1Model);
+                    var dice2Model = $parse(attrs.dice2Model);
+
+                    var html = "<div><div class='col-md-4'><button type='button' ng-click='rollDice()' id='btn_roll' class='btn btn-success'>Roll Dice!</button></div><div class='col-md-4' id='dice1'></div><div class='col-md-4' id='dice2'></div></div>";
+
+                    var newElem = $(html);
+                    element.replaceWith(newElem);
+
+                    return function (scope, element, attrs, controller) {
+                        var button = angular.element(element.children()[0]);
+                        var dice1 = angular.element(element.children()[1]);
+                        var dice2 = angular.element(element.children()[2]);
+
+                        dice1.dice();
+                        dice2.dice();
+                        
+                        function dice1Rolled(event) {
+                            
+                            scope.$apply(function (scope) {
+                                // Change bound variable
+                                dice1Model.assign(scope, event);
+                            });
+                        }
+
+                        function dice2Rolled(event) {
+                            
+                            scope.$apply(function (scope) {
+                                // Change bound variable
+                                dice2Model.assign(scope, event);
+                            });
+                        }
+
+                        button.on("click", function(){
+                            
+                            dice1.dice("roll", dice1Rolled);
+                            dice2.dice("roll", dice2Rolled);
+
+                            setTimeout(function() {
+                                scope.DiceRolled();
+                            }, 1000);
+
+                        });
+
+                    };
+            }
+            };
+        });;
 </script>
+

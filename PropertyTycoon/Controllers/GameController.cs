@@ -25,6 +25,14 @@ namespace PropertyTycoon.Controllers
             return board.BoardUsers;
         }
 
+        // GET: api/Game/{id}/GetActivePlayer
+        public User GetActivePlayer(int id)
+        {
+            Board board = db.Boards.Find(id);
+
+            return board.ActiveBoardPlayer;
+        }
+
         // GET: api/Game
         public IQueryable<BoardUser> GetBoardUsers()
         {

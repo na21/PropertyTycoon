@@ -16,7 +16,13 @@ namespace PropertyTycoon
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
-                name: "TransactionDetailsRoute",
+                name: "GetActivePlayerRoute",
+                routeTemplate: "api/{controller}/{id}/GetActivePlayer",
+                defaults: new { controller = "Game", action = "GetActivePlayer" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "GetBoardGameUsersRoute",
                 routeTemplate: "api/{controller}/{id}/BoardUsers",
                 defaults: new { controller = "Game", action = "GetBoardGameUsers" }
             );

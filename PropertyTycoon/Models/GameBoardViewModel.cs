@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Web;
 
 namespace PropertyTycoon.Models
@@ -12,7 +13,10 @@ namespace PropertyTycoon.Models
         public Board GameBoard;
         
         public Hashtable propTable;
-        public GameBoardViewModel(Board b)
+
+        public string currentUsername;
+
+        public GameBoardViewModel(Board b, IPrincipal iUser)
         {
             GameBoard = b;
             
@@ -22,6 +26,7 @@ namespace PropertyTycoon.Models
                 propTable[p.Position] = p;
             }
 
+            currentUsername = iUser.Identity.Name;
         }
 
         public Property GetPropertyFromPosition(int Position)
