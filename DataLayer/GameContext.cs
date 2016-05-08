@@ -18,6 +18,10 @@ namespace DataLayer
 
         public virtual DbSet<PointsEarned> UserPointsEarned { get; set; }
 
+        public virtual DbSet<Friends> Friendships { get; set; }
+
+        public virtual DbSet<FriendRequest> FriendRequests { get; set; }
+
         /// <summary>
         /// This function creates a new Board for a User.
         /// </summary>
@@ -35,6 +39,7 @@ namespace DataLayer
             boardUser.User = player;
             BoardUsers.Add(boardUser);
             board.BoardUsers.Add(boardUser);
+            board.ActiveBoardPlayer = player;
 
             Boards.Add(board);
 

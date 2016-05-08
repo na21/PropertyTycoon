@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using DataLayer;
+using System.Web.Script.Serialization;
 
 namespace PropertyTycoon.Controllers
 {
@@ -16,9 +17,29 @@ namespace PropertyTycoon.Controllers
     {
         private GameContext db = new GameContext();
 
+        // GET: api/Game/{id}/BoardUsers
+        public IEnumerable<BoardUser> GetBoardGameUsers(int id)
+        {
+            Board board = db.Boards.Find(id);
+            
+            return board.BoardUsers;
+        }
+
+        // GET: api/Game/{id}/GetActivePlayer
+        public User GetActivePlayer(int id)
+        {
+            Board board = db.Boards.Find(id);
+
+            return board.ActiveBoardPlayer;
+        }
+
         // GET: api/Game
         public IQueryable<BoardUser> GetBoardUsers()
         {
+            db.Configuration.ProxyCreationEnabled = false;
+            JavaScriptSerializer js = new JavaScriptSerializer();
+            string json = js.Serialize(db.BoardUsers);
+
             return db.BoardUsers;
         }
 

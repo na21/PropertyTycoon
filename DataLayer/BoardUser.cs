@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace DataLayer
 {
@@ -16,9 +17,11 @@ namespace DataLayer
         [Key, Column(Order = 2)]
         public string UserName { get; set; }
 
+        [JsonIgnoreAttribute]
         [ForeignKey("UserName")]
         public virtual User User { get; set; }
 
+        [JsonIgnoreAttribute]
         [ForeignKey("BoardId")]
         public virtual Board Board { get; set; }
 

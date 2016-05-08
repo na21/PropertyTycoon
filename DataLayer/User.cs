@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,15 +14,17 @@ namespace DataLayer
     {
         [Key]
         public string UserName { get; set; }
-
+        [JsonIgnoreAttribute]
         public virtual ICollection<BoardUser> BoardUsers { get; set; }
 
+        [JsonIgnoreAttribute]
         public virtual ICollection<Friends> Friendships { get; set; }
 
         public int SkillPoints { get; set; }
 
         public virtual ICollection<PointsEarned> PointsEarned { get; set; }
 
+        [JsonIgnoreAttribute]
         public virtual IEnumerable<Board> Boards
         {
             get
@@ -33,6 +36,7 @@ namespace DataLayer
             }
         }
 
+        [JsonIgnoreAttribute]
         public virtual IEnumerable<User> Friends
         {
             get

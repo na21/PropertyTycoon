@@ -581,7 +581,7 @@ namespace BusinessLogic
 
             p = new Property();
             p.Name = "Luxury Tax";
-            p.Position = 34;
+            p.Position = 39;
             p.Price = 100;
             p.Rent = 0;
             p.Group = "No-Group";
