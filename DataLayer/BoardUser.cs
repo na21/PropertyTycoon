@@ -33,5 +33,7 @@ namespace DataLayer
         public bool HasGetOutOfJail { get; set; }
 
         public int TurnsRemaining { get; set; }
+
+        public bool GameOver { get; set; }
     }
 }

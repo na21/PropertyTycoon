@@ -164,6 +164,66 @@ namespace BusinessLogic
         }
 
         /// <summary>
+        /// Called when a player forfeits the game.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <param name="u"></param>
+        public static void PlayerForfeit(this Board b, User u)
+        {
+            PointsEarned pe = new PointsEarned()
+            {
+                User = u,
+                Board = b,
+                CreatedAt = DateTime.Now,
+                Points = -25
+            };
+
+            u.PointsEarned.Add(pe);
+
+            BoardUser bu = b.GetBoardUser(u.UserName);
+            bu.GameOver = true;
+
+            // if only 1 player remains after forfeit, the game
+            // is over.
+            if (b.GetNumberofActivePlayers() == 1)
+            {
+                b.Status = "Completed";
+                
+                foreach(User user in b.Users)
+                {
+                    BoardUser boardUser = b.GetBoardUser(user.UserName);
+
+                    if(!boardUser.GameOver)
+                    {
+                        b.Winner = boardUser.User;
+                        break;
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Return the number of players still in the game.
+        /// </summary>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public static int GetNumberofActivePlayers(this Board b)
+        {
+            int count = 0;
+
+            foreach (User user in b.Users)
+            {
+                BoardUser bu = b.GetBoardUser(user.UserName);
+
+                if (!bu.GameOver)
+                    ++count;
+            }
+
+            return count;
+        }
+
+        /// <summary>
         /// Sets the properties and their options to the Game Board.
         /// </summary>
         /// <param name="b"></param>
