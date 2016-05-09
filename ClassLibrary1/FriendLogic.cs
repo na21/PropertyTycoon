@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLogic
 {
-    public static class FriendRequestLogic
+    public static class FriendLogic
     {
         /// <summary>
         /// This method creates a new friend request
@@ -22,6 +22,7 @@ namespace BusinessLogic
 
             GameContext gc = new GameContext();
             gc.FriendRequests.Add(friendRequest);
+            gc.SaveChanges();
         }
 
         /// <summary>
@@ -35,9 +36,12 @@ namespace BusinessLogic
             Friends f = new Friends();
             f.User1 = fr.User;
             f.User2 = fr.Friend;
+            f.UserName1 = fr.User.UserName;
+            f.UserName2 = fr.Friend.UserName;
 
             gc.Friendships.Add(f);
-            gc.FriendRequests.Remove(fr);     
+            gc.FriendRequests.Remove(fr);
+            gc.SaveChanges();
         }
 
         /// <summary>
@@ -48,6 +52,26 @@ namespace BusinessLogic
         {
             GameContext gc = new GameContext();
             gc.FriendRequests.Remove(fr);
+            gc.SaveChanges();
+        }
+
+        /// <summary>
+        /// This method allows a user to delete an existing friend
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="friend"></param>
+        public static void DeleteFriend(User u, User friend)
+        {
+            GameContext gc = new GameContext();
+            Friends f = new Friends();
+
+            f.User1 = u;
+            f.UserName1 = u.UserName;
+            f.User2 = friend;
+            f.UserName2 = friend.UserName;
+
+            gc.Friendships.Remove(f);
+            gc.SaveChanges();
         }
     }
 }
