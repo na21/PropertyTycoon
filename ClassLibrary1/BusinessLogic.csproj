@@ -42,7 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BoardLogic.cs" />
-    <Compile Include="FriendRequestLogic.cs" />
+    <Compile Include="FriendLogic.cs" />
     <Compile Include="GameInvitationLogic.cs" />
     <Compile Include="MoveLogic.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

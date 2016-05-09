@@ -271,6 +271,7 @@
     <Content Include="Views\Boards\Index.cshtml" />
     <Content Include="Views\Boards\BoardError.cshtml" />
     <Content Include="Views\Boards\Forfeit.cshtml" />
+    <Content Include="Views\Home\Friends.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
