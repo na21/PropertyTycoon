@@ -34,6 +34,8 @@ namespace DataLayer
 
             var boardUser = new BoardUser();
 
+            boardUser.Money = 1500;
+            boardUser.Position = 1;
             boardUser.Board = board;
             boardUser.BoardId = board.Id;
             boardUser.User = player;
@@ -51,7 +53,8 @@ namespace DataLayer
         public void AddPlayerToBoard(User player, Board board)
         {
             var boardUser = new BoardUser();
-
+            boardUser.Money = 1500;
+            boardUser.Position = 1;
             boardUser.Board = board;
             boardUser.User = player;
 

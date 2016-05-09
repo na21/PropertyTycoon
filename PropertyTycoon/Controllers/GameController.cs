@@ -33,27 +33,25 @@ namespace PropertyTycoon.Controllers
             return board.ActiveBoardPlayer;
         }
 
-        // GET: api/Game
-        public IQueryable<BoardUser> GetBoardUsers()
+        // GET: api/Game/{id}/GetMovesList
+        public ICollection<Move> GetMovesList(int id)
         {
-            db.Configuration.ProxyCreationEnabled = false;
-            JavaScriptSerializer js = new JavaScriptSerializer();
-            string json = js.Serialize(db.BoardUsers);
+            Board board = db.Boards.Find(id);
 
-            return db.BoardUsers;
+            return board.Moves;
         }
 
         // GET: api/Game/5
-        [ResponseType(typeof(BoardUser))]
-        public IHttpActionResult GetBoardUser(int id)
+        [ResponseType(typeof(ICollection<BoardUser>))]
+        public ICollection<BoardUser> GetBoardUser(int id)
         {
-            BoardUser boardUser = db.BoardUsers.Find(id);
-            if (boardUser == null)
+            Board board = db.Boards.Find(id);
+            if (board == null)
             {
-                return NotFound();
+                return null;
             }
 
-            return Ok(boardUser);
+            return board.BoardUsers;
         }
 
         // PUT: api/Game/5
