@@ -30,6 +30,18 @@
             width: 10px;
             background: blue;
         }
+
+        #player3 {
+            height: 10px;
+            width: 10px;
+            background: green;
+        }
+
+        #player4 {
+            height: 10px;
+            width: 10px;
+            background: yellow;
+        }
     </style>
     @helper ViewHelper(DataLayer.Property property, string id, string style, bool isPriceHidden, string addElements)
     {
@@ -330,9 +342,7 @@
                     No moves made.
                 </li>
             </ul>
-            {{ boardUsers}}
-            <button id="move">Move</button>
-           
+
         </div>
     </div>
 
@@ -353,14 +363,15 @@
             var gameId = @Html.Raw(@Model.GameBoard.Id);
             console.log(gameId);
             
-            $("#pos1").append("<div id=\"player1\"></div>");
-            $("#pos1").append("<div id=\"player2\"></div>");
-
+            
+            $scope.currentPlayer = '@Model.currentUsername';
             $scope.activePlayer = '';
             $scope.dice1 = -1;
             $scope.dice2 = -1;
             $scope.moves = [];
             $scope.boardUsers = [];
+            $scope.boardUserNames = [];
+            $scope.currentBoardUser = null;
 
             $http({
                 method: 'GET',
@@ -391,6 +402,17 @@
                 //Success
                 console.log(response);
                 $scope.boardUsers = response.data;
+
+                var count = 1;
+                angular.forEach($scope.boardUsers, function(item){
+                    if(item.UserName == $scope.currentPlayer){
+                        $scope.currentBoardUser = item;
+                    }
+                    $scope.boardUserNames.push(item.UserName);
+                    $("#pos"+String(item.Position)).append("<div id=\"player" + String(count) + "\"></div>")
+                    count += 1;
+                });
+
             }, function errorCallback(response) {
                 console.log(response);
             });
@@ -399,9 +421,24 @@
                 console.log("DICE ROLLED");
                 console.log($scope.dice1)
                 console.log($scope.dice2)
-                moveAnimate("#player1", 0, [4, 7, 15, 35]);
+                console.log($scope.currentBoardUser);
+                var playerIdentifier = getPlayerIndexFromUsername($scope.currentPlayer);
+                
+                moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
+                    $scope.currentBoardUser.Position + $scope.dice1, 
+                    $scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2 ]);
+
+                $http.post('/someUrl', data, config).then(function(response){
+                    console.log(response);
+                }, 
+                function(response){
+                    console.log(response);
+                });
             }
             
+            function getPlayerIndexFromUsername(username){
+                return "#player" + String($scope.boardUserNames.indexOf(username) + 1);
+            }
             function moveAnimate(element, count, direction) {
                 
                 if (count >= direction.length) { return; }

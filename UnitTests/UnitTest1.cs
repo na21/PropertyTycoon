@@ -112,10 +112,10 @@ namespace UnitTests
                 bc.AddPlayerToBoard(player2, new_board);
 
                 bool isDoubles;
-                var rollVal = player1.Roll(out isDoubles);
+                //int rollVal;// = player1.Roll(out isDoubles);
 
-                new_board.AssignPlayerTurn(player1.UserName, 2);
-                new_board.AssignPlayerTurn(player2.UserName, 1);
+                //new_board.AssignPlayerTurn(player1.UserName, 2);
+                //new_board.AssignPlayerTurn(player2.UserName, 1);
 
                 // The Player with the current Turn should be player 2 as the Turn Index = 1
                 bc.SaveChanges();
@@ -125,9 +125,16 @@ namespace UnitTests
                 bc.SaveChanges();
 
                 // Create a move on the board.
-                int rollValue;
-                Move firstMove = new_board.MakeCurrentPlayerMove(out isDoubles, out rollValue);
+                int rollValue = 10;
+                isDoubles = false;
+
+                Move firstMove = new_board.MakeCurrentPlayerMove(isDoubles, rollValue);
                 firstMove.CurrentPos = 2;
+
+                new_board.EndCurrentPlayerTurn();
+
+                var nextPlayer = new_board.GetPlayerWithCurrentTurn();
+                Assert.AreEqual(nextPlayer, player2);
                 bc.SaveChanges();
 
                 // For this test, it is assumed that player buys property.

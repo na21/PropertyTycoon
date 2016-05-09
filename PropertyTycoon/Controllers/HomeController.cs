@@ -266,7 +266,7 @@ namespace PropertyTycoon.Controllers
                             bool doubles;
                             int roll;
 
-                            board.MakeCurrentPlayerMove(out doubles, out roll);
+                            //board.MakeCurrentPlayerMove(out doubles, out roll);
                         }
                         break;
                     }

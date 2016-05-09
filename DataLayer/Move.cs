@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,5 +24,15 @@ namespace DataLayer
         public int CurrentPos { get; set; }
 
         public int Roll { get; set; }
+
+        public string UserName { get; set; }
+
+        public string Description { get; set; }
+
+        public bool IsFirstMove { get; set; }
+
+        [JsonIgnoreAttribute]
+        [ForeignKey("UserName")]
+        public virtual User User { get; set; }
     }
 }

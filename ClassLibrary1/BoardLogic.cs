@@ -84,13 +84,30 @@ namespace BusinessLogic
         /// <returns></returns>
         public static User GetPlayerWithCurrentTurn(this Board b)
         {
-            if(b.ActiveBoardPlayer == null)
+            // Check if all the players on the board have made their
+            // first turns.
+            if(b.Moves == null)
             {
-
-                b.ActiveBoardPlayer =  (from bu in b.BoardUsers
-                        orderby bu.Turn ascending
-                        select bu.User).FirstOrDefault();
                 return b.ActiveBoardPlayer;
+            }
+
+            IEnumerable<User> users = (from m in b.Moves
+                                 where m.IsFirstMove == true
+                                 orderby m.Roll descending
+                                 select m.User).Distinct();
+
+            int firsTurnMoves = users.Count();
+
+            if(firsTurnMoves == b.BoardUsers.Count())
+            {
+                int moveIndex = firsTurnMoves;
+                foreach(var u in users)
+                {
+                    b.AssignPlayerTurn(u.UserName, moveIndex--);
+                }
+
+                return users.First();
+
             } else
             {
                 return b.ActiveBoardPlayer;
@@ -105,15 +122,77 @@ namespace BusinessLogic
                         select p).FirstOrDefault();
         }
 
+        public static User GetUserWithNextFirstTurn(this Board b, User u)
+        {
+
+            var otherUsers = (from bu in b.BoardUsers
+                                     where bu.UserName != u.UserName
+                                     select bu.User);
+
+            var firstTurns = (from m in b.Moves
+                    where m.IsFirstMove == true
+                    select m.UserName).Distinct();
+
+            foreach(var ou in otherUsers)
+            {
+                if (!firstTurns.ToList().Contains(ou.UserName))
+                    return ou;
+            }
+
+            return null;
+        }
+
+        public static bool isPlayerFirstMove(this Board b, User player)
+        {
+            Move move = (from m in b.Moves
+                      where m.UserName == player.UserName && m.IsFirstMove == true
+                      select m).FirstOrDefault();
+
+            return move == null;
+        }
+
+        public static Move EndCurrentPlayerTurn(this Board b)
+        {
+            User player = b.GetPlayerWithCurrentTurn();
+
+            Move newMove = new Move();
+            newMove.Roll = 0;
+            newMove.Board = b;
+            newMove.Description = player.UserName + " ended their Turn.";
+
+            if (b.Moves == null)
+            {
+                b.Moves = new Collection<Move>();
+            }
+
+            if (b.isPlayerFirstMove(player))
+            {
+                var otherPlayer = b.GetUserWithNextFirstTurn(player);
+                if (otherPlayer != null)
+                {
+                    b.ActiveBoardPlayer = otherPlayer;
+                }
+                else
+                {
+                    b.ActiveBoardPlayer = b.GetPlayerWithCurrentTurn();
+                }
+
+                return newMove;
+            }
+
+            b.ActiveBoardPlayer = b.GetUserWithNextTurn();
+            return newMove;
+        }
+
         /// <summary>
         /// This method creates a new move for the current player on the Board.
         /// </summary>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Move MakeCurrentPlayerMove(this Board b, out bool isDoubles, out int RollValue)
+        public static Move MakeCurrentPlayerMove(this Board b, bool isDoubles, int RollValue)
         {
             User player = b.GetPlayerWithCurrentTurn();
-            RollValue = player.Roll(out isDoubles);
+            //RollValue = player.Roll(out isDoubles);
 
             Move newMove = new Move();
             newMove.Roll = RollValue;
@@ -122,7 +201,23 @@ namespace BusinessLogic
             BoardUser bu = b.GetBoardUser(player.UserName);
 
             if (b.Moves == null)
+            {
                 b.Moves = new Collection<Move>();
+            }
+
+            if (b.isPlayerFirstMove(player))
+            {
+                newMove.IsFirstMove = true;
+                if(isDoubles)
+                    newMove.Description = player.UserName + "'s : First Move - Rolled a Double " + newMove.Roll.ToString();
+                else
+                    newMove.Description = player.UserName + "'s : First Move - Rolled " + newMove.Roll.ToString();
+
+                b.Moves.Add(newMove);
+
+                
+                return newMove;
+            }
 
             // If User currently in Jail, only double can take them out.
             if (bu.InJail)
@@ -145,11 +240,6 @@ namespace BusinessLogic
             {
                 newMove.CurrentPos = Board.JailPosition;
                 bu.InJail = true;
-            }
-            // If doubles were not rolled the Active Player on the Board will change.
-            if (!isDoubles)
-            {
-                b.ActiveBoardPlayer = b.GetUserWithNextTurn();
             }
 
             // If Player passes Go add $200 to his account.
