@@ -81,8 +81,8 @@ namespace PropertyTycoon.Controllers
 
                 if (usersAbove != null)
                 {
-                    usersAbove.Reverse();
                     ul.AddRange(usersAbove.ToList());
+                    ul.Reverse();
                 }
                 
                 ul.Add(user);
@@ -117,41 +117,53 @@ namespace PropertyTycoon.Controllers
 
                 List<User> ul = new List<User>();
 
-
                 if (usersAllTime != null)
                     ul.AddRange(usersAllTime.ToList());
 
                 return View(ul);
             }
 
-            else if(display == "week")
+            //
+            // Display leaders for month, week, or today.
+            //
+            else if(display == "month" || display == "week" || display == "today")
             {
-                DateTime weekStart = DateTime.Now.AddDays(-7);
+                DateTime startTime;
 
-                var groupPEbyUser = (from pe in gc.UserPointsEarned
-                                 where pe.CreatedAt >= weekStart
-                                 group pe by pe.UserName);
+                switch(display)
+                {
+                    case "month": startTime = DateTime.Now.AddMonths(-1);
+                        break;
 
-                // TODO: Get sum of user's weekly totals
-                // take top 10
+                    case "week": startTime = DateTime.Now.AddDays(-7);
+                        break;
 
-                return View();
+                    case "today": startTime = DateTime.Now.AddHours(-24);
+                        break;
+
+                    default: startTime = DateTime.Now;
+                        break;
+                }
+
+                var userSums = (from pe in gc.UserPointsEarned
+                                where pe.CreatedAt >= startTime
+                                group pe by new { pe.UserName, pe.Points } into g
+                                select new { g.Key.UserName, Sum = g.Sum(pe => pe.Points) } into s
+                                orderby s.Sum descending
+                                select s).Take(10);
+
+                List<User> ul = new List<User>();
+
+                if (userSums != null)
+                {
+                    foreach (var item in userSums)
+                        ul.Add(gc.GetUser(item.UserName));
+                }
+
+                return View(ul);
             }
 
-            else if(display == "month")
-            {
-                DateTime monthStart = DateTime.Now.AddMonths(-1);
-
-                var groupPEbyUser = (from pe in gc.UserPointsEarned
-                                     where pe.CreatedAt >= monthStart
-                                     group pe by pe.UserName);
-
-                // TODO: Get sum of user's monthly totals
-                // Take top 10
-
-                return View();
-            }
-
+            // Default: No rankings to display.
             return View();
         }
 

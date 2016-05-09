@@ -125,6 +125,9 @@ namespace PropertyTycoon.Controllers
                 Board new_board = db.CreateNewGameBoard(boardOwner, board.MaximumPlayers);
                 new_board.GenerateBoardProperties();
 
+                new_board.minSkillRange = board.minSkillRange;
+                new_board.maxSkillRange = board.maxSkillRange;
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
