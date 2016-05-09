@@ -25,21 +25,37 @@ namespace PropertyTycoon.Controllers
                                  where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange
                                  select b);
 
-            List<Board> boardList = boards.ToList();
             List<Board> eligibleBoards = new List<Board>();
 
-            foreach(Board b in boardList)
+            if (boards != null)
             {
-                if (b.GetBoardUser(User.Identity.Name) == null)
-                    eligibleBoards.Add(b);
+                foreach (Board b in boards.ToList())
+                {
+                    if (b.GetBoardUser(User.Identity.Name) == null)
+                        eligibleBoards.Add(b);
+                }
             }
 
+            ViewBag.eligibleBoards = eligibleBoards;
 
-            if(eligibleBoards != null)
-                ViewBag.eligibleBoards = eligibleBoards.ToList();
+            List<Board> activeBoards = new List<Board>();
+            List<Board> completedBoards = new List<Board>();
+
 
             if (u.Boards != null)
-                ViewBag.yourBoards = u.Boards.ToList();
+            {
+                foreach(Board b in u.Boards)
+                {
+                    if (b.Status == "Completed")
+                        completedBoards.Add(b);
+
+                    else
+                        activeBoards.Add(b);
+                }
+            }
+
+            ViewBag.activeBoards = activeBoards;
+            ViewBag.completedBoards = completedBoards;
 
             return View();
         }

@@ -179,6 +179,7 @@ namespace BusinessLogic
             };
 
             u.PointsEarned.Add(pe);
+            u.SkillPoints -= 25;
 
             BoardUser bu = b.GetBoardUser(u.UserName);
             bu.GameOver = true;
