@@ -256,6 +256,15 @@ namespace PropertyTycoon.Controllers
             return View(pvm);
         }
 
+        public ActionResult Friends()
+        {
+            if (!User.Identity.IsAuthenticated)
+                return View("NotAuthorized");
+
+            return View();
+
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Play(string button)
