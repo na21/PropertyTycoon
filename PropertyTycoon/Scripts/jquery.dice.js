@@ -96,6 +96,7 @@ jQuery.easing.jswing = jQuery.easing.swing; jQuery.extend(jQuery.easing, { def: 
     }
 
     Dice.prototype.roll = function (v, cb) {
+
         var that = this;
         if (that.inRoll) return false;
         if (cb == undefined && typeof v == "function") { cb = v; v = null; }
@@ -109,7 +110,7 @@ jQuery.easing.jswing = jQuery.easing.swing; jQuery.extend(jQuery.easing, { def: 
 
         that.inRoll = true;
 
-        $(that.diceImage).css({
+        var res = $(that.diceImage).css({
             marginTop: -(that.diceSize * 4),
             marginLeft: -(that.diceSize * 4),
             width: (that.diceSize * 4) + "px",
@@ -132,7 +133,11 @@ jQuery.easing.jswing = jQuery.easing.swing; jQuery.extend(jQuery.easing, { def: 
                 that.inRoll = false;
                 that.value = that.targetValue;
                 that.showValue(that.targetValue);
-                if (cb && typeof cb === "function") cb(that.targetValue);
+                if (cb && typeof cb === "function") {
+                    var res = cb(that.targetValue);
+                    return res;
+                }
+                    
             }
         });
     }
@@ -141,7 +146,7 @@ jQuery.easing.jswing = jQuery.easing.swing; jQuery.extend(jQuery.easing, { def: 
         if (typeof elems == "string") {
             switch (elems) {
                 case "roll":
-                    $(this).data("lz_dice").roll(opt, cb);
+                    var res = $(this).data("lz_dice").roll(opt, cb);
                     break;
                 case "option":
                     $(this).data("lz_dice").option(opt);
