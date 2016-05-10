@@ -34,6 +34,12 @@ namespace PropertyTycoon
             );
 
             config.Routes.MapHttpRoute(
+                name: "CreateMovesRoute",
+                routeTemplate: "api/{controller}/{id}/CreateMove/{userId}",
+                defaults: new { controller = "Game", action = "GetMovesList" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "api/{controller}/{id}",
                 defaults: new { id = RouteParameter.Optional }

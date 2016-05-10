@@ -40,7 +40,35 @@ namespace PropertyTycoon.Controllers
 
             return board.Moves;
         }
+        //POST: 
+        
+        [ResponseType(typeof(Move))]
+        public IHttpActionResult CreateMove(int id, int roll, bool doubles, string userName)
+        {
+            
+            Board board = db.Boards.Find(id);
 
+            if (board == null)
+            {
+                return null;
+            }
+            Move newMove = new Move();
+            newMove.Board = board;
+            newMove.UserName = userName;
+            //newMove.CurrentPos;
+            board.Moves.Add(newMove);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
+            return CreatedAtRoute("DefaultApi", new { id = newMove.Id}, newMove);
+        }
         // GET: api/Game/5
         [ResponseType(typeof(ICollection<BoardUser>))]
         public ICollection<BoardUser> GetBoardUser(int id)
