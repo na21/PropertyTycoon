@@ -40,6 +40,13 @@ namespace BusinessLogic
                     select bu).FirstOrDefault();
         }
 
+        public static Property GetPropertyWithPos(this Board b, int pos)
+        {
+            return (from p in b.Properties
+                    where p.Position == pos
+                    select p).FirstOrDefault();
+        }
+
         /// <summary>
         /// This returns the player with the next turn after the Active Player on the Board.
         /// </summary>

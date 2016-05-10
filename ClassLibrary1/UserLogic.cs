@@ -64,11 +64,12 @@ namespace BusinessLogic
         public static void LandedOn(this User user, Board b, Move move)
         {
             BoardUser boardUser = b.GetBoardUser(user.UserName);
+            boardUser.Position = move.CurrentPos;
 
             int pos = move.CurrentPos;
 
             var prop = (from p in b.Properties
-                        where p.Position == pos
+                        where p.Position == pos && p.BoardId == b.Id
                         select p).FirstOrDefault();
 
             // Check if user is in jail.
