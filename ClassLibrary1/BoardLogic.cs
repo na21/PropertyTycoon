@@ -212,6 +212,13 @@ namespace BusinessLogic
                 b.Moves = new Collection<Move>();
             }
 
+            //
+            // begin break
+            //
+            // This breaks my console test game -- comment out if testing.
+            // Why is first move different from any other move?
+            // currentPos is not set
+            //
             if (b.isPlayerFirstMove(player))
             {
                 newMove.IsFirstMove = true;
@@ -225,6 +232,9 @@ namespace BusinessLogic
                 
                 return newMove;
             }
+            //
+            // end break
+            //
 
             // If User currently in Jail, only double can take them out.
             if (bu.InJail)

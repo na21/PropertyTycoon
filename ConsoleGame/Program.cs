@@ -68,10 +68,11 @@ namespace ConsoleGame
                 board.GetBoardUser(u.UserName).Print();
                 Console.WriteLine();
 
-
                 bool doubles;
-                int roll;
-                Move m = board.MakeCurrentPlayerMove(out doubles, out roll);
+                int roll = u.Roll(out doubles);
+
+                Move m = board.MakeCurrentPlayerMove(doubles, roll);
+
                 u.LandedOn(board, m);
                 db.SaveChanges();
 
@@ -97,6 +98,9 @@ namespace ConsoleGame
                     gameOver = true;
 
                 Console.Clear();
+
+                board.ActiveBoardPlayer = board.GetUserWithNextTurn();
+                db.SaveChanges();
 
             } //end turn
 

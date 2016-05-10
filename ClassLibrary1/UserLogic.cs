@@ -69,7 +69,7 @@ namespace BusinessLogic
             int pos = move.CurrentPos;
 
             var prop = (from p in b.Properties
-                        where p.Position == pos && p.BoardId == b.Id
+                        where p.Position == pos
                         select p).FirstOrDefault();
 
             // Check if user is in jail.
