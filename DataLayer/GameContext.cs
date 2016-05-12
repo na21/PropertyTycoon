@@ -39,6 +39,7 @@ namespace DataLayer
             boardUser.Board = board;
             boardUser.BoardId = board.Id;
             boardUser.User = player;
+            boardUser.Turn = -1;
             BoardUsers.Add(boardUser);
             board.BoardUsers.Add(boardUser);
             board.ActiveBoardPlayer = player;
@@ -57,7 +58,7 @@ namespace DataLayer
             boardUser.Position = 1;
             boardUser.Board = board;
             boardUser.User = player;
-
+            boardUser.Turn = -1;
             board.BoardUsers.Add(boardUser);
 
             SaveChanges();

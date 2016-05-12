@@ -100,12 +100,15 @@ namespace BusinessLogic
 
             IEnumerable<User> users = (from m in b.Moves
                                  where m.IsFirstMove == true
-                                 orderby m.Roll descending
+                                 orderby m.Roll ascending
                                  select m.User).Distinct();
 
             int firsTurnMoves = users.Count();
+            bool assignTurns = (from bu in b.BoardUsers
+             where bu.Turn == -1
+             select bu.UserName).Distinct().Count() == firsTurnMoves;
 
-            if(firsTurnMoves == b.BoardUsers.Count())
+            if(assignTurns)
             {
                 int moveIndex = firsTurnMoves;
                 foreach(var u in users)
@@ -113,7 +116,7 @@ namespace BusinessLogic
                     b.AssignPlayerTurn(u.UserName, moveIndex--);
                 }
 
-                return users.First();
+                return users.Last();
 
             } else
             {
@@ -136,13 +139,13 @@ namespace BusinessLogic
                                      where bu.UserName != u.UserName
                                      select bu.User);
 
-            var firstTurns = (from m in b.Moves
-                    where m.IsFirstMove == true
-                    select m.UserName).Distinct();
-
             foreach(var ou in otherUsers)
             {
-                if (!firstTurns.ToList().Contains(ou.UserName))
+                var firstTurns = (from m in b.Moves
+                                  where m.IsFirstMove == true && m.UserName == ou.UserName
+                                  select m.UserName).Distinct().FirstOrDefault();
+
+                if (firstTurns == null)
                     return ou;
             }
 
@@ -166,28 +169,37 @@ namespace BusinessLogic
             newMove.Roll = 0;
             newMove.Board = b;
             newMove.Description = player.UserName + " ended their Turn.";
+            newMove.UserName = player.UserName;
+            newMove.User = player;
 
             if (b.Moves == null)
             {
                 b.Moves = new Collection<Move>();
             }
 
-            if (b.isPlayerFirstMove(player))
-            {
-                var otherPlayer = b.GetUserWithNextFirstTurn(player);
-                if (otherPlayer != null)
-                {
-                    b.ActiveBoardPlayer = otherPlayer;
-                }
-                else
-                {
-                    b.ActiveBoardPlayer = b.GetPlayerWithCurrentTurn();
-                }
-
-                return newMove;
-            }
-
             b.ActiveBoardPlayer = b.GetUserWithNextTurn();
+
+            var otherPlayer = b.GetUserWithNextFirstTurn(player);
+            if (otherPlayer != null)
+            {
+                b.ActiveBoardPlayer = otherPlayer;
+            }
+            else
+            {
+                // All 1st turns completed get user with highest Roll Value
+
+                if (b.Moves.Last().IsFirstMove == true)
+                {
+                    b.ActiveBoardPlayer = (from m in b.Moves
+                                           where m.IsFirstMove == true
+                                           orderby m.Roll descending
+                                           select m.User).Distinct().FirstOrDefault();
+                }
+            }
+            
+
+            b.Moves.Add(newMove);
+
             return newMove;
         }
 
@@ -204,6 +216,8 @@ namespace BusinessLogic
             Move newMove = new Move();
             newMove.Roll = RollValue;
             newMove.Board = b;
+            newMove.UserName = player.UserName;
+            newMove.User = player;
 
             BoardUser bu = b.GetBoardUser(player.UserName);
 
@@ -222,13 +236,11 @@ namespace BusinessLogic
             if (b.isPlayerFirstMove(player))
             {
                 newMove.IsFirstMove = true;
-                if(isDoubles)
-                    newMove.Description = player.UserName + "'s : First Move - Rolled a Double " + newMove.Roll.ToString();
-                else
-                    newMove.Description = player.UserName + "'s : First Move - Rolled " + newMove.Roll.ToString();
+                newMove.CurrentPos = 1;
+
+                newMove.Description = player.UserName + "'s : First Move - Rolled " + newMove.Roll.ToString();
 
                 b.Moves.Add(newMove);
-
                 
                 return newMove;
             }

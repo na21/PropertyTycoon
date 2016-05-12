@@ -129,16 +129,53 @@ namespace UnitTests
                 isDoubles = false;
 
                 Move firstMove = new_board.MakeCurrentPlayerMove(isDoubles, rollValue);
-                firstMove.CurrentPos = 2;
+                
 
-                new_board.EndCurrentPlayerTurn();
+                var endMove = new_board.EndCurrentPlayerTurn(); // This method should end player 1's turn
+
+                Assert.AreEqual(new_board.ActiveBoardPlayer, player2);
 
                 var nextPlayer = new_board.GetPlayerWithCurrentTurn();
                 Assert.AreEqual(nextPlayer, player2);
+
+                rollValue = 12;
+                Move p2FirstMove = new_board.MakeCurrentPlayerMove(isDoubles, rollValue);
+
+                endMove = new_board.EndCurrentPlayerTurn(); // This method should end player 2's turn
+
+                Assert.AreEqual(new_board.ActiveBoardPlayer, player2);
+
+                // player2 rolled higher value, so next turn is p2's
+                nextPlayer = new_board.GetPlayerWithCurrentTurn();
+
+                Assert.AreEqual(nextPlayer, player2);
+
+                rollValue = 6;
+                var p2NextTurn = new_board.MakeCurrentPlayerMove(isDoubles, rollValue);
+                Assert.AreEqual(p2NextTurn.CurrentPos, rollValue + 1);
+
+                endMove = new_board.EndCurrentPlayerTurn();
+                Assert.AreEqual(new_board.ActiveBoardPlayer, player1);
+
+                // Next player is p1
+                nextPlayer = new_board.GetPlayerWithCurrentTurn();
+                Assert.AreEqual(nextPlayer, player1);
+
+                rollValue = 10;
+                isDoubles = true;
+
+                var p1NextTurn = new_board.MakeCurrentPlayerMove(isDoubles, rollValue);
+                Assert.AreEqual(p1NextTurn.CurrentPos, rollValue + 1);
+
+                nextPlayer = new_board.GetPlayerWithCurrentTurn();
+                Assert.AreEqual(nextPlayer, player1);
+                // Do not end player turn if doubles
                 bc.SaveChanges();
 
                 // For this test, it is assumed that player buys property.
                 // Check if money is deducted for property.
+
+                firstMove.CurrentPos = 2;
                 BoardUser bu = new_board.GetBoardUser(player1.UserName);
                 bu.Money = 1000;
 
