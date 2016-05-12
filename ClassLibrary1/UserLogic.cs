@@ -64,6 +64,7 @@ namespace BusinessLogic
         public static void LandedOn(this User user, Board b, Move move)
         {
             BoardUser boardUser = b.GetBoardUser(user.UserName);
+            boardUser.Position = move.CurrentPos;
 
             int pos = move.CurrentPos;
 
