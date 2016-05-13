@@ -457,7 +457,7 @@
 
                 $http.post(createMoveUrl, JSON.stringify(jsonObject)).then(function(response){
                     console.log(response);
-                    $scope.moves.push(response.data.Description);
+                    $scope.moves.push(response.data);
 
                     if(!response.data.IsFirstMove){
                         moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 

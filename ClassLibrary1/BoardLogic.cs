@@ -218,6 +218,7 @@ namespace BusinessLogic
             newMove.Board = b;
             newMove.UserName = player.UserName;
             newMove.User = player;
+            newMove.Description = "";
 
             BoardUser bu = b.GetBoardUser(player.UserName);
 
@@ -248,6 +249,13 @@ namespace BusinessLogic
             // end break
             //
 
+            
+            if (isDoubles)
+                newMove.Description += player.UserName + " has rolled doubles!, value: " + newMove.Roll.ToString();
+            else
+                newMove.Description += player.UserName + " has rolled, value:  " + newMove.Roll.ToString();
+
+
             // If User currently in Jail, only double can take them out.
             if (bu.InJail)
             {
@@ -262,12 +270,18 @@ namespace BusinessLogic
             } else
             {
                 newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
+
+                Property p = b.GetPropertyFromPosition(newMove.CurrentPos);
+
+                newMove.Description += " Landed on " + p.Name + " !";
+
             }
 
             // If landed on Go to jail.
             if (newMove.CurrentPos == Board.GoToJailPosition)
             {
                 newMove.CurrentPos = Board.JailPosition;
+                newMove.Description += " Landed in Jail!";
                 bu.InJail = true;
             }
 
@@ -276,8 +290,11 @@ namespace BusinessLogic
             if (newMove.HasPassedGo())
             {
                 b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
+                newMove.Description += " Passed Go! Collect $200.";
             }
 
+            // Update Player  position
+            bu.Position = newMove.CurrentPos;
             b.Moves.Add(newMove);
             return newMove;
         }
