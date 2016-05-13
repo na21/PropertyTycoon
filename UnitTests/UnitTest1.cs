@@ -210,7 +210,7 @@ namespace UnitTests
                 Assert.AreEqual(false, player1.OwnsGroup(new_board, "Purple"));
 
                 //Check if player can build a house before owning group.
-                Assert.AreEqual(false, player1.CanBuildHouse(new_board, p));
+                Assert.AreEqual(false, bu.CanBuildHouse(p));
 
                 var props = (from prop in new_board.Properties
                              where prop.Group == "Purple"
@@ -228,23 +228,23 @@ namespace UnitTests
                 Property purpleProp = props.FirstOrDefault();
 
                 //Check if player can build a house after owning group.
-                Assert.AreEqual(true, player1.CanBuildHouse(new_board, purpleProp));
+                Assert.AreEqual(true, bu.CanBuildHouse(purpleProp));
 
                 //Check if player can build hotel after owning group with no houses.
-                Assert.AreEqual(false, player1.CanBuildHotel(new_board, purpleProp));
+                Assert.AreEqual(false, bu.CanBuildHotel(purpleProp));
 
                 purpleProp.NumHouses = 3;
-                player1.BuildHouse(new_board, purpleProp);
+                bu.BuildHouse(purpleProp);
                 bc.SaveChanges();
 
                 //Check that player has built a house with BuildHouse()
                 Assert.AreEqual(true, purpleProp.NumHouses == 4);
 
                 // Check that player can build hotel after owning 4 houses on property.
-                Assert.AreEqual(true, player1.CanBuildHotel(new_board, purpleProp));
+                Assert.AreEqual(true, bu.CanBuildHotel(purpleProp));
 
                 //Build a hotel now that we have 4 houses.
-                player1.BuildHotel(new_board, purpleProp);
+                bu.BuildHotel(purpleProp);
 
                 Assert.AreEqual(true, purpleProp.NumHouses == 0);
                 Assert.AreEqual(true, purpleProp.NumHotels == 1);
@@ -256,8 +256,8 @@ namespace UnitTests
                 purpleProp.NumHotels = 0;
                 bc.SaveChanges();
 
-                Assert.AreEqual(false, player1.CanBuildHotel(new_board, purpleProp));
-                Assert.AreEqual(false, player1.CanBuildHouse(new_board, purpleProp));
+                Assert.AreEqual(false, bu.CanBuildHotel(purpleProp));
+                Assert.AreEqual(false, bu.CanBuildHouse(purpleProp));
 
             }
         }
