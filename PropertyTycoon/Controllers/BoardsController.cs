@@ -19,24 +19,12 @@ namespace PropertyTycoon.Controllers
         // GET: Boards
         public ActionResult Index()
         {
+            return RedirectToAction("GameFeed");
+        }
+
+        public ActionResult GameFeed()
+        {
             User u = db.GetUser(User.Identity.Name);
-
-            var boards = (from b in db.Boards
-                                 where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange
-                                 select b);
-
-            List<Board> eligibleBoards = new List<Board>();
-
-            if (boards != null)
-            {
-                foreach (Board b in boards.ToList())
-                {
-                    if (b.GetBoardUser(User.Identity.Name) == null)
-                        eligibleBoards.Add(b);
-                }
-            }
-
-            ViewBag.eligibleBoards = eligibleBoards;
 
             List<Board> activeBoards = new List<Board>();
             List<Board> completedBoards = new List<Board>();
@@ -56,6 +44,30 @@ namespace PropertyTycoon.Controllers
 
             ViewBag.activeBoards = activeBoards;
             ViewBag.completedBoards = completedBoards;
+
+            return View();
+        }
+
+        public ActionResult MatchMaking()
+        {
+            User u = db.GetUser(User.Identity.Name);
+
+            var boards = (from b in db.Boards
+                          where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange
+                          select b);
+
+            List<Board> eligibleBoards = new List<Board>();
+
+            if (boards != null)
+            {
+                foreach (Board b in boards.ToList())
+                {
+                    if (b.GetBoardUser(User.Identity.Name) == null)
+                        eligibleBoards.Add(b);
+                }
+            }
+
+            ViewBag.eligibleBoards = eligibleBoards;
 
             return View();
         }
@@ -101,6 +113,9 @@ namespace PropertyTycoon.Controllers
             {
                 return HttpNotFound();
             }
+
+            if (board.Status != "Active")
+                return RedirectToAction("GameFeed");
             
             return View(new GameBoardViewModel(board, User));
         }

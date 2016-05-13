@@ -3,78 +3,10 @@
 @{
     ViewBag.Title = "Index";
 
-    List<DataLayer.Board> eligibleBoards = ((List<DataLayer.Board>)(ViewBag.eligibleBoards));
     List<DataLayer.Board> activeBoards = ((List<DataLayer.Board>)(ViewBag.activeBoards));
     List<DataLayer.Board> completedBoards = ((List<DataLayer.Board>)(ViewBag.completedBoards));
 
 }
-
-<h2>Create Game</h2>
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<br />
-
-<h2>Join Game</h2>
-@if (eligibleBoards == null || !eligibleBoards.Any())
-{
-    <p>No eligible boards to display.</p>
-}
-
-else
-{
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.MaximumPlayers)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Status)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.minSkillRange)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.maxSkillRange)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in eligibleBoards)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaximumPlayers)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.minSkillRange)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.maxSkillRange)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.Id })
-
-                    @using (Html.BeginForm("Join", "Boards", FormMethod.Post))
-                    {
-                        @Html.AntiForgeryToken()
-
-                        <input type="hidden" name="id" value="@item.Id">
-                        <button type="submit" name="button" value="Join">Join</button>
-                    }
-
-
-                </td>
-            </tr>
-        }
-
-    </table>
-}
-
-<br />
 
 <h2>Active Games</h2>
 @if (activeBoards == null || !activeBoards.Any())

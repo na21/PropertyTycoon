@@ -268,10 +268,11 @@
     <Content Include="Views\Boards\Delete.cshtml" />
     <Content Include="Views\Boards\Details.cshtml" />
     <Content Include="Views\Boards\Edit.cshtml" />
-    <Content Include="Views\Boards\Index.cshtml" />
+    <Content Include="Views\Boards\GameFeed.cshtml" />
     <Content Include="Views\Boards\BoardError.cshtml" />
     <Content Include="Views\Boards\Forfeit.cshtml" />
     <Content Include="Views\Home\Friends.cshtml" />
+    <Content Include="Views\Boards\MatchMaking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
