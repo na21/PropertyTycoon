@@ -212,7 +212,6 @@ namespace BusinessLogic
         public static Move MakeCurrentPlayerMove(this Board b, bool isDoubles, int RollValue)
         {
             User player = b.GetPlayerWithCurrentTurn();
-            //RollValue = player.Roll(out isDoubles);
 
             Move newMove = new Move();
             newMove.Roll = RollValue;
@@ -228,13 +227,6 @@ namespace BusinessLogic
                 b.Moves = new Collection<Move>();
             }
 
-            //
-            // begin break
-            //
-            // This breaks my console test game -- comment out if testing.
-            // Why is first move different from any other move?
-            // currentPos is not set
-            //
             if (b.isPlayerFirstMove(player))
             {
                 newMove.IsFirstMove = true;
@@ -246,11 +238,7 @@ namespace BusinessLogic
                 
                 return newMove;
             }
-            //
-            // end break
-            //
 
-            
             if (isDoubles)
                 newMove.Description += player.UserName + " has rolled doubles!, value: " + newMove.Roll.ToString();
             else
@@ -329,14 +317,19 @@ namespace BusinessLogic
                     if (bu.Money >= payment)
                     {
                         bu.Money -= payment;
+                        buOwner.Money += payment;
                         newMove.Description += "Pay $" + payment.ToString() + " Rent to " + buOwner.UserName;
                     }
 
                 }
             }
 
-                // Update Player  position
+            // Update Player  position
+            if (isDoubles)
+                bu.HasRolled = false;
+            else
                 bu.HasRolled = true;
+
             bu.Position = newMove.CurrentPos;
             b.Moves.Add(newMove);
             return newMove;

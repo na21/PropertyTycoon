@@ -127,10 +127,7 @@ namespace PropertyTycoon.Controllers
             response.PropertyCost = property.Price;
             response.PropertyName = property.Name;
 
-            if (property.Name == "Chance" ||
-                property.Name == "Community Chest" ||
-                property.Name == "Income Tax" ||
-                property.Name == "Luxury Tax")
+            if (property.Group == "No-Group")
             {
                 response.isChanceorCommunity = true;
             }
@@ -138,7 +135,7 @@ namespace PropertyTycoon.Controllers
             {
                 response.isChanceorCommunity = false;
 
-                response.isPropertyPurchasable = bu.Money >= property.Price;
+                response.isPropertyPurchasable = property.User == null && bu.Money >= property.Price;
 
             }
             return response;
