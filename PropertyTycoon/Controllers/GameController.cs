@@ -39,6 +39,8 @@ namespace PropertyTycoon.Controllers
         public PropertyActionModel propertyState { get; set; }
 
         public User user { get; set; }
+
+        public bool HasRolled { get; set; }
     }
 
     public class PropertyActionModel
@@ -73,11 +75,12 @@ namespace PropertyTycoon.Controllers
 
             ActivePlayerModel response = new ActivePlayerModel();
             response.user = board.ActiveBoardPlayer;
-            
+             
 
             BoardUser bu = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
 
-            
+            response.HasRolled = bu.HasRolled;
+
             Property property = (from p in board.Properties
                                  where p.Position == bu.Position
                                  select p).FirstOrDefault();

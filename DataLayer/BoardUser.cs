@@ -38,5 +38,7 @@ namespace DataLayer
         public int TurnsRemaining { get; set; }
 
         public bool GameOver { get; set; }
+
+        public bool HasRolled { get; set; }
     }
 }

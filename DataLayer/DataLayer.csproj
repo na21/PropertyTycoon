@@ -89,6 +89,10 @@
     <Compile Include="Migrations\201605091830097_AddedIsFirstMove.Designer.cs">
       <DependentUpon>201605091830097_AddedIsFirstMove.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605131505249_AddedHasRolledToBU.cs" />
+    <Compile Include="Migrations\201605131505249_AddedHasRolledToBU.Designer.cs">
+      <DependentUpon>201605131505249_AddedHasRolledToBU.cs</DependentUpon>
+    </Compile>
     <Compile Include="PointsEarned.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
@@ -170,6 +174,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605091830097_AddedIsFirstMove.resx">
       <DependentUpon>201605091830097_AddedIsFirstMove.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605131505249_AddedHasRolledToBU.resx">
+      <DependentUpon>201605131505249_AddedHasRolledToBU.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

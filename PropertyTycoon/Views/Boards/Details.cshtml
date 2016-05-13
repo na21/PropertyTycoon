@@ -132,12 +132,12 @@
                                 </td>
                             </tr>
                             <tr style="border:solid 2px black;">
-                                <td style="height: 200px;">
-                                    <div class="row" ng-if="'@Model.currentUsername' == activePlayer">
+                                <td style="height: 300px;">
+                                    <div class="row" ng-if="'@Model.currentUsername' == activePlayer && !HasCurrentUserRolled">
                                         <dice dice1-model="$parent.dice1" dice2-model="$parent.dice2"></dice>
                                     </div>
                                     
-                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer">
+                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer && HasCurrentUserRolled">
                                         <div class='col-md-4'>
                                             <button type='button' 
                                                     ng-click='endTurn()' class='btn btn-danger'>End Turn
@@ -149,7 +149,15 @@
                                         <h3 class="col-md-12 text-center">It is not your turn right now.</h3>
                                     </div>
 
-                                    {{ propertyState }}
+                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer && HasCurrentUserRolled">
+                                        <div ng-if="propertyState.isPropertyPurchasable" class='col-md-12'>
+                                             <h5>Purchase 
+                                                 <strong>{{ propertyState.PropertyName }} </strong>
+                                            for ${{propertyState.PropertyCost}} ?</h5>  
+                                             <button type="submit" class="btn btn-default">Buy</button>
+                                        </div>
+                                    </div>
+                                        
                                 </td>
                             </tr>
                         </table>
@@ -368,10 +376,8 @@
 <script>
     angular.module('GameApp', [])
         .controller('GameController', ["$scope", "$http", function ($scope, $http) {
-            $scope.test = "Hello World";
+
             var gameId = @Html.Raw(@Model.GameBoard.Id);
-            console.log(gameId);
-            
             
             $scope.currentPlayer = '@Model.currentUsername';
             $scope.activePlayer = '';
@@ -382,6 +388,7 @@
             $scope.boardUserNames = [];
             $scope.currentBoardUser = null;
             $scope.propertyState = null;
+            $scope.HasCurrentUserRolled = false;
 
             $http({
                 method: 'GET',
@@ -391,7 +398,7 @@
                 console.log(response);
                 $scope.activePlayer = response.data.user.UserName;
                 $scope.propertyState = response.data.propertyState;
-
+                $scope.HasCurrentUserRolled = response.data.HasRolled;
             }, function errorCallback(response) {
                 console.log(response);
             });
@@ -485,11 +492,13 @@
                     $scope.moves.push(response.data);
 
                     if(!response.data.IsFirstMove){
-                        moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
-                        $scope.currentBoardUser.Position + $scope.dice1, 
-                        $scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2 ]);
+                        var endPosition = ($scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2)%40;
 
-                        $scope.processProperty($scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2);
+                        moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
+                        ($scope.currentBoardUser.Position + $scope.dice1)%40, 
+                        endPosition ]);
+
+                        $scope.processProperty(endPosition);
                     }
                 }, 
                 function(response){

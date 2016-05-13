@@ -196,8 +196,9 @@ namespace BusinessLogic
                                            select m.User).Distinct().FirstOrDefault();
                 }
             }
-            
 
+            BoardUser bu = b.GetBoardUser(player.UserName);
+            bu.HasRolled = false;
             b.Moves.Add(newMove);
 
             return newMove;
@@ -270,18 +271,12 @@ namespace BusinessLogic
             } else
             {
                 newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
-
-                Property p = b.GetPropertyFromPosition(newMove.CurrentPos);
-
-                newMove.Description += " Landed on " + p.Name + " !";
-
             }
 
             // If landed on Go to jail.
             if (newMove.CurrentPos == Board.GoToJailPosition)
             {
                 newMove.CurrentPos = Board.JailPosition;
-                newMove.Description += " Landed in Jail!";
                 bu.InJail = true;
             }
 
@@ -293,7 +288,13 @@ namespace BusinessLogic
                 newMove.Description += " Passed Go! Collect $200.";
             }
 
+
+            Property p = b.GetPropertyFromPosition(newMove.CurrentPos);
+
+            newMove.Description += " Landed on " + p.Name + " !";
+
             // Update Player  position
+            bu.HasRolled = true;
             bu.Position = newMove.CurrentPos;
             b.Moves.Add(newMove);
             return newMove;
