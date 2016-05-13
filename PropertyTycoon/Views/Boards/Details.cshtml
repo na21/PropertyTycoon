@@ -154,7 +154,7 @@
                                              <h5>Purchase 
                                                  <strong>{{ propertyState.PropertyName }} </strong>
                                             for ${{propertyState.PropertyCost}} ?</h5>  
-                                             <button type="submit" class="btn btn-default">Buy</button>
+                                             <button type="submit" class="btn btn-default" ng-click="BuyProperty()">Buy</button>
                                         </div>
                                     </div>
                                         
@@ -471,6 +471,21 @@
                     console.log(response);
                 });
             };
+
+            $scope.BuyProperty = function(){
+
+                var buyPropertyUrl = '/api/Game/BuyProperty';
+
+                var jsonObject = {  "BoardId": String(gameId) };
+
+                $http.post(buyPropertyUrl, JSON.stringify(jsonObject)).then(function(response){
+                    console.log(response);
+                    $scope.moves.push(response.data);
+                }, 
+                function(response){
+                    console.log(response);
+                });
+            }
 
             $scope.DiceRolled = function(){
                 console.log("DICE ROLLED");

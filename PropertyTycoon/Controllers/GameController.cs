@@ -56,6 +56,12 @@ namespace PropertyTycoon.Controllers
         public string PropertyName { get; set; }
     }
 
+    public class BuyPropertyModel
+    {
+        public int BoardId { get; set; }
+
+    }
+
     public class GameController : ApiController
     {
         private GameContext db = new GameContext();
@@ -64,7 +70,7 @@ namespace PropertyTycoon.Controllers
         public IEnumerable<BoardUser> GetBoardGameUsers(int id)
         {
             Board board = db.Boards.Find(id);
-            
+
             return board.BoardUsers;
         }
 
@@ -75,7 +81,7 @@ namespace PropertyTycoon.Controllers
 
             ActivePlayerModel response = new ActivePlayerModel();
             response.user = board.ActiveBoardPlayer;
-             
+
 
             BoardUser bu = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
 
@@ -110,8 +116,8 @@ namespace PropertyTycoon.Controllers
                                  where p.Position == position
                                  select p).FirstOrDefault();
 
-            
-            
+
+
             return SetPropertyState(property, bu);
         }
 
@@ -162,10 +168,64 @@ namespace PropertyTycoon.Controllers
             MoveResponseModel response = new MoveResponseModel();
             response.move = newMove;
             response.ActivePlayer = board.ActiveBoardPlayer;
-            
+
             return CreatedAtRoute("DefaultApi", null, response);
         }
 
+        //POST: 
+        [HttpPost]
+        [ResponseType(typeof(Move))]
+        public IHttpActionResult BuyProperty(BuyPropertyModel m)
+        {
+            Board board = db.Boards.Find(m.BoardId);
+
+            if (board == null)
+            {
+                return null;
+            }
+
+            Move newMove = new Move();
+            newMove.User = board.ActiveBoardPlayer;
+            BoardUser boardUser = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
+
+            int position = boardUser.Position;
+
+            Property property = (from p in board.Properties
+                        where p.Position == position
+                        select p).FirstOrDefault();
+
+            if (property.User == null)
+            {
+                // give player option to buy if they have enough money
+                if (boardUser.Money >= property.Price)
+                {
+                    boardUser.Money -= property.Price;
+                    property.User = board.ActiveBoardPlayer;
+
+                    newMove.Description = board.ActiveBoardPlayer.UserName + " purchased " + property.Name;
+                } else
+                    newMove.Description = board.ActiveBoardPlayer.UserName + " does not have enough money to buy " + property.Name;
+
+                board.Moves.Add(newMove);
+
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    throw;
+                }
+
+                return CreatedAtRoute("DefaultApi", null, newMove);
+            } else
+            {
+                return null;
+            }
+
+            
+            
+        }
         //POST: 
         [HttpPost]
         [ResponseType(typeof(Move))]

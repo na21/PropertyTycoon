@@ -306,10 +306,37 @@ namespace BusinessLogic
             {
                 bu.Money -= prop.Price;
                 newMove.Description += " Pay $" + prop.Price.ToString();
+            } else if (prop.User != null && prop.User != player)
+            {
+                // Need to Pay Rent.
+                BoardUser buOwner = b.GetBoardUser(prop.User.UserName);
+
+                // Only pay rent if the property isn't mortgaged and the owner
+                // isn't in jail.
+                if (!prop.Mortgaged && !buOwner.InJail)
+                {
+
+                    int payment = prop.Rent;
+
+                    //Check if owners owns the entire group, if so rent is doubled.
+                    if (prop.User.OwnsGroup(b, prop.Group))
+                        payment *= 2;
+
+                    payment += prop.NumHotels * 10;
+                    payment += prop.NumHouses * 5;
+
+                    // Player has enough money to pay.
+                    if (bu.Money >= payment)
+                    {
+                        bu.Money -= payment;
+                        newMove.Description += "Pay $" + payment.ToString() + " Rent to " + buOwner.UserName;
+                    }
+
+                }
             }
 
-            // Update Player  position
-            bu.HasRolled = true;
+                // Update Player  position
+                bu.HasRolled = true;
             bu.Position = newMove.CurrentPos;
             b.Moves.Add(newMove);
             return newMove;

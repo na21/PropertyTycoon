@@ -22,6 +22,12 @@ namespace PropertyTycoon
             );
 
             config.Routes.MapHttpRoute(
+                name: "BuyPropertyRoute",
+                routeTemplate: "api/Game/BuyProperty",
+                defaults: new { controller = "Game", action = "BuyProperty" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "EndMoveRoute",
                 routeTemplate: "api/Game/EndMove",
                 defaults: new { controller = "Game", action = "EndMove" }
