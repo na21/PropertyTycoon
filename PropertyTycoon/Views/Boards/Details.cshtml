@@ -393,7 +393,7 @@
 
 <script>
     angular.module('GameApp', [])
-        .controller('GameController', ["$scope", "$http", function ($scope, $http) {
+        .controller('GameController', ["$scope", "$http", "$window", function ($scope, $http, $window) {
 
             var gameId = @Html.Raw(@Model.GameBoard.Id);
             
@@ -408,18 +408,23 @@
             $scope.propertyState = null;
             $scope.HasCurrentUserRolled = false;
 
-            $http({
-                method: 'GET',
-                url: '/api/Game/' + String(gameId) + '/GetActivePlayer'
-            }).then(function successCallback(response) {
-                //Success
-                console.log(response);
-                $scope.activePlayer = response.data.user.UserName;
-                $scope.propertyState = response.data.propertyState;
-                $scope.HasCurrentUserRolled = response.data.HasRolled;
-            }, function errorCallback(response) {
-                console.log(response);
-            });
+            $scope.GetActivePlayer = function(){
+
+                $http({
+                    method: 'GET',
+                    url: '/api/Game/' + String(gameId) + '/GetActivePlayer'
+                }).then(function successCallback(response) {
+                    //Success
+                    console.log(response);
+                    $scope.activePlayer = response.data.user.UserName;
+                    $scope.propertyState = response.data.propertyState;
+                    $scope.HasCurrentUserRolled = response.data.HasRolled;
+                }, function errorCallback(response) {
+                    console.log(response);
+                });
+            }
+            
+            $scope.GetActivePlayer();
 
             $http({
                 method: 'GET',
@@ -509,6 +514,7 @@
                     console.log(response);
                     $scope.activePlayer = response.data.ActivePlayer.UserName;
                     $scope.moves.push(response.data.move);
+
                 }, 
                 function(response){
                     console.log(response);
@@ -550,14 +556,19 @@
                     $scope.moves.push(response.data);
 
                     if(!response.data.IsFirstMove){
-                        var endPosition = ($scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2)%40;
+                        var endPosition =  response.data.CurrentPos; //($scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2)%40;
+                        if(endPosition != $scope.currentBoardUser.Position){
+                            moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
+                            ($scope.currentBoardUser.Position + $scope.dice1)%40, 
+                            endPosition ]);
 
-                        moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
-                        ($scope.currentBoardUser.Position + $scope.dice1)%40, 
-                        endPosition ]);
-
-                        $scope.processProperty(endPosition);
+                            $scope.currentBoardUser.Position = endPosition;
+                            $scope.processProperty(endPosition);
+                        }
                     }
+
+                    $scope.GetActivePlayer();
+                    // $window.location.reload();
                 }, 
                 function(response){
                     console.log(response);
