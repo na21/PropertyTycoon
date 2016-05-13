@@ -252,9 +252,13 @@ namespace BusinessLogic
                 {
                     bu.InJail = false;
                     newMove.CurrentPos = player.GetCurrentPositionOnBoard(b) + RollValue;
+                    newMove.Description += " player gets out of Jail. ";
                 }
                 else
+                {
+                    newMove.Description += " player remains in Jail. ";
                     newMove.CurrentPos = player.GetCurrentPositionOnBoard(b);
+                }
 
             } else
             {
@@ -264,6 +268,7 @@ namespace BusinessLogic
             // If landed on Go to jail.
             if (newMove.CurrentPos == Board.GoToJailPosition)
             {
+                newMove.Description += " player goes to Jail !";
                 newMove.CurrentPos = Board.JailPosition;
                 bu.InJail = true;
             }

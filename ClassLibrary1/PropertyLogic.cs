@@ -63,7 +63,7 @@ namespace BusinessLogic
 
                 switch (chanceCards[r])
                 {
-                    case "PASS_GO_COLLECT_200":
+                    case "GET_OUT_OF_JAIL":
                         bu.Position = 1;
                         bu.Money += 200;
                         result = chanceCardDesc[0];
