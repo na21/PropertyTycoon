@@ -284,14 +284,29 @@ namespace BusinessLogic
             // Resets the position after player passes go.
             if (newMove.HasPassedGo())
             {
-                b.GetBoardUser(player.UserName).Money += Board.PassGoMoney;
+                bu.Money += Board.PassGoMoney;
                 newMove.Description += " Passed Go! Collect $200.";
             }
 
 
-            Property p = b.GetPropertyFromPosition(newMove.CurrentPos);
+            Property prop = b.GetPropertyFromPosition(newMove.CurrentPos);
 
-            newMove.Description += " Landed on " + p.Name + " !";
+            newMove.Description += " Landed on " + prop.Name + " !";
+
+            if (prop.Name == "Chance")
+                newMove.Description +=  " " + prop.ProcessChanceCard(bu);
+            else if (prop.Name == "Community Chest")
+                newMove.Description += " " +  prop.ProcessCommChestCard(bu);
+            else if (prop.Name == "Income Tax")
+            {
+                bu.Money -= prop.Price;
+                newMove.Description += " Pay $" + prop.Price.ToString(); 
+            }
+            else if (prop.Name == "Luxury Tax")
+            {
+                bu.Money -= prop.Price;
+                newMove.Description += " Pay $" + prop.Price.ToString();
+            }
 
             // Update Player  position
             bu.HasRolled = true;
