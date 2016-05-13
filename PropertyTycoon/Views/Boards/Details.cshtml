@@ -420,7 +420,8 @@
             }).then(function successCallback(response) {
                 //Success
                 console.log(response);
-                $scope.boardUsers = response.data;
+                $scope.boardUsers = response.data.boardUsers;
+                $scope.UserOwnedProperties = response.data.UserOwnedProperties;
 
                 var count = 1;
                 angular.forEach($scope.boardUsers, function(item){
@@ -430,6 +431,30 @@
                     $scope.boardUserNames.push(item.UserName);
                     $("#pos"+String(item.Position)).append("<div id=\"player" + String(count) + "\"></div>")
                     count += 1;
+                });
+
+                angular.forEach($scope.UserOwnedProperties, function(value, key) {
+                    
+                    if(!isNaN(key)){
+                        var idx = $scope.boardUserNames.indexOf(value);
+                        var color = "black";
+
+                        if(idx == 0)
+                            color = "red"
+                        else if(idx == 1)
+                            color = "blue"
+                        else if(idx == 2)
+                            color = "green"
+                        else
+                            color = "yellow"
+
+                        var style = {   
+                            "color": color
+                        }
+
+                        $("#pos"+String(key)).css(style);
+                    }
+                    
                 });
 
             }, function errorCallback(response) {

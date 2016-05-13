@@ -11,6 +11,7 @@ using System.Web.Http.Description;
 using DataLayer;
 using System.Web.Script.Serialization;
 using BusinessLogic;
+using System.Collections;
 
 namespace PropertyTycoon.Controllers
 {
@@ -62,16 +63,35 @@ namespace PropertyTycoon.Controllers
 
     }
 
+    public class BoardUserViewModel
+    {
+        public IEnumerable<BoardUser> boardUsers { get; set; }
+
+        public Hashtable UserOwnedProperties;
+
+        public BoardUserViewModel(Board b)
+        {
+            boardUsers = b.BoardUsers;
+            UserOwnedProperties = new Hashtable();
+
+            foreach(Property p in b.Properties)
+            {
+                if(p.User != null)
+                    UserOwnedProperties[p.Position] = p.UserName;
+            }
+        }
+    }
     public class GameController : ApiController
     {
         private GameContext db = new GameContext();
 
         // GET: api/Game/{id}/BoardUsers
-        public IEnumerable<BoardUser> GetBoardGameUsers(int id)
+        public BoardUserViewModel GetBoardGameUsers(int id)
         {
             Board board = db.Boards.Find(id);
+            BoardUserViewModel response = new BoardUserViewModel(board);
 
-            return board.BoardUsers;
+            return response;
         }
 
         // GET: api/Game/{id}/GetActivePlayer
