@@ -133,11 +133,18 @@
                             </tr>
                             <tr style="border:solid 2px black;">
                                 <td style="height: 200px;">
-                                    {{dice1}} , {{ dice2 }}, {{ activePlayer }}
-                                    <div ng-if="'@Model.currentUsername' == activePlayer">
+                                    <div class="row" ng-if="'@Model.currentUsername' == activePlayer">
                                         <dice dice1-model="$parent.dice1" dice2-model="$parent.dice2"></dice>
                                     </div>
                                     
+                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer">
+                                        <div class='col-md-4'>
+                                            <button type='button' 
+                                                    ng-click='endTurn()' class='btn btn-danger'>End Turn
+                                            </button>
+                                        </div>
+                                    </div>
+
                                     <div ng-if="'@Model.currentUsername' != activePlayer" class="row">
                                         <h3 class="col-md-12 text-center">It is not your turn right now.</h3>
                                     </div>
@@ -337,7 +344,7 @@
             <h3>Moves List</h3>
             <ul class="list-group">
                 <li class="list-group-item" ng-repeat="move in moves">
-                {{ move }} </li>
+                {{ move.Description }} </li>
                 <li ng-if="moves.length == 0" class="list-group-item">
                     No moves made.
                 </li>
@@ -416,6 +423,22 @@
             }, function errorCallback(response) {
                 console.log(response);
             });
+        
+            $scope.endTurn = function(){
+                console.log("End Turn");
+
+                var endMoveUrl = '/api/Game/EndMove';
+
+                var jsonObject = {  "BoardId": String(gameId) };
+
+                $http.post(endMoveUrl, JSON.stringify(jsonObject)).then(function(response){
+                    console.log(response);
+
+                }, 
+                function(response){
+                    console.log(response);
+                });
+            };
 
             $scope.DiceRolled = function(){
                 console.log("DICE ROLLED");
@@ -424,12 +447,23 @@
                 console.log($scope.currentBoardUser);
                 var playerIdentifier = getPlayerIndexFromUsername($scope.currentPlayer);
                 
-                moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
-                    $scope.currentBoardUser.Position + $scope.dice1, 
-                    $scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2 ]);
+                
 
-                $http.post('/someUrl', data, config).then(function(response){
+                var createMoveUrl = '/api/Game/CreateMove';
+
+                var jsonObject = {  "BoardId": String(gameId),
+                                    "Roll": $scope.dice1 + $scope.dice2, 
+                                    "Doubles": $scope.dice1 == $scope.dice2};
+
+                $http.post(createMoveUrl, JSON.stringify(jsonObject)).then(function(response){
                     console.log(response);
+                    $scope.moves.push(response.data.Description);
+
+                    if(!response.data.IsFirstMove){
+                        moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
+                        $scope.currentBoardUser.Position + $scope.dice1, 
+                        $scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2 ]);
+                    }
                 }, 
                 function(response){
                     console.log(response);

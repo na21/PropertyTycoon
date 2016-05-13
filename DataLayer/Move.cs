@@ -18,6 +18,7 @@ namespace DataLayer
         [Required]
         public int BoardId { get; set; }
 
+        [JsonIgnoreAttribute]
         [ForeignKey("BoardId")]
         public virtual Board Board { get; set; }
 

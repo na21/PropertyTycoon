@@ -16,6 +16,18 @@ namespace PropertyTycoon
             config.MapHttpAttributeRoutes();
 
             config.Routes.MapHttpRoute(
+                name: "CreateMoveRoute",
+                routeTemplate: "api/Game/CreateMove",
+                defaults: new { controller = "Game", action = "CreateMove" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "EndMoveRoute",
+                routeTemplate: "api/Game/EndMove",
+                defaults: new { controller = "Game", action = "EndMove" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "GetActivePlayerRoute",
                 routeTemplate: "api/{controller}/{id}/GetActivePlayer",
                 defaults: new { controller = "Game", action = "GetActivePlayer" }
@@ -30,12 +42,6 @@ namespace PropertyTycoon
             config.Routes.MapHttpRoute(
                 name: "GetMovesListRoute",
                 routeTemplate: "api/{controller}/{id}/GetMovesList",
-                defaults: new { controller = "Game", action = "GetMovesList" }
-            );
-
-            config.Routes.MapHttpRoute(
-                name: "CreateMovesRoute",
-                routeTemplate: "api/{controller}/{id}/CreateMove/{userId}",
                 defaults: new { controller = "Game", action = "GetMovesList" }
             );
 

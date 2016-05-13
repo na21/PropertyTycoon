@@ -10,9 +10,23 @@ using System.Web.Http;
 using System.Web.Http.Description;
 using DataLayer;
 using System.Web.Script.Serialization;
+using BusinessLogic;
 
 namespace PropertyTycoon.Controllers
 {
+    public class EndMoveModel
+    {
+        public int BoardId { get; set; }
+    }
+
+    public class CreateMoveModel
+    {
+        public int Roll { get; set; }
+        public bool Doubles { get; set; }
+
+        public int BoardId { get; set; }
+    }
+
     public class GameController : ApiController
     {
         private GameContext db = new GameContext();
@@ -34,29 +48,25 @@ namespace PropertyTycoon.Controllers
         }
 
         // GET: api/Game/{id}/GetMovesList
-        public ICollection<Move> GetMovesList(int id)
+        public IEnumerable<Move> GetMovesList(int id)
         {
             Board board = db.Boards.Find(id);
 
             return board.Moves;
         }
-        //POST: 
-        
-        [ResponseType(typeof(Move))]
-        public IHttpActionResult CreateMove(int id, int roll, bool doubles, string userName)
+
+        [HttpPost]
+        [ResponseType(typeof(User))]
+        public IHttpActionResult EndMove(EndMoveModel m)
         {
-            
-            Board board = db.Boards.Find(id);
+            Board board = db.Boards.Find(m.BoardId);
 
             if (board == null)
             {
                 return null;
             }
-            Move newMove = new Move();
-            newMove.Board = board;
-            newMove.UserName = userName;
-            //newMove.CurrentPos;
-            board.Moves.Add(newMove);
+
+            board.EndCurrentPlayerTurn();
 
             try
             {
@@ -67,8 +77,37 @@ namespace PropertyTycoon.Controllers
                 throw;
             }
 
-            return CreatedAtRoute("DefaultApi", new { id = newMove.Id}, newMove);
+            return CreatedAtRoute("DefaultApi", null, board.ActiveBoardPlayer);
         }
+
+        //POST: 
+        [HttpPost]
+        [ResponseType(typeof(Move))]
+        public IHttpActionResult CreateMove(CreateMoveModel m)
+        {
+
+            Board board = db.Boards.Find(m.BoardId);
+
+            if (board == null)
+            {
+                return null;
+            }
+            
+            Move newMove = board.MakeCurrentPlayerMove(m.Doubles, m.Roll);
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+            
+            return CreatedAtRoute("DefaultApi", null, newMove) ;
+            
+        }
+
         // GET: api/Game/5
         [ResponseType(typeof(ICollection<BoardUser>))]
         public ICollection<BoardUser> GetBoardUser(int id)
