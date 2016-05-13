@@ -148,7 +148,9 @@
                                     <div ng-if="'@Model.currentUsername' != activePlayer" class="row">
                                         <h3 class="col-md-12 text-center">It is not your turn right now.</h3>
                                     </div>
-</td>
+
+                                    {{ propertyState }}
+                                </td>
                             </tr>
                         </table>
                     </td>
@@ -341,9 +343,9 @@
             }
 
 
-            <h3>Moves List</h3>
+            <h3>Moves List (Last 10 Moves)</h3>
             <ul class="list-group">
-                <li class="list-group-item" ng-repeat="move in moves">
+                <li class="list-group-item" ng-repeat="move in moves | limitTo:-10">
                 {{ move.Description }} </li>
                 <li ng-if="moves.length == 0" class="list-group-item">
                     No moves made.
@@ -379,6 +381,7 @@
             $scope.boardUsers = [];
             $scope.boardUserNames = [];
             $scope.currentBoardUser = null;
+            $scope.propertyState = null;
 
             $http({
                 method: 'GET',
@@ -386,7 +389,9 @@
             }).then(function successCallback(response) {
                 //Success
                 console.log(response);
-                $scope.activePlayer = response.data.UserName;
+                $scope.activePlayer = response.data.user.UserName;
+                $scope.propertyState = response.data.propertyState;
+
             }, function errorCallback(response) {
                 console.log(response);
             });
@@ -424,6 +429,25 @@
                 console.log(response);
             });
         
+            // http://localhost:12306/api/Game/51/GetPropInfo/5
+            
+            $scope.processProperty = function(position){
+                console.log("Process Property");
+
+                var procPropUrl = '/api/Game/' + String(gameId) + '/GetPropInfo/' + String(position);
+
+                $http({
+                    method: 'GET',
+                    url: procPropUrl
+                }).then(function successCallback(response) {
+                    console.log(response);
+                    $scope.propertyState = response.data;
+
+                }, function errorCallback(response){
+                    console.log(response);
+                });
+            }
+
             $scope.endTurn = function(){
                 console.log("End Turn");
 
@@ -433,7 +457,8 @@
 
                 $http.post(endMoveUrl, JSON.stringify(jsonObject)).then(function(response){
                     console.log(response);
-
+                    $scope.activePlayer = response.data.ActivePlayer.UserName;
+                    $scope.moves.push(response.data.move);
                 }, 
                 function(response){
                     console.log(response);
@@ -463,6 +488,8 @@
                         moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
                         $scope.currentBoardUser.Position + $scope.dice1, 
                         $scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2 ]);
+
+                        $scope.processProperty($scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2);
                     }
                 }, 
                 function(response){

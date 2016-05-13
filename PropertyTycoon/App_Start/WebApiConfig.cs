@@ -28,6 +28,12 @@ namespace PropertyTycoon
             );
 
             config.Routes.MapHttpRoute(
+                name: "GetProfInfoRoute",
+                routeTemplate: "api/{controller}/{id}/GetPropInfo/{position}",
+                defaults: new { controller = "Game", action = "GetPropInfo" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "GetActivePlayerRoute",
                 routeTemplate: "api/{controller}/{id}/GetActivePlayer",
                 defaults: new { controller = "Game", action = "GetActivePlayer" }

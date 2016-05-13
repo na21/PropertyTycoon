@@ -27,6 +27,33 @@ namespace PropertyTycoon.Controllers
         public int BoardId { get; set; }
     }
 
+    public class MoveResponseModel
+    {
+        public Move move { get; set; }
+
+        public User ActivePlayer { get; set; }
+    }
+
+    public class ActivePlayerModel
+    {
+        public PropertyActionModel propertyState { get; set; }
+
+        public User user { get; set; }
+    }
+
+    public class PropertyActionModel
+    {
+        public bool isPropertyPurchasable { get; set; }
+
+        public int PropertyCost { get; set; }
+
+        public bool isChanceorCommunity { get; set; }
+
+        public string ChanceCommDescription { get; set; }
+
+        public string PropertyName { get; set; }
+    }
+
     public class GameController : ApiController
     {
         private GameContext db = new GameContext();
@@ -40,11 +67,25 @@ namespace PropertyTycoon.Controllers
         }
 
         // GET: api/Game/{id}/GetActivePlayer
-        public User GetActivePlayer(int id)
+        public ActivePlayerModel GetActivePlayer(int id)
         {
             Board board = db.Boards.Find(id);
 
-            return board.ActiveBoardPlayer;
+            ActivePlayerModel response = new ActivePlayerModel();
+            response.user = board.ActiveBoardPlayer;
+            
+
+            BoardUser bu = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
+
+            
+            Property property = (from p in board.Properties
+                                 where p.Position == bu.Position
+                                 select p).FirstOrDefault();
+
+
+            response.propertyState = SetPropertyState(property, bu);
+
+            return response;
         }
 
         // GET: api/Game/{id}/GetMovesList
@@ -55,8 +96,46 @@ namespace PropertyTycoon.Controllers
             return board.Moves;
         }
 
+        // GET: api/Game/{id}/GetPropInfo/{propId}
+        public PropertyActionModel GetPropInfo(int id, int position)
+        {
+            Board board = db.Boards.Find(id);
+
+            BoardUser bu = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
+
+            Property property = (from p in board.Properties
+                                 where p.Position == position
+                                 select p).FirstOrDefault();
+
+            
+            
+            return SetPropertyState(property, bu);
+        }
+
+        public PropertyActionModel SetPropertyState(Property property, BoardUser bu)
+        {
+            PropertyActionModel response = new PropertyActionModel();
+            response.PropertyCost = property.Price;
+            response.PropertyName = property.Name;
+
+            if (property.Name == "Chance" ||
+                property.Name == "Community Chest" ||
+                property.Name == "Income Tax" ||
+                property.Name == "Luxury Tax")
+            {
+                response.isChanceorCommunity = true;
+            }
+            else
+            {
+                response.isChanceorCommunity = false;
+
+                response.isPropertyPurchasable = bu.Money >= property.Price;
+
+            }
+            return response;
+        }
         [HttpPost]
-        [ResponseType(typeof(User))]
+        [ResponseType(typeof(MoveResponseModel))]
         public IHttpActionResult EndMove(EndMoveModel m)
         {
             Board board = db.Boards.Find(m.BoardId);
@@ -66,7 +145,7 @@ namespace PropertyTycoon.Controllers
                 return null;
             }
 
-            board.EndCurrentPlayerTurn();
+            var newMove = board.EndCurrentPlayerTurn();
 
             try
             {
@@ -77,7 +156,11 @@ namespace PropertyTycoon.Controllers
                 throw;
             }
 
-            return CreatedAtRoute("DefaultApi", null, board.ActiveBoardPlayer);
+            MoveResponseModel response = new MoveResponseModel();
+            response.move = newMove;
+            response.ActivePlayer = board.ActiveBoardPlayer;
+            
+            return CreatedAtRoute("DefaultApi", null, response);
         }
 
         //POST: 
