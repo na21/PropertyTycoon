@@ -37,8 +37,8 @@ namespace BusinessLogic
         public static int GetNumberOfGamesWonSince(this User user, DateTime DateSince)
         {
             return (from b in user.Boards
-             where b.Winner == user
-             select b.Id).Count();
+                    where b.Winner == user
+                    select b.Id).Count();
         }
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace BusinessLogic
                         select p).FirstOrDefault();
 
             // Check if user is in jail.
-            if(boardUser.InJail)
+            if (boardUser.InJail)
                 return;
 
             if (prop.Name == "Chance")
@@ -88,13 +88,13 @@ namespace BusinessLogic
                 return;
             }
 
-            if(prop.Name == "Income Tax")
+            if (prop.Name == "Income Tax")
             {
                 boardUser.Money -= prop.Price;
                 return;
             }
 
-            if(prop.Name == "Luxury Tax")
+            if (prop.Name == "Luxury Tax")
             {
                 boardUser.Money -= prop.Price;
                 return;
@@ -181,10 +181,10 @@ namespace BusinessLogic
                              select bu).FirstOrDefault();
 
             // User owns this property and it's not currently mortgaged.
-            if(!prop.Mortgaged && prop.User == user)
+            if (!prop.Mortgaged && prop.User == user)
             {
-                    prop.Mortgaged = true;
-                    boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
+                prop.Mortgaged = true;
+                boardUser.Money += (int)(Property.MortgagePercentage * prop.Price);
             }
         }
 
@@ -268,6 +268,20 @@ namespace BusinessLogic
                 bu.Money += hotelPrice;
                 p.NumHotels = 0;
             }
+        }
+
+        public static int NumGamesHosted(this User u)
+        {
+            int count = 0;
+
+            var nonCompleteBoards = (from b in u.Boards
+                                     where b.Host.UserName == u.UserName && b.Status != "Completed"
+                                     select b);
+
+            if (nonCompleteBoards != null)
+                count = nonCompleteBoards.Count();
+
+            return count;
         }
     }
 }

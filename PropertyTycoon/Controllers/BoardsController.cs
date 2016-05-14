@@ -61,6 +61,8 @@ namespace PropertyTycoon.Controllers
         {
             User u = db.GetUser(User.Identity.Name);
 
+            int boardCount = u.NumGamesHosted();
+
             var boards = (from b in db.Boards
                           where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange 
                           && b.Status == "New"
@@ -79,6 +81,7 @@ namespace PropertyTycoon.Controllers
             }
 
             ViewBag.eligibleBoards = eligibleBoards;
+            ViewBag.boardCount = boardCount;
 
             return View();
         }
@@ -164,6 +167,11 @@ namespace PropertyTycoon.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Board board)
         {
+            User u = db.getUserFromIdentity(User);
+
+            if (u.NumGamesHosted() >= 5)
+                return View("BoardError");
+
             if (ModelState.IsValid)
             {
                 User boardOwner = db.getUserFromIdentity(User);

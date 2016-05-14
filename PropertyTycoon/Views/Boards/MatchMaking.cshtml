@@ -4,12 +4,23 @@
     ViewBag.Title = "MatchMaking";
 
     List<DataLayer.Board> eligibleBoards = ((List<DataLayer.Board>)(ViewBag.eligibleBoards));
+    int boardCount = (int)ViewBag.boardCount;
 }
 
 <h2>Create Game</h2>
+@if (boardCount < 5)
+{
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+}
+else
+{
+    <p>
+        Players may only host up to 5 games at any given time. Complete, delete, or forfeit some
+        of your @Html.ActionLink("active games", "GameFeed") to free up a slot.
+    </p>
+}
 <br />
 
 <h2>Join Game</h2>
