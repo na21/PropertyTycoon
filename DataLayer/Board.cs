@@ -21,6 +21,7 @@ namespace DataLayer
         public int Id { get; set; }
 
         [Required]
+        [Display(Name = "Max Players")]
         public int MaximumPlayers { get; set; }
 
         public virtual User ActiveBoardPlayer { get; set; }
@@ -49,9 +50,11 @@ namespace DataLayer
         public string Status { get; set; }
 
         [Required]
+        [Display(Name = "Min Skill")]
         public int minSkillRange { get; set; }
 
         [Required]
+        [Display(Name = "Max Skill")]
         public int maxSkillRange { get; set; }
     }
 }

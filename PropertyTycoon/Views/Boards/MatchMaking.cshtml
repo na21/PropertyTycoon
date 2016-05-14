@@ -23,7 +23,10 @@ else
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MaximumPlayers)
+                Host
+            </th>
+            <th>
+               Players
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -41,7 +44,10 @@ else
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MaximumPlayers)
+                    @item.Users.FirstOrDefault().UserName
+                </td>
+                <td>
+                    @item.Users.Count()/@item.MaximumPlayers
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
@@ -53,8 +59,6 @@ else
                     @Html.DisplayFor(modelItem => item.maxSkillRange)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.Id })
-
                     @using (Html.BeginForm("Join", "Boards", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()

@@ -29,7 +29,6 @@ namespace PropertyTycoon.Controllers
             List<Board> activeBoards = new List<Board>();
             List<Board> completedBoards = new List<Board>();
 
-
             if (u.Boards != null)
             {
                 foreach(Board b in u.Boards)
@@ -53,7 +52,8 @@ namespace PropertyTycoon.Controllers
             User u = db.GetUser(User.Identity.Name);
 
             var boards = (from b in db.Boards
-                          where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange
+                          where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange 
+                          && b.Status == "New"
                           select b);
 
             List<Board> eligibleBoards = new List<Board>();
@@ -62,7 +62,7 @@ namespace PropertyTycoon.Controllers
             {
                 foreach (Board b in boards.ToList())
                 {
-                    if (b.GetBoardUser(User.Identity.Name) == null)
+                    if (b.GetBoardUser(User.Identity.Name) == null && b.Users.Count() < b.MaximumPlayers)
                         eligibleBoards.Add(b);
                 }
             }

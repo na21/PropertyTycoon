@@ -18,7 +18,13 @@ else
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MaximumPlayers)
+                Host
+            </th>
+            <th>
+                Your Turn
+            </th>
+            <th>
+                Players
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -34,9 +40,26 @@ else
 
         @foreach (var item in activeBoards)
         {
+            string turn = item.Status == "Active" ? item.ActiveBoardPlayer.UserName : "";
+
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.MaximumPlayers)
+                    @item.Users.FirstOrDefault().UserName
+                </td>
+                <td>
+                    @if (turn == User.Identity.Name)
+                    {
+                        <span style="color:green; font-weight:bold">&#x2713;</span>
+                        }
+                    else
+                    {
+                       <span>&#x2717;</span>
+                    }
+
+
+                </td>
+                <td>
+                    @item.Users.Count()/@item.MaximumPlayers
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
@@ -48,7 +71,6 @@ else
                     @Html.DisplayFor(modelItem => item.maxSkillRange)
                 </td>
                 <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.Id })
 
                     @if (item.Status == "New")
                     {
@@ -57,6 +79,8 @@ else
 
                     else if (item.Status == "Active")
                     {
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })
+                        <br />
                         @Html.ActionLink("Forfeit", "Forfeit", new { id = item.Id })
                     }
                 </td>
@@ -79,7 +103,10 @@ else
     <table class="table">
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.MaximumPlayers)
+                Winner
+            </th>
+            <th>
+                Players
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
@@ -95,34 +122,40 @@ else
 
         @foreach (var item in completedBoards)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MaximumPlayers)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Status)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.minSkillRange)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.maxSkillRange)
-                </td>
-                <td>
-                    @Html.ActionLink("Details", "Details", new { id = item.Id })
+           
+                string color = item.Winner.UserName == User.Identity.Name ? "green" : "black";
+           
+                <tr style="color:@color">
+                    <td>
+                        @item.Winner.UserName
+                    </td>
+                    <td>
+                        @item.Users.Count()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.minSkillRange)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.maxSkillRange)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = item.Id })
 
-                    @if (item.Status == "New")
-                    {
-                        @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                    }
+                        @if (item.Status == "New")
+                        {
+                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                        }
 
-                    else if (item.Status == "Active")
-                    {
-                        @Html.ActionLink("Forfeit", "Forfeit", new { id = item.Id })
-                    }
-                </td>
-            </tr>
-        }
+                        else if (item.Status == "Active")
+                        {
+                            @Html.ActionLink("Forfeit", "Forfeit", new { id = item.Id })
+                        }
+                    </td>
+                </tr>
+                }
 
-    </table>
-}
+            </table>
+            }
