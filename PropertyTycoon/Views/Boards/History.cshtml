@@ -1,0 +1,88 @@
+﻿@model IEnumerable<DataLayer.Board>
+
+@{
+    ViewBag.Title = "History";
+    string userName = (string)ViewBag.userName;
+    int wins = 0;
+    int losses = 0;
+}
+
+<h2>History - @userName</h2>
+
+<table class="table">
+    <tr>
+        <th>
+            W/L
+        </th>
+        <th>
+            Host
+        </th>
+        <th>
+            Winner
+        </th>
+        <th>
+            Players
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.minSkillRange)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.maxSkillRange)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        string turn = item.Status == "Active" ? item.ActiveBoardPlayer.UserName : "";
+
+        <tr>
+            <td>
+                @if (item.Winner.UserName == userName)
+                {
+                    ++wins;
+                    <span style="color:green; font-weight:bold">&#x2713;</span>
+                }
+                else
+                {
+                    ++losses;
+                    <span style="color:red; font-weight:bold">&#x2717;</span>
+                }
+
+
+            </td>
+            <td>
+                <a href="History?userName=@item.Host.UserName">
+                    @item.Host.UserName
+                    </a>
+            </td>
+            <td>
+                <a href="History?userName=@item.Winner.UserName">
+                    @item.Winner.UserName
+                </a>
+            </td>
+
+            <td>
+                @item.Users.Count()/@item.MaximumPlayers
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.minSkillRange)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.maxSkillRange)
+            </td>
+        </tr>
+    }
+
+</table>
+
+@{ 
+    string color = wins >= losses ? "green" : "red";
+}
+<h3 style="color:@color">@wins wins - @losses losses</h3>

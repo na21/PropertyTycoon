@@ -273,6 +273,7 @@
     <Content Include="Views\Boards\Forfeit.cshtml" />
     <Content Include="Views\Home\Friends.cshtml" />
     <Content Include="Views\Boards\MatchMaking.cshtml" />
+    <Content Include="Views\Boards\History.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

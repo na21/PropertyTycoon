@@ -43,17 +43,25 @@ else
             string turn = item.Status == "Active" ? item.ActiveBoardPlayer.UserName : "";
 
             <tr>
-                <td>
+                <td><a href="History?userName=@item.Host.UserName">
                     @item.Host.UserName
+                    </a>
                 </td>
                 <td>
-                    @if (turn == User.Identity.Name)
+                    @if (item.Status == "New")
                     {
-                        <span style="color:green; font-weight:bold">&#x2713;</span>
-                        }
+                        <span>-</span>
+                    }
                     else
                     {
-                       <span>&#x2717;</span>
+                        if (turn == User.Identity.Name)
+                        {
+                        <span style="color:green; font-weight:bold">&#x2713;</span>
+                        }
+                        else
+                        {
+                       <span style="color:red; font-weight:bold">&#x2717;</span>
+                        }
                     }
 
 
@@ -104,7 +112,7 @@ else
 <br />
 
 
-<h2>Completed Games</h2>
+<h2>Recent Games</h2>
 @if (completedBoards == null || !completedBoards.Any())
 {
     <p>No completed games to display.</p>
@@ -113,6 +121,12 @@ else
 {
     <table class="table">
         <tr>
+            <th>
+                W/L
+            </th>
+            <th>
+                Host
+            </th>
             <th>
                 Winner
             </th>
@@ -133,12 +147,26 @@ else
 
         @foreach (var item in completedBoards)
         {
-           
-                string color = item.Winner.UserName == User.Identity.Name ? "green" : "black";
-           
-                <tr style="color:@color">
+                <tr>
                     <td>
+                        @if (item.Winner.UserName == User.Identity.Name)
+                        {
+                            <span style="color:green; font-weight:bold">&#x2713;</span>
+                        }
+                        else
+                        {
+                            <span style="color:red; font-weight:bold">&#x2717;</span>
+                        }
+
+                    </td>
+                    <td>
+                        <a href="History?userName=@item.Host.UserName">
+                            @item.Host.UserName
+                        </a>
+                    </td>
+                    <td><a href="History?userName=@item.Winner.UserName">
                         @item.Winner.UserName
+                        </a>
                     </td>
                     <td>
                         @item.Users.Count()
@@ -151,19 +179,6 @@ else
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.maxSkillRange)
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", new { id = item.Id })
-
-                        @if (item.Status == "New")
-                        {
-                            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                        }
-
-                        else if (item.Status == "Active")
-                        {
-                            @Html.ActionLink("Forfeit", "Forfeit", new { id = item.Id })
-                        }
                     </td>
                 </tr>
                 }

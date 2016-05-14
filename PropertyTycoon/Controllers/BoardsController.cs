@@ -29,16 +29,26 @@ namespace PropertyTycoon.Controllers
             List<Board> activeBoards = new List<Board>();
             List<Board> completedBoards = new List<Board>();
 
+            // user has associated boards
             if (u.Boards != null)
             {
-                foreach(Board b in u.Boards)
-                {
-                    if (b.Status == "Completed")
-                        completedBoards.Add(b);
+                var recent = (from b in u.Boards
+                              where b.Status == "Completed"
+                              orderby b.Id descending
+                              select b).Take(5);
 
-                    else
-                        activeBoards.Add(b);
-                }
+                var active = (from b in u.Boards
+                              where b.Status != "Completed"
+                              orderby b.Status descending
+                              select b);
+
+
+                if (recent != null)
+                    completedBoards.AddRange(recent.ToList());
+
+                if (active != null)
+                    activeBoards.AddRange(active.ToList());
+                
             }
 
             ViewBag.activeBoards = activeBoards;
@@ -171,36 +181,6 @@ namespace PropertyTycoon.Controllers
             return View(board);
         }
 
-        // GET: Boards/Edit/5
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Board board = db.Boards.Find(id);
-            if (board == null)
-            {
-                return HttpNotFound();
-            }
-            return View(board);
-        }
-
-        // POST: Boards/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,MaximumPlayers,Status,minSkillRange,maxSkillRange")] Board board)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Entry(board).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(board);
-        }
 
         public ActionResult Forfeit(int? id)
         {
@@ -279,6 +259,34 @@ namespace PropertyTycoon.Controllers
             db.Boards.Remove(board);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public ActionResult History(string userName)
+        {
+            if (userName == null)
+                userName = User.Identity.Name;
+
+            User u = db.GetUser(userName);
+
+            if (u == null)
+                return HttpNotFound();
+
+            List<Board> gamesList = new List<Board>();
+
+            if(u.Boards != null)
+            {
+                var completed = (from b in u.Boards
+                                 where b.Status == "Completed"
+                                 orderby b.Id descending
+                                 select b);
+
+                if(completed != null)
+                    gamesList.AddRange(completed.ToList());
+            }
+
+            ViewBag.userName = userName;
+
+            return View(gamesList);
         }
 
         protected override void Dispose(bool disposing)
