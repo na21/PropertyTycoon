@@ -55,6 +55,9 @@ namespace PropertyTycoon.Controllers
         public string ChanceCommDescription { get; set; }
 
         public string PropertyName { get; set; }
+
+        public bool CanBuildHouse { get; set; }
+        public bool CanBuildHotel { get; set; }
     }
 
     public class BuyPropertyModel
@@ -141,6 +144,8 @@ namespace PropertyTycoon.Controllers
             return SetPropertyState(property, bu);
         }
 
+        
+
         public PropertyActionModel SetPropertyState(Property property, BoardUser bu)
         {
             PropertyActionModel response = new PropertyActionModel();
@@ -158,8 +163,74 @@ namespace PropertyTycoon.Controllers
                 response.isPropertyPurchasable = property.User == null && bu.Money >= property.Price;
 
             }
+
+            if(property.Group != "Utilities" && property.Group != "Railroad" && property.Group != "No-Group")
+            {
+                response.CanBuildHouse = bu.CanBuildHouse(property);
+                response.CanBuildHotel = bu.CanBuildHotel(property);
+            }
+
+            else
+            {
+                response.CanBuildHouse = false;
+                response.CanBuildHotel = false;
+            }
             return response;
         }
+
+        
+        [HttpPost]
+        [ResponseType(typeof(MoveResponseModel))]
+        public IHttpActionResult BuildHouse(EndMoveModel m)
+        {
+            Board board = db.Boards.Find(m.BoardId);
+            BoardUser bu = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
+            Property p = board.GetPropertyWithPos(bu.Position);
+            bu.BuildHouse(p);
+
+            Move newMove = new Move();
+            newMove.Roll = 0;
+            newMove.Board = board;
+            newMove.Description = board.ActiveBoardPlayer.UserName + " built a house.";
+            newMove.UserName = board.ActiveBoardPlayer.UserName;
+            newMove.User = board.ActiveBoardPlayer;
+
+            board.Moves.Add(newMove);
+
+            MoveResponseModel response = new MoveResponseModel();
+            response.move = newMove;
+            response.ActivePlayer = board.ActiveBoardPlayer;
+
+            return CreatedAtRoute("DefaultApi", null, response);
+        }
+
+        
+        [HttpPost]
+        [ResponseType(typeof(MoveResponseModel))]
+        public IHttpActionResult BuildHotel(EndMoveModel m)
+        {
+            Board board = db.Boards.Find(m.BoardId);
+            BoardUser bu = board.GetBoardUser(board.ActiveBoardPlayer.UserName);
+            Property p = board.GetPropertyWithPos(bu.Position);
+            bu.BuildHotel(p);
+
+            Move newMove = new Move();
+            newMove.Roll = 0;
+            newMove.Board = board;
+            newMove.Description = board.ActiveBoardPlayer.UserName + " built a hotel.";
+            newMove.UserName = board.ActiveBoardPlayer.UserName;
+            newMove.User = board.ActiveBoardPlayer;
+
+            board.Moves.Add(newMove);
+
+            MoveResponseModel response = new MoveResponseModel();
+            response.move = newMove;
+            response.ActivePlayer = board.ActiveBoardPlayer;
+
+            return CreatedAtRoute("DefaultApi", null, response);
+        }
+        
+
         [HttpPost]
         [ResponseType(typeof(MoveResponseModel))]
         public IHttpActionResult EndMove(EndMoveModel m)

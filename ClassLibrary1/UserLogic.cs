@@ -208,44 +208,37 @@ namespace BusinessLogic
             return propsInGroup == propsOwned;
         }
 
-        public static bool CanBuildHouse(this User user, Board b, Property p)
+        public static bool CanBuildHouse(this BoardUser bu, Property p)
         {
-            BoardUser bu = b.GetBoardUser(user.UserName);
 
             int housePrice = (int)(p.Price * Property.HouseCostPercentage);
 
-            if (OwnsGroup(user, b, p.Group) && p.NumHouses < 4 && bu.Money >= housePrice)
+            if (OwnsGroup(bu.User, bu.Board, p.Group) && p.NumHouses < 4 && bu.Money >= housePrice)
                 return true;
 
             return false;
         }
 
-        public static bool CanBuildHotel(this User user, Board b, Property p)
+        public static bool CanBuildHotel(this BoardUser bu, Property p)
         {
-            BoardUser bu = b.GetBoardUser(user.UserName);
-
             int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
 
-            if (OwnsGroup(user, b, p.Group) && p.NumHouses >= 4 && bu.Money >= hotelPrice)
+            if (OwnsGroup(bu.User, bu.Board, p.Group) && p.NumHouses >= 4 && bu.Money >= hotelPrice)
                 return true;
 
             return false;
         }
 
-        public static void BuildHouse(this User user, Board b, Property p, int n = 1)
+        public static void BuildHouse(this BoardUser bu, Property p, int n = 1)
         {
-            BoardUser bu = b.GetBoardUser(user.UserName);
-
             int housePrice = (int)(p.Price * Property.HouseCostPercentage);
 
             bu.Money -= n * housePrice;
             p.NumHouses += n;
         }
 
-        public static void BuildHotel(this User user, Board b, Property p)
+        public static void BuildHotel(this BoardUser bu, Property p)
         {
-            BoardUser bu = b.GetBoardUser(user.UserName);
-
             int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
 
             bu.Money -= hotelPrice;
@@ -266,10 +259,8 @@ namespace BusinessLogic
             }
         }
 
-        public static void SellHotel(this User user, Board b, Property p)
+        public static void SellHotel(BoardUser bu, Property p)
         {
-            BoardUser bu = b.GetBoardUser(user.UserName);
-
             if (p.NumHotels > 0)
             {
                 int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
