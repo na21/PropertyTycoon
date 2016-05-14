@@ -31,6 +31,7 @@ namespace DataLayer
             var board = new Board();
             board.Status = "New";
             board.MaximumPlayers = maxPlayers;
+            board.Host = player;
 
             var boardUser = new BoardUser();
 

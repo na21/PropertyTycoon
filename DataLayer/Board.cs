@@ -27,6 +27,8 @@ namespace DataLayer
         public virtual User ActiveBoardPlayer { get; set; }
 
         public virtual User Winner { get; set; }
+
+        public virtual User Host { get; set; }
         
         public virtual ICollection<BoardUser> BoardUsers { get; set; }
 

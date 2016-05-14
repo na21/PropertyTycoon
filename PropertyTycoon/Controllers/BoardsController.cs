@@ -54,6 +54,7 @@ namespace PropertyTycoon.Controllers
             var boards = (from b in db.Boards
                           where u.SkillPoints >= b.minSkillRange && u.SkillPoints <= b.maxSkillRange 
                           && b.Status == "New"
+                          orderby b.Status descending
                           select b);
 
             List<Board> eligibleBoards = new List<Board>();
@@ -74,6 +75,32 @@ namespace PropertyTycoon.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public ActionResult StartGame(int? id)
+        {
+            User u = db.GetUser(User.Identity.Name);
+
+            if (id == null)
+                return View("BoardError");
+
+            var board = (from b in db.Boards
+                         where b.Id == id
+                         select b).FirstOrDefault();
+
+            if (board == null)
+                return View("BoardError");
+
+            // Need at least 2 players to start.
+            if (board.GetNumberofPlayers() < 2)
+                return View("BoardError");
+
+            board.Status = "Active";
+            db.SaveChanges();
+
+            return RedirectToAction("Details", new { id = board.Id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Join(int? id)
         {
             User u = db.GetUser(User.Identity.Name);
@@ -90,14 +117,8 @@ namespace PropertyTycoon.Controllers
 
             db.AddPlayerToBoard(u, board);
 
-            // Start the game once all players have joined.
-            if(board.GetNumberofPlayers() == board.MaximumPlayers)
-            {
-                board.Status = "Active";
-            }
-
             db.SaveChanges();
-            return RedirectToAction("Details", new { id = board.Id });
+            return RedirectToAction("GameFeed", "Boards");
         }
 
         // GET: Boards/Details/5
@@ -233,6 +254,7 @@ namespace PropertyTycoon.Controllers
             {
                 return HttpNotFound();
             }
+
             return View(board);
         }
 
@@ -249,7 +271,7 @@ namespace PropertyTycoon.Controllers
             }
 
             // In progress or completed games cannot be deleted.
-            if(board.Status != "New")
+            if(board.Status != "New" || board.Host.UserName != User.Identity.Name)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }

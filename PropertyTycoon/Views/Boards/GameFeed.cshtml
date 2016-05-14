@@ -44,7 +44,7 @@ else
 
             <tr>
                 <td>
-                    @item.Users.FirstOrDefault().UserName
+                    @item.Host.UserName
                 </td>
                 <td>
                     @if (turn == User.Identity.Name)
@@ -72,9 +72,20 @@ else
                 </td>
                 <td>
 
-                    @if (item.Status == "New")
+                    @if (item.Status == "New" && item.Host.UserName == User.Identity.Name)
                     {
                         @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+
+                        if (item.Users.Count() >= 2)
+                        {
+                            using (Html.BeginForm("StartGame", "Boards", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden" name="id" value="@item.Id">
+                                <button type="submit" name="button" value="StartGame">Start Game</button>
+                            }
+                        }
                     }
 
                     else if (item.Status == "Active")
