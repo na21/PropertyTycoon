@@ -262,7 +262,17 @@ namespace PropertyTycoon.Controllers
                 return View("NotAuthorized");
 
             return View();
+        }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddFriend(User friend)
+        {
+            User u = gc.getUserFromIdentity(User);
+            FriendLogic.CreateFriendRequest(u , friend);
+            gc.SaveChanges();
+
+            return View("Friends");     
         }
 
         [HttpPost]

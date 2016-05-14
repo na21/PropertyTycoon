@@ -73,5 +73,10 @@ namespace BusinessLogic
             gc.Friendships.Remove(f);
             gc.SaveChanges();
         }
+
+        //public static IEnumerable<Friends> getFriends(User u)
+        //{
+
+        //}
     }
 }

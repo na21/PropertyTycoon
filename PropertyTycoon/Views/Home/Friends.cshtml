@@ -29,8 +29,15 @@
             for (int i = 0; i < users.Length; i++)
             {
                 <tr>
-                    <th>@users[i].UserName</th>
-                    <th><input type="button" value="Add Friend" name="AddFriend"/></th>
+                    <td>@users[i].UserName</td>
+                    <td>
+                        @using (Html.BeginForm("AddFriend", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="friend" value="@users[i]">
+                            <button type="submit" name="AddFriend" value="AddFriend">Add Friend</button>
+                        }
+                    </td>
                 </tr>
             }
         }
@@ -46,7 +53,12 @@ else
             <th>Invite To Game</th>
             <th>Delete Friend</th> 
         </tr>
-    </table>
 
-    // TODO: Display all of currently logged in user's friends
+        @{ 
+            // TODO: Display all of currently logged in user's friends
+            GameContext gc = new GameContext();
+            User currentUser = gc.getUserFromIdentity(User);
+
+        }
+    </table>      
 }
