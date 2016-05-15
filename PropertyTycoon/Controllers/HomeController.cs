@@ -147,7 +147,7 @@ namespace PropertyTycoon.Controllers
 
                 var userSums = (from pe in gc.UserPointsEarned
                                 where pe.CreatedAt >= startTime
-                                group pe by new { pe.UserName, pe.Points } into g
+                                group pe by new { pe.UserName } into g
                                 select new { g.Key.UserName, Sum = g.Sum(pe => pe.Points) } into s
                                 orderby s.Sum descending
                                 select s).Take(10);
@@ -157,7 +157,15 @@ namespace PropertyTycoon.Controllers
                 if (userSums != null)
                 {
                     foreach (var item in userSums)
-                        ul.Add(gc.GetUser(item.UserName));
+                    {
+                        User u = new User()
+                        {
+                            UserName = item.UserName,
+                            SkillPoints = item.Sum
+                        };
+
+                        ul.Add(u);
+                    }
                 }
 
                 return View(ul);
