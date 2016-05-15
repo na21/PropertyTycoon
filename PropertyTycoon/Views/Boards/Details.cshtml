@@ -437,52 +437,60 @@
                 console.log(response);
             });
 
-            $http({
-                method: 'GET',
-                url: '/api/Game/' + String(gameId) + '/BoardUsers'
-            }).then(function successCallback(response) {
-                //Success
-                console.log(response);
-                $scope.boardUsers = response.data.boardUsers;
-                $scope.UserOwnedProperties = response.data.UserOwnedProperties;
+            $scope.GetBoardUsersDetails = function(addPlayerstoBoard){
+                $http({
+                    method: 'GET',
+                    url: '/api/Game/' + String(gameId) + '/BoardUsers'
+                }).then(function successCallback(response) {
+                    //Success
+                    console.log(response);
+                    $scope.boardUsers = response.data.boardUsers;
+                    $scope.UserOwnedProperties = response.data.UserOwnedProperties;
 
-                var count = 1;
-                angular.forEach($scope.boardUsers, function(item){
-                    if(item.UserName == $scope.currentPlayer){
-                        $scope.currentBoardUser = item;
+                    if(addPlayerstoBoard){
+                        var count = 1;
+                        angular.forEach($scope.boardUsers, function(item){
+                            if(item.UserName == $scope.currentPlayer){
+                                $scope.currentBoardUser = item;
+                            }
+                            $scope.boardUserNames.push(item.UserName);
+                            $("#pos"+String(item.Position)).append("<div id=\"player" + String(count) + "\"></div>")
+                            count += 1;
+                        });
                     }
-                    $scope.boardUserNames.push(item.UserName);
-                    $("#pos"+String(item.Position)).append("<div id=\"player" + String(count) + "\"></div>")
-                    count += 1;
-                });
-
-                angular.forEach($scope.UserOwnedProperties, function(value, key) {
                     
-                    if(!isNaN(key)){
-                        var idx = $scope.boardUserNames.indexOf(value);
-                        var color = "black";
 
-                        if(idx == 0)
-                            color = "red"
-                        else if(idx == 1)
-                            color = "blue"
-                        else if(idx == 2)
-                            color = "green"
-                        else
-                            color = "yellow"
+                    angular.forEach($scope.UserOwnedProperties, function(value, key) {
+                    
+                        if(!isNaN(key)){
+                            var idx = $scope.boardUserNames.indexOf(value);
+                            var color = "black";
 
-                        var style = {   
-                            "color": color
+                            if(idx == 0)
+                                color = "red"
+                            else if(idx == 1)
+                                color = "blue"
+                            else if(idx == 2)
+                                color = "green"
+                            else
+                                color = "yellow"
+
+                            var style = {   
+                                "color": color
+                            }
+
+                            $("#pos"+String(key)).css(style);
                         }
-
-                        $("#pos"+String(key)).css(style);
-                    }
                     
-                });
+                    });
 
-            }, function errorCallback(response) {
-                console.log(response);
-            });
+                }, function errorCallback(response) {
+                    console.log(response);
+                });
+            };
+
+            $scope.GetBoardUsersDetails(true);
+            
         
             // http://localhost:12306/api/Game/51/GetPropInfo/5
             
@@ -530,6 +538,8 @@
                 $http.post(buyPropertyUrl, JSON.stringify(jsonObject)).then(function(response){
                     console.log(response);
                     $scope.moves.push(response.data);
+                    $scope.GetActivePlayer();
+                    $scope.GetBoardUsersDetails(false);
                 }, 
                 function(response){
                     console.log(response);
@@ -559,7 +569,7 @@
                         var endPosition =  response.data.CurrentPos; //($scope.currentBoardUser.Position + $scope.dice1 + $scope.dice2)%40;
                         if(endPosition != $scope.currentBoardUser.Position){
                             moveAnimate(playerIdentifier, 0, [$scope.currentBoardUser.Position, 
-                            ($scope.currentBoardUser.Position + $scope.dice1)%40, 
+                            $scope.currentBoardUser.Position, 
                             endPosition ]);
 
                             $scope.currentBoardUser.Position = endPosition;
