@@ -67,49 +67,43 @@ namespace PropertyTycoon.Controllers
             User user = gc.GetUser(User.Identity.Name);
 
             //
-            // Display your rank and up to 9 users above you.
+            // Prep drop-down list box wiith these choices.
             //
-            if (display == null || display == "me")
+            List<SelectListItem> choices = new List<SelectListItem>();
+
+            choices.Add(new SelectListItem()
             {
+                Value = "alltime",
+                Text = "All-Time",
+                Selected = true
+            });
 
-                var usersAbove = (from u in gc.Users
-                                   where u.SkillPoints > user.SkillPoints
-                               orderby u.SkillPoints ascending
-                               select u).Take(9);
+            choices.Add(new SelectListItem()
+            {
+                Value = "week",
+                Text = "Week",
+                Selected = false
+            });
+            choices.Add(new SelectListItem()
+            {
+                Value = "month",
+                Text = "Month",
+                Selected = false
+            });
+            choices.Add(new SelectListItem()
+            {
+                Value = "today",
+                Text = "Today",
+                Selected = false
+            });
 
-                List<User> ul = new List<User>();
+            ViewBag.display = choices;
 
-                if (usersAbove != null)
-                {
-                    ul.AddRange(usersAbove.ToList());
-                    ul.Reverse();
-                }
-                
-                ul.Add(user);
-
-                int aboveCount = usersAbove == null ? 0 : usersAbove.Count();
-
-                // If there aren't 9 users ranked above you, show 9 - n users ranked below.
-                if(aboveCount < 9)
-                {
-                    int n = 9 - aboveCount;
-
-                    var usersBelow = (from u in gc.Users
-                                   where u.SkillPoints <= user.SkillPoints && u.UserName != user.UserName
-                                   orderby u.SkillPoints descending
-                                   select u).Take(n);
-
-                    if(usersBelow != null)
-                        ul.AddRange(usersBelow.ToList());
-                }
-
-                return View(ul);
-            }
 
             //
             // Display all-time point leaders.
             //
-            else if(display == "alltime")
+            if(display == null || display == "alltime")
             {
                 var usersAllTime = (from u in gc.Users
                                 orderby u.SkillPoints descending
