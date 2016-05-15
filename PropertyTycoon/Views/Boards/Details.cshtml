@@ -11,7 +11,6 @@
             @Html.ActionLink("Edit", "Edit", new { id = Model.GameBoard.Id }) |
             @Html.ActionLink("Back to List", "Index")
         </p>
-       
     </div>
 
     <style>
@@ -62,8 +61,8 @@
             if (property.Group != "Railroad" && property.Group != "Utilities" && property.Group != "No-Group")
             {
                 <div style="color: black">
-                    @Html.Raw("Hotels: ") @property.NumHotels
-                    @Html.Raw("Houses: ") @property.NumHouses
+                    @Html.Raw("Hotels: ") {{ properties["@property.Position"].numHotels}}
+                    @Html.Raw("Houses: ") {{ properties["@property.Position"].numHouses  }}
                 </div>
             }
 
@@ -173,6 +172,24 @@
                                                  <strong>{{ propertyState.PropertyName }} </strong>
                                             for ${{propertyState.PropertyCost}} ?</h5>  
                                              <button type="submit" class="btn btn-default" ng-click="BuyProperty()">Buy</button>
+                                        </div>
+
+                                        <div ng-if="propertyState.CanBuildHouse" class='col-md-12'>
+                                            <h5>
+                                                Build a House on
+                                                <strong>{{ propertyState.PropertyName }} </strong>
+                                                for ${{propertyState.HouseCost}} ?
+                                            </h5>
+                                            <button type="submit" class="btn btn-default" ng-click="BuildHouse()">Build</button>
+                                        </div>
+
+                                        <div ng-if="propertyState.CanBuildHotel" class='col-md-12'>
+                                            <h5>
+                                                Build a Hotel on
+                                                <strong>{{ propertyState.PropertyName }} </strong>
+                                                for ${{propertyState.HotelCost}} ?
+                                            </h5>
+                                            <button type="submit" class="btn btn-default" ng-click="BuildHotel()">Build</button>
                                         </div>
                                     </div>
                                         
@@ -407,6 +424,7 @@
             $scope.currentBoardUser = null;
             $scope.propertyState = null;
             $scope.HasCurrentUserRolled = false;
+            $scope.properties = null;
 
             $scope.GetActivePlayer = function(){
 
@@ -419,6 +437,8 @@
                     $scope.activePlayer = response.data.user.UserName;
                     $scope.propertyState = response.data.propertyState;
                     $scope.HasCurrentUserRolled = response.data.HasRolled;
+                    $scope.properties = response.data.properties;
+
                 }, function errorCallback(response) {
                     console.log(response);
                 });
@@ -540,6 +560,40 @@
                     $scope.moves.push(response.data);
                     $scope.GetActivePlayer();
                     $scope.GetBoardUsersDetails(false);
+                }, 
+                function(response){
+                    console.log(response);
+                });
+            }
+
+            $scope.BuildHouse = function(){
+                console.log("Build House");
+
+                var buildHouseUrl = '/api/Game/BuildHouse';
+
+                var jsonObject = {  "BoardId": String(gameId) };
+
+                $http.post(buildHouseUrl, JSON.stringify(jsonObject)).then(function(response){
+                    console.log(response);
+                    $scope.moves.push(response.data.move);
+                    $scope.GetActivePlayer();
+                }, 
+                function(response){
+                    console.log(response);
+                });
+            }
+
+            $scope.BuildHotel = function(){
+                console.log("Build House");
+
+                var buildHotelUrl = '/api/Game/BuildHotel';
+
+                var jsonObject = {  "BoardId": String(gameId) };
+
+                $http.post(buildHotelUrl, JSON.stringify(jsonObject)).then(function(response){
+                    console.log(response);
+                    $scope.moves.push(response.data.move);
+                    $scope.GetActivePlayer();
                 }, 
                 function(response){
                     console.log(response);

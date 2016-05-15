@@ -231,19 +231,15 @@ namespace BusinessLogic
 
         public static void BuildHouse(this BoardUser bu, Property p, int n = 1)
         {
-            int housePrice = (int)(p.Price * Property.HouseCostPercentage);
-
-            bu.Money -= n * housePrice;
+            bu.Money -= n * p.GetHouseCost();
             p.NumHouses += n;
         }
 
         public static void BuildHotel(this BoardUser bu, Property p)
         {
-            int hotelPrice = (int)(p.Price * Property.HotelCostPercentage);
-
-            bu.Money -= hotelPrice;
+            bu.Money -= p.GetHotelCost();
             p.NumHotels++;
-            p.NumHouses = 0;
+            p.NumHouses -= 4;
         }
 
         public static void SellHouse(this User user, Board b, Property p, int n = 1)
