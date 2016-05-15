@@ -15,7 +15,6 @@
 
 else
 {
-
     <table>
         <tr>
             <th>Ranking</th>
@@ -23,16 +22,27 @@ else
             <th>Points</th>
         </tr>
 
+        @{
+            int? lastPoints = null;
+            int rank = 1;
+        }
+
         @for (int i = 0; i < Model.Count; ++i)
         {
             var u = Model[i];
 
+            if (lastPoints != null && lastPoints != Model[i].SkillPoints)
+            { ++rank; }
+
             <tr>
-                <td>@(i + 1)</td>
+                <td>@rank</td>
                 <td>@u.UserName</td>
                 <td>@u.SkillPoints</td>
             </tr>
 
+                lastPoints = u.SkillPoints;
+
+
         }
     </table>
-}
+            }

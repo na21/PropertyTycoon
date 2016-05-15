@@ -97,6 +97,10 @@
     <Compile Include="Migrations\201605141616281_AddedHostPropertyToBoard.Designer.cs">
       <DependentUpon>201605141616281_AddedHostPropertyToBoard.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605150145024_SeedForPointsEarned.cs" />
+    <Compile Include="Migrations\201605150145024_SeedForPointsEarned.Designer.cs">
+      <DependentUpon>201605150145024_SeedForPointsEarned.cs</DependentUpon>
+    </Compile>
     <Compile Include="PointsEarned.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
@@ -184,6 +188,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605141616281_AddedHostPropertyToBoard.resx">
       <DependentUpon>201605141616281_AddedHostPropertyToBoard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605150145024_SeedForPointsEarned.resx">
+      <DependentUpon>201605150145024_SeedForPointsEarned.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
