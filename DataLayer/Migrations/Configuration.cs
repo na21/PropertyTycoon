@@ -27,7 +27,7 @@ namespace DataLayer.Migrations
             //    );
             //
 
-            
+            /*
             context.Users.AddOrUpdate(x => x.UserName,
                 new User() { UserName = "Joe", SkillPoints = 25 },
                 new User() { UserName = "Paul", SkillPoints = 50 },
@@ -58,6 +58,7 @@ namespace DataLayer.Migrations
                 new PointsEarned() { Id = 108, Points = 90, UserName = "James", CreatedAt = DateTime.Now, BoardId = 890 },
                 new PointsEarned() { Id = 109, Points = 100, UserName = "Joe", CreatedAt = DateTime.Now, BoardId = 888 }
                 );
+                */
         }
     }
 }
