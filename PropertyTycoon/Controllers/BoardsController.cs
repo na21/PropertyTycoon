@@ -157,6 +157,9 @@ namespace PropertyTycoon.Controllers
         // GET: Boards/Create
         public ActionResult Create()
         {
+            //User user = db.getUserFromIdentity(User);
+
+            //ViewBag.Friends = new SelectList(user.Friends.OrderBy(u => u.UserName), "UserName", "UserName");
             return View();
         }
 

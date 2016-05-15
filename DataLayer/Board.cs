@@ -22,6 +22,7 @@ namespace DataLayer
 
         [Required]
         [Display(Name = "Max Players")]
+        [RangeAttribute(2, 4)]
         public int MaximumPlayers { get; set; }
 
         public virtual User ActiveBoardPlayer { get; set; }
