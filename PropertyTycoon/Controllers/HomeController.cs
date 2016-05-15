@@ -266,13 +266,25 @@ namespace PropertyTycoon.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddFriend(User friend)
+        public ActionResult CancelRequest(String friendUsername)
         {
             User u = gc.getUserFromIdentity(User);
-            FriendLogic.CreateFriendRequest(u , friend);
-            gc.SaveChanges();
+            User friend = gc.GetUser(friendUsername);
 
-            return View("Friends");     
+            FriendLogic.CancelFriendRequest(u, friend, gc);
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AddFriend(String friendUsername)
+        {
+            User u = gc.getUserFromIdentity(User);
+            User friend = gc.GetUser(friendUsername);
+
+            FriendLogic.CreateFriendRequest(u , friend, gc);
+            
+            return RedirectToAction("Friends");     
         }
 
         [HttpPost]

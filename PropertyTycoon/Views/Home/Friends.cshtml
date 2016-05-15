@@ -15,7 +15,8 @@
     <p>
         List of Users in the system:
     </p>
-
+}
+<div id="UserList">
     <table>
         <tr>
             <th>Username</th>
@@ -25,40 +26,57 @@
         @{
             GameContext gc = new GameContext();
             var users = gc.Users.ToArray();
+            User currentUser = gc.getUserFromIdentity(User);
 
             for (int i = 0; i < users.Length; i++)
             {
-                <tr>
-                    <td>@users[i].UserName</td>
-                    <td>
-                        @using (Html.BeginForm("AddFriend", "Home", FormMethod.Post))
-                        {
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="friend" value="@users[i]">
-                            <button type="submit" name="AddFriend" value="AddFriend">Add Friend</button>
-                        }
-                    </td>
-                </tr>
+                User u = users[i];
+
+                if ((currentUser != u) && (!currentUser.Friends.Contains(u)))
+                {
+                    <tr>
+                        <td>@u.UserName</td>
+                        <td>
+                            @{
+                                int frCount = gc.FriendRequests.Where(fr => fr.User.UserName.Equals(currentUser.UserName) && fr.Friend.UserName.Equals(u.UserName)).Count();
+                                if (frCount == 1)
+                                {
+                                    using (Html.BeginForm("CancelRequest", "Home", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="friendUsername" value="@u.UserName">
+                                        <button type="submit" name="CancelRequest" value="CancelRequest">Cancel Request</button>
+                                    }
+                                }
+                                else
+                                {
+                                    using (Html.BeginForm("AddFriend", "Home", FormMethod.Post))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="friendUsername" value="@u.UserName">
+                                        <button type="submit" name="AddFriend" value="AddFriend">Add Friend</button>
+                                    }
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
             }
         }
     </table>
+</div>
 
-    // TODO: Remove list of Users and add search bar to search for Users to add
-}
-else
-{
+<div id="FriendsList">
     <table>
         <tr>
             <th>Username</th>
             <th>Invite To Game</th>
-            <th>Delete Friend</th> 
+            <th>Delete Friend</th>
         </tr>
 
-        @{ 
-            // TODO: Display all of currently logged in user's friends
-            GameContext gc = new GameContext();
-            User currentUser = gc.getUserFromIdentity(User);
+        @{
+            
 
         }
-    </table>      
-}
+    </table>
+</div>

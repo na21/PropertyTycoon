@@ -14,13 +14,12 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="u"></param>
         /// <param name="friend"></param>
-        public static void CreateFriendRequest(User u, User friend)
+        public static void CreateFriendRequest(User u, User friend, GameContext gc)
         {
             var friendRequest = new FriendRequest();
             friendRequest.User = u;
             friendRequest.Friend = friend;
 
-            GameContext gc = new GameContext();
             gc.FriendRequests.Add(friendRequest);
             gc.SaveChanges();
         }
@@ -44,6 +43,20 @@ namespace BusinessLogic
             gc.SaveChanges();
         }
 
+        /// <summary>
+        /// This method allows a user to cancel a friend request
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="friend"></param>
+        /// <param name="gc"></param>
+        public static void CancelFriendRequest(User u, User friend, GameContext gc)
+        {
+            FriendRequest friendrequest = gc.FriendRequests.Where(fr => fr.User.UserName.Equals(u.UserName) && fr.Friend.UserName.Equals(friend.UserName)).FirstOrDefault();
+            gc.FriendRequests.Remove(friendrequest);
+            gc.SaveChanges();
+        }
+        
+        
         /// <summary>
         /// This method allows a user to decline a friend request
         /// </summary>
