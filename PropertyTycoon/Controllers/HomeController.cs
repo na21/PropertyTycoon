@@ -59,7 +59,7 @@ namespace PropertyTycoon.Controllers
             return View();
         }
 
-        public ActionResult Ranking(string display)
+        public ActionResult Ranking(string display, int? n)
         {
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
@@ -99,15 +99,46 @@ namespace PropertyTycoon.Controllers
 
             ViewBag.display = choices;
 
+            List<SelectListItem> num = new List<SelectListItem>();
+
+            num.Add(new SelectListItem()
+            {
+                Value = "10",
+                Text = "10",
+                Selected = true
+            });
+
+            num.Add(new SelectListItem()
+            {
+                Value = "100",
+                Text = "100",
+                Selected = false
+            });
+            num.Add(new SelectListItem()
+            {
+                Value = "1000",
+                Text = "1000",
+                Selected = false
+            });
+
+            ViewBag.n = num;
+
+            int take = n ?? 10;
+
+            if (take < 0)
+                take = 10;
+
+            if (take > 1000)
+                take = 1000;
 
             //
             // Display all-time point leaders.
             //
-            if(display == null || display == "alltime")
+            if (display == null || display == "alltime")
             {
                 var usersAllTime = (from u in gc.Users
                                 orderby u.SkillPoints descending
-                                select u).Take(10);
+                                select u).Take(take);
 
                 List<User> ul = new List<User>();
 
@@ -144,7 +175,7 @@ namespace PropertyTycoon.Controllers
                                 group pe by new { pe.UserName } into g
                                 select new { g.Key.UserName, Sum = g.Sum(pe => pe.Points) } into s
                                 orderby s.Sum descending
-                                select s).Take(10);
+                                select s).Take(take);
 
                 List<User> ul = new List<User>();
 
