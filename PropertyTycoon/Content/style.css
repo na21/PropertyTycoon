@@ -21,3 +21,18 @@ th, td{
     padding-left: 150px;
     padding-right: 150px;
 }
+
+#UserList {
+    display:inline-block;
+    float: left;
+}
+
+#FriendsList {
+    display:inline-block;
+    padding-left: 15%;
+}
+
+#Notifications {
+    display:inline-block;
+    padding-left: 15%;
+}

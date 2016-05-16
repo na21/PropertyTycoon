@@ -269,7 +269,13 @@ namespace PropertyTycoon.Controllers
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
 
-            return View();
+            User u = gc.getUserFromIdentity(User);
+
+            String[] friends = FriendLogic.getFriends(u, gc);
+            String[] pendingFriendRequests = FriendLogic.getFriendRequestNotifications(u, gc);
+            ViewData["FriendRequests"] = pendingFriendRequests;
+
+            return View(friends);
         }
 
         [HttpPost]
@@ -293,6 +299,41 @@ namespace PropertyTycoon.Controllers
             FriendLogic.CreateFriendRequest(u , friend, gc);
             
             return RedirectToAction("Friends");     
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteFriend(String friendUsername)
+        {
+            User u = gc.getUserFromIdentity(User);
+            User friend = gc.GetUser(friendUsername);
+
+            FriendLogic.DeleteFriend(u, friend, gc);
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AcceptFriendRequest(String friendRequestUsername)
+        {
+            User u = gc.getUserFromIdentity(User);
+            User friend = gc.GetUser(friendRequestUsername);
+
+            FriendLogic.AcceptFriendRequest(u, friend, gc);
+
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeclineFriendRequest(String friendRequestUsername)
+        {
+            User u = gc.getUserFromIdentity(User);
+            User friend = gc.GetUser(friendRequestUsername);
+
+            FriendLogic.DeclineFriendRequest(u, friend, gc);
+
+            return RedirectToAction("Friends");
         }
 
         [HttpPost]

@@ -1,82 +1,131 @@
-﻿@model IEnumerable<DataLayer.Friends>
+﻿@model String[]
 @using DataLayer
 
 @{
     ViewBag.Title = "Friends";
 }
 
-<h2>Friends</h2>
+<div class="container">
+    <div id="UserList">
+        <h2>Users</h2>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th></th>
+            </tr>
 
-@if (Model == null)
-{
-    <p>
-        You don't have any friends yet, search for a user and add them!
-    </p>
-    <p>
-        List of Users in the system:
-    </p>
-}
-<div id="UserList">
-    <table>
-        <tr>
-            <th>Username</th>
-            <th></th>
-        </tr>
+            @{
+                GameContext gc = new GameContext();
+                var users = gc.Users.ToArray();
+                User currentUser = gc.getUserFromIdentity(User);
 
-        @{
-            GameContext gc = new GameContext();
-            var users = gc.Users.ToArray();
-            User currentUser = gc.getUserFromIdentity(User);
+                for (int i = 0; i < users.Length; i++)
+                {
+                    User u = users[i];
 
-            for (int i = 0; i < users.Length; i++)
+                    if ((currentUser != u) && (!Model.Contains(u.UserName)))
+                    {
+                        <tr>
+                            <td>@u.UserName</td>
+                            <td>
+                                @{
+                                    int frCount = gc.FriendRequests.Where(fr => fr.User.UserName.Equals(currentUser.UserName) && fr.Friend.UserName.Equals(u.UserName)).Count();
+                                    if (frCount == 1)
+                                    {
+                                        using (Html.BeginForm("CancelRequest", "Home", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="friendUsername" value="@u.UserName">
+                                            <button type="submit" name="CancelRequest" value="CancelRequest">Cancel Request</button>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        using (Html.BeginForm("AddFriend", "Home", FormMethod.Post))
+                                        {
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="friendUsername" value="@u.UserName">
+                                            <button type="submit" name="AddFriend" value="AddFriend">Add Friend</button>
+                                        }
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+            }
+        </table>
+    </div>
+
+    <div id="FriendsList">
+        <h2>
+            Friends List
+        </h2>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
             {
-                User u = users[i];
-
-                if ((currentUser != u) && (!currentUser.Friends.Contains(u)))
+                <tr>
+                    <td>@item</td>
+                    <td>
+                        @using (Html.BeginForm("DeleteFriend", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="friendUsername" value="@item">
+                            <button type="submit" name="DeleteFriend" value="DeleteFriend">Delete Friend</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    
+    <div id="Notifications">
+        <h2>
+            Notifications
+        </h2>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th></th>
+                <th></th>
+            </tr>
+            @if ((Array)ViewData["FriendRequests"] == null)
+            {
+                <tr>
+                    <td>No new invitations</td>
+                </tr>
+            }
+            else
+            {
+                foreach (var item in (ViewData["FriendRequests"] as Array))
                 {
                     <tr>
-                        <td>@u.UserName</td>
+                        <td>@item</td>
                         <td>
-                            @{
-                                int frCount = gc.FriendRequests.Where(fr => fr.User.UserName.Equals(currentUser.UserName) && fr.Friend.UserName.Equals(u.UserName)).Count();
-                                if (frCount == 1)
-                                {
-                                    using (Html.BeginForm("CancelRequest", "Home", FormMethod.Post))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="friendUsername" value="@u.UserName">
-                                        <button type="submit" name="CancelRequest" value="CancelRequest">Cancel Request</button>
-                                    }
-                                }
-                                else
-                                {
-                                    using (Html.BeginForm("AddFriend", "Home", FormMethod.Post))
-                                    {
-                                        @Html.AntiForgeryToken()
-                                        <input type="hidden" name="friendUsername" value="@u.UserName">
-                                        <button type="submit" name="AddFriend" value="AddFriend">Add Friend</button>
-                                    }
-                                }
+                            @using (Html.BeginForm("AcceptFriendRequest", "Home", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="friendRequestUsername" value="@item">
+                                <button type="submit" name="AcceptFriendRequest" value="AcceptFriendRequest">Accept</button>
+                            }
+                        </td>
+                        <td>
+                            @using (Html.BeginForm("DeclineFriendRequest", "Home", FormMethod.Post))
+                            {
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="friendRequestUsername" value="@item">
+                                <button type="submit" name="DeclineFriendRequest" value="DeclineFriendRequest">Decline</button>
                             }
                         </td>
                     </tr>
                 }
             }
-        }
-    </table>
+        </table>
+    </div>  
 </div>
 
-<div id="FriendsList">
-    <table>
-        <tr>
-            <th>Username</th>
-            <th>Invite To Game</th>
-            <th>Delete Friend</th>
-        </tr>
-
-        @{
-            
-
-        }
-    </table>
-</div>
