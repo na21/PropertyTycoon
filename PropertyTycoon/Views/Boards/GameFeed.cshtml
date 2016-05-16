@@ -38,6 +38,7 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.maxSkillRange)
             </th>
+            <th>Max Rounds</th>
             <th></th>
         </tr>
 
@@ -83,6 +84,9 @@ else
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.maxSkillRange)
+                </td>
+                <td>
+                    @item.MaximumRounds
                 </td>
                 <td>
 
@@ -151,6 +155,9 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.maxSkillRange)
             </th>
+            <th>
+                Max Rounds
+            </th>
             <th></th>
         </tr>
 
@@ -191,6 +198,9 @@ else
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.maxSkillRange)
+                    </td>
+                    <td>
+                        @item.MaximumRounds
                     </td>
                 </tr>
                 }
