@@ -370,7 +370,7 @@
                         <h3 class="panel-title">@bu.UserName</h3>
                     </div>
                     <div class="panel-body">
-                        <div>Current Balance: $ @bu.Money</div>
+                        <div>Current Balance: $ {{ playerBalances["@bu.UserName"] }} </div>
                     </div>
                 </div>
             </div>
@@ -425,6 +425,7 @@
             $scope.propertyState = null;
             $scope.HasCurrentUserRolled = false;
             $scope.properties = null;
+            $scope.playerBalances = null;
 
             $scope.GetActivePlayer = function(){
 
@@ -438,6 +439,7 @@
                     $scope.propertyState = response.data.propertyState;
                     $scope.HasCurrentUserRolled = response.data.HasRolled;
                     $scope.properties = response.data.properties;
+                    $scope.playerBalances = response.data.playerBalances;
 
                 }, function errorCallback(response) {
                     console.log(response);

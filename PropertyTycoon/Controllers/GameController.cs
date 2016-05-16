@@ -38,6 +38,9 @@ namespace PropertyTycoon.Controllers
     public class ActivePlayerModel
     {
         public Hashtable properties;
+
+        public Hashtable playerBalances;
+
         public PropertyActionModel propertyState { get; set; }
 
         public User user { get; set; }
@@ -47,9 +50,17 @@ namespace PropertyTycoon.Controllers
         public ActivePlayerModel(Board GameBoard)
         {
             properties = new Hashtable();
+
+            playerBalances = new Hashtable();
+
             foreach (Property p in GameBoard.Properties)
             {
                 properties[p.Position] = new { numHouses = p.NumHouses, numHotels = p.NumHotels };
+            }
+
+            foreach(BoardUser bu in GameBoard.BoardUsers)
+            {
+                playerBalances[bu.UserName] = bu.Money;
             }
         }
     }
