@@ -64,5 +64,8 @@ namespace DataLayer
         [Required]
         [Display(Name = "Max Skill")]
         public int maxSkillRange { get; set; }
+
+        [Display(Name = "Description")]
+        public string Description { get; set; }
     }
 }

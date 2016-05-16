@@ -185,6 +185,8 @@ namespace PropertyTycoon.Controllers
                 new_board.minSkillRange = board.minSkillRange;
                 new_board.maxSkillRange = board.maxSkillRange;
 
+                new_board.Description = board.Description;
+
                 Stat s = db.GetUserStats(User.Identity.Name);
                 s.GamesCreated++;
 

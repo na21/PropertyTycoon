@@ -37,6 +37,9 @@ else
                 Host
             </th>
             <th>
+                Description
+            </th>
+            <th>
                Players
             </th>
             <th>
@@ -48,6 +51,7 @@ else
             <th>
                 @Html.DisplayNameFor(model => model.maxSkillRange)
             </th>
+            <th>Max Rounds</th>
             <th></th>
         </tr>
 
@@ -56,6 +60,9 @@ else
             <tr>
                 <td>
                     @item.Host.UserName
+                </td>
+                <td>
+                    @item.Description
                 </td>
                 <td>
                     @item.Users.Count()/@item.MaximumPlayers
@@ -68,6 +75,9 @@ else
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.maxSkillRange)
+                </td>
+                <td>
+                    @item.MaximumRounds
                 </td>
                 <td>
                     @using (Html.BeginForm("Join", "Boards", FormMethod.Post))
