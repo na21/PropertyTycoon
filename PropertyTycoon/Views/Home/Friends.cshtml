@@ -139,7 +139,8 @@
                 </tr>
             }
         }
-        @if ((ViewData["GameInvitations"] != null))
+
+        @if (false && (ViewData["GameInvitations"] != null))
         {
             foreach (var item in (ViewData["GameInvitations"] as IEnumerable<GameInvitation>))
             {
