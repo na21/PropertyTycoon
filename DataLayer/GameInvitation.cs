@@ -13,11 +13,9 @@ namespace DataLayer
         [Key]
         public string UserName { get; set; }
 
-        [MaxLength(2)]
-        public string [] InvitedUsers { get; set; }
-
-        [MaxLength(2)]
-        public bool [] IsAccepted { get; set; }
+        public User InvitedUser1 { get; set; }
+        public User InvitedUser2 { get; set; }
+        public User InvitedUser3 { get; set; }
 
         public virtual Board Board { get; set; }
     }

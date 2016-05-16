@@ -24,6 +24,8 @@ namespace DataLayer
 
         public virtual DbSet<Stat> Stats { get; set; }
 
+        public virtual DbSet<GameInvitation> GameInvitations { get; set; }
+
         /// <summary>
         /// This function creates a new Board for a User.
         /// </summary>

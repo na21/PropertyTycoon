@@ -15,29 +15,21 @@ namespace BusinessLogic
         /// <param name="u"></param>
         /// <param name="invitedUsers"></param>
         /// <returns></returns>
-        public static GameInvitation CreateNewInvitation(User u, User[] invitedUsers)
+        public static void CreateNewInvitation(User u, User[] invitedUsers, GameContext gc)
         {
             var invitation = new GameInvitation();
-            Board b = new Board();
+            Board b = gc.CreateNewGameBoard(u, invitedUsers.Length);
             invitation.Board = b;
             invitation.UserName = u.UserName;
-
-            BoardUser bu = new BoardUser();
-            bu.Board = b;
-            bu.User = u;
-            bu.UserName = u.UserName;
-
-            b.BoardUsers.Add(bu);
-
-            var i = 0;
-            foreach (User invitedUser in invitedUsers)
-            {
-                invitation.InvitedUsers[i] = invitedUser.UserName;
-                invitation.IsAccepted[i] = false;
-                i++;
-            }
             
-            return invitation;
+            if (invitedUsers[0] != null)
+                invitation.InvitedUser1 = invitedUsers[0];
+            if (invitedUsers[1] != null)
+                invitation.InvitedUser2 = invitedUsers[1];
+            if (invitedUsers[2] != null)
+                invitation.InvitedUser3 = invitedUsers[2];
+
+            gc.GameInvitations.Add(invitation);
         }
 
         /// <summary>
@@ -45,16 +37,24 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="i"></param>
         /// <param name="u"></param>
-        public static void AcceptInvitation(GameInvitation i, User u)
+        public static void AcceptInvitation(User u, GameInvitation gi, GameContext gc)
         {
-            int pos = Array.IndexOf(i.InvitedUsers, u.UserName);
-            i.IsAccepted[pos] = true;
-
-            BoardUser bu = new BoardUser();
-            bu.User = u;
-            bu.UserName = u.UserName;
-            bu.BoardId = i.Board.Id;
-            i.Board.BoardUsers.Add(bu);
+            if (gi.InvitedUser1.Equals(u))
+            {
+                gi.InvitedUser1 = null;
+            }
+            else if (gi.InvitedUser2.Equals(u))
+            {
+                 gi.InvitedUser2 = null;
+            }
+            else if (gi.InvitedUser3.Equals(u))
+            {
+                 gi.InvitedUser3 = null;
+            }
+           
+            gc.AddPlayerToBoard(u, gi.Board);
+            DeleteInvitation(gi, gc);
+            gc.SaveChanges();
         }
 
         /// <summary>
@@ -62,12 +62,40 @@ namespace BusinessLogic
         /// </summary>
         /// <param name="i"></param>
         /// <param name="u"></param>
-        public static void DeclineInvitation(GameInvitation i, User u)
+        public static void DeclineInvitation(User u, GameInvitation gi, GameContext gc)
         {
-            var invitedUsers = i.InvitedUsers.ToList();
-            invitedUsers.Remove(u.UserName);
-            string[] updatedUsers = invitedUsers.ToArray();
-            i.InvitedUsers = updatedUsers;
+            if (gi.InvitedUser1.Equals(u))
+            {
+                gi.InvitedUser1 = null;
+            }
+            else if (gi.InvitedUser2.Equals(u))
+            {
+                gi.InvitedUser2 = null;
+            }
+            else if (gi.InvitedUser3.Equals(u))
+            {
+                gi.InvitedUser3 = null;
+            }
+
+            DeleteInvitation(gi, gc);
+            gc.SaveChanges();
+        }
+
+        /// <summary>
+        /// This method will delete the GameInvitation if all invitedUsers have responded to the request. 
+        /// Will also delete the board if all users have declined
+        /// </summary>
+        /// <param name="gi"></param>
+        public static void DeleteInvitation(GameInvitation gi, GameContext gc)
+        {
+            if ((gi.InvitedUser1.Equals(null)) && (gi.InvitedUser2.Equals(null)) && (gi.InvitedUser3.Equals(null)))
+            {
+                if (gi.Board.BoardUsers.Count == 1)
+                    gc.Boards.Remove(gi.Board);
+
+                gc.GameInvitations.Remove(gi);
+            }
+            gc.SaveChanges();
         }
     }
 }

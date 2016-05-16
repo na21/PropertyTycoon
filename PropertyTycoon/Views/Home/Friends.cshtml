@@ -82,50 +82,52 @@
                 </tr>
             }
         </table>
-    </div>
-    
-    <div id="Notifications">
-        <h2>
-            Notifications
-        </h2>
-        <table>
-            <tr>
-                <th>Username</th>
-                <th></th>
-                <th></th>
-            </tr>
-            @if ((Array)ViewData["FriendRequests"] == null)
-            {
-                <tr>
-                    <td>No new invitations</td>
-                </tr>
-            }
-            else
-            {
-                foreach (var item in (ViewData["FriendRequests"] as Array))
-                {
-                    <tr>
-                        <td>@item</td>
-                        <td>
-                            @using (Html.BeginForm("AcceptFriendRequest", "Home", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="friendRequestUsername" value="@item">
-                                <button type="submit" name="AcceptFriendRequest" value="AcceptFriendRequest">Accept</button>
-                            }
-                        </td>
-                        <td>
-                            @using (Html.BeginForm("DeclineFriendRequest", "Home", FormMethod.Post))
-                            {
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="friendRequestUsername" value="@item">
-                                <button type="submit" name="DeclineFriendRequest" value="DeclineFriendRequest">Decline</button>
-                            }
-                        </td>
-                    </tr>
-                }
-            }
-        </table>
-    </div>  
+    </div>   
 </div>
 
+<br />
+
+<div id="Notifications" class="container">
+    <h2>
+        Notifications
+    </h2>
+    <table>
+        <tr>
+            <th>Username</th>
+            <th></th>
+            <th></th>
+        </tr>
+        @if ((Array)ViewData["FriendRequests"] == null)
+            {
+            <tr>
+                <td>No new invitations</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var item in (ViewData["FriendRequests"] as Array))
+            {
+                <tr>
+                    <td>@item sent a friend request!</td>
+                    <td>
+                        @using (Html.BeginForm("AcceptFriendRequest", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="friendRequestUsername" value="@item">
+                            <button type="submit" name="AcceptFriendRequest" value="AcceptFriendRequest">Accept</button>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("DeclineFriendRequest", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="friendRequestUsername" value="@item">
+                            <button type="submit" name="DeclineFriendRequest" value="DeclineFriendRequest">Decline</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+  
