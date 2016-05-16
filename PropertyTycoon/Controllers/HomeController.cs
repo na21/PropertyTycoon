@@ -51,6 +51,7 @@ namespace PropertyTycoon.Controllers
             {
                 User u = new User();
                 u.UserName = User.Identity.Name;
+                u.SkillPoints = 50;
 
                 u.Badges = new List<Badge>();
 

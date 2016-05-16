@@ -352,16 +352,23 @@ namespace BusinessLogic
         /// <param name="u"></param>
         public static void PlayerForfeit(this Board b, User u)
         {
-            PointsEarned pe = new PointsEarned()
-            {
-                User = u,
-                Board = b,
-                CreatedAt = DateTime.Now,
-                Points = -25
-            };
-
-            u.PointsEarned.Add(pe);
             u.SkillPoints -= 25;
+
+            if (u.SkillPoints < 0)
+                u.SkillPoints = 0;
+
+            else
+            {
+                PointsEarned pe = new PointsEarned()
+                {
+                    User = u,
+                    Board = b,
+                    CreatedAt = DateTime.Now,
+                    Points = -25
+                };
+
+                u.PointsEarned.Add(pe);
+            }
 
             BoardUser bu = b.GetBoardUser(u.UserName);
             bu.GameOver = true;
