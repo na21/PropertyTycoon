@@ -15,19 +15,23 @@ namespace BusinessLogic
         /// <param name="u"></param>
         /// <param name="invitedUsers"></param>
         /// <returns></returns>
-        public static void CreateNewInvitation(User u, User[] invitedUsers, GameContext gc)
+        public static void CreateNewInvitation(User u, String[] invitedUsers, GameContext gc)
         {
             var invitation = new GameInvitation();
             Board b = gc.CreateNewGameBoard(u, invitedUsers.Length, 20);
             invitation.Board = b;
             invitation.UserName = u.UserName;
-            
-            if (invitedUsers[0] != null)
-                invitation.InvitedUser1 = invitedUsers[0];
-            if (invitedUsers[1] != null)
-                invitation.InvitedUser2 = invitedUsers[1];
-            if (invitedUsers[2] != null)
-                invitation.InvitedUser3 = invitedUsers[2];
+
+            User invitedUser1 = gc.GetUser(invitedUsers[0]);
+            User invitedUser2 = gc.GetUser(invitedUsers[1]);
+            User invitedUser3 = gc.GetUser(invitedUsers[2]);
+
+            if (invitedUser1 != null)
+                invitation.InvitedUser1 = invitedUser1;
+            if (invitedUser2 != null)
+                invitation.InvitedUser2 = invitedUser2;
+            if (invitedUser3 != null)
+                invitation.InvitedUser3 = invitedUser3;
 
             gc.GameInvitations.Add(invitation);
         }
@@ -96,6 +100,25 @@ namespace BusinessLogic
                 gc.GameInvitations.Remove(gi);
             }
             gc.SaveChanges();
+        }
+
+        /// <summary>
+        /// Returns a list of pending GameInvitations for a User
+        /// </summary>
+        /// <param name="u"></param>
+        /// <param name="gc"></param>
+        /// <returns></returns>
+        public static IEnumerable<GameInvitation> getGameInvitationNotifications(User u, GameContext gc)
+        {
+            IEnumerable<GameInvitation> gameInvitations = gc.GameInvitations.Where(gi => gi.InvitedUser1.Equals(u) || gi.InvitedUser2.Equals(u) || gi.InvitedUser3.Equals(u));
+            return gameInvitations;
+        }
+
+        public static GameInvitation getGameInvitation(User u, User invitedUser1, User invitedUser2, User invitedUser3, GameContext gc)
+        {
+            GameInvitation gi = gc.GameInvitations.Where(g => g.UserName.Equals(u.UserName) && g.InvitedUser1.Equals(invitedUser1) &&
+                                                         g.InvitedUser2.Equals(invitedUser2) && g.InvitedUser3.Equals(invitedUser3)).SingleOrDefault();
+            return gi;
         }
     }
 }

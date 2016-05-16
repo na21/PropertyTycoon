@@ -64,7 +64,15 @@
         <table>
             <tr>
                 <th>Username</th>
-                <th></th>
+                <th>@if (Model.Any())
+                    {
+                        using (Html.BeginForm("CreateInvitation", "Home", FormMethod.Post))
+                        {
+                            <button type="submit" name="CreateInvitation" value="CreateInvitation">Create Invitation</button>
+
+                        }
+                    }
+                </th>
             </tr>
 
             @foreach (var item in Model)
@@ -78,6 +86,9 @@
                             <input type="hidden" name="friendUsername" value="@item">
                             <button type="submit" name="DeleteFriend" value="DeleteFriend">Delete Friend</button>
                         }
+                    </td>
+                    <td>
+                        @Html.CheckBoxFor(x =>);
                     </td>
                 </tr>
             }
@@ -97,18 +108,18 @@
             <th></th>
             <th></th>
         </tr>
-        @if ((Array)ViewData["FriendRequests"] == null)
-            {
+        @if (((Array)ViewData["FriendRequests"] == null) && (ViewData["GameInvitations"] == null))
+        {
             <tr>
                 <td>No new invitations</td>
             </tr>
         }
-        else
+        @if ((Array)ViewData["FriendRequests"] != null)
         {
             foreach (var item in (ViewData["FriendRequests"] as Array))
             {
                 <tr>
-                    <td>@item sent a friend request!</td>
+                    <td>@item sent you friend request!</td>
                     <td>
                         @using (Html.BeginForm("AcceptFriendRequest", "Home", FormMethod.Post))
                         {
@@ -123,6 +134,37 @@
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="friendRequestUsername" value="@item">
                             <button type="submit" name="DeclineFriendRequest" value="DeclineFriendRequest">Decline</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        @if ((ViewData["GameInvitations"] != null))
+        {
+            foreach (var item in (ViewData["GameInvitations"] as IEnumerable<GameInvitation>))
+            {
+                <tr>
+                    <td>@item.UserName sent you a game invite!</td>
+                    <td>
+                        @using (Html.BeginForm("AcceptGameInvitation", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="userName" value="@item.UserName">
+                            <input type="hidden" name="invitedUser1" value="@item.InvitedUser1.UserName">
+                            <input type="hidden" name="invitedUser2" value="@item.InvitedUser2.UserName">
+                            <input type="hidden" name="invitedUser3" value="@item.InvitedUser3.UserName">
+                            <button type="submit" name="AcceptGameInvitation" value="AcceptGameInvitation">Accept</button>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("DeclineGameInvitation", "Home", FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="userName" value="@item.UserName">
+                            <input type="hidden" name="invitedUser1" value="@item.InvitedUser1.UserName">
+                            <input type="hidden" name="invitedUser2" value="@item.InvitedUser2.UserName">
+                            <input type="hidden" name="invitedUser3" value="@item.InvitedUser3.UserName">
+                            <button type="submit" name="DeclineGameInvitation" value="DeclineGameInvitation">Decline</button>
                         }
                     </td>
                 </tr>

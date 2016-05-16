@@ -323,6 +323,7 @@ namespace PropertyTycoon.Controllers
             String[] friends = FriendLogic.getFriends(u, gc);
             String[] pendingFriendRequests = FriendLogic.getFriendRequestNotifications(u, gc);
             ViewData["FriendRequests"] = pendingFriendRequests;
+            ViewData["GameInvitations"] = GameInvitationLogic.getGameInvitationNotifications(u, gc);
 
             return View(friends);
         }
@@ -381,6 +382,48 @@ namespace PropertyTycoon.Controllers
             User friend = gc.GetUser(friendRequestUsername);
 
             FriendLogic.DeclineFriendRequest(u, friend, gc);
+
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateGameInvitation(String[] invitedUsers)
+        {
+            User u = gc.getUserFromIdentity(User);
+            GameInvitationLogic.CreateNewInvitation(u, invitedUsers, gc);
+
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult AcceptGameInvitation(String username, String invitedUser1, String invitedUser2, String invitedUser3)
+        {
+            User current = gc.getUserFromIdentity(User);
+            User u = gc.GetUser(username);
+            User u1 = gc.GetUser(invitedUser1);
+            User u2 = gc.GetUser(invitedUser2);
+            User u3 = gc.GetUser(invitedUser3);
+
+            GameInvitation gi = GameInvitationLogic.getGameInvitation(u, u1, u2, u3, gc);
+            GameInvitationLogic.AcceptInvitation(current, gi, gc);
+
+            return RedirectToAction("Friends");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeclineGameInvitation(String username, String invitedUser1, String invitedUser2, String invitedUser3)
+        {
+            User current = gc.getUserFromIdentity(User);
+            User u = gc.GetUser(username);
+            User u1 = gc.GetUser(invitedUser1);
+            User u2 = gc.GetUser(invitedUser2);
+            User u3 = gc.GetUser(invitedUser3);
+
+            GameInvitation gi = GameInvitationLogic.getGameInvitation(u, u1, u2, u3, gc);
+            GameInvitationLogic.DeclineInvitation(current, gi, gc);
 
             return RedirectToAction("Friends");
         }
