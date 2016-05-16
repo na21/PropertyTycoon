@@ -322,10 +322,10 @@ namespace PropertyTycoon.Controllers
 
             String[] friends = FriendLogic.getFriends(u, gc);
             String[] pendingFriendRequests = FriendLogic.getFriendRequestNotifications(u, gc);
-            ViewData["FriendRequests"] = pendingFriendRequests;
-            ViewData["GameInvitations"] = GameInvitationLogic.getGameInvitationNotifications(u, gc);
 
-            return View(friends);
+            InvitationViewModel vm = new InvitationViewModel(pendingFriendRequests, GameInvitationLogic.getGameInvitationNotifications(u, gc));
+
+            return View(vm);
         }
 
         [HttpPost]

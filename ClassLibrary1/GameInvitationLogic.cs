@@ -110,8 +110,9 @@ namespace BusinessLogic
         /// <returns></returns>
         public static IEnumerable<GameInvitation> getGameInvitationNotifications(User u, GameContext gc)
         {
-            IEnumerable<GameInvitation> gameInvitations = gc.GameInvitations.Where(gi => gi.InvitedUser1.Equals(u) || gi.InvitedUser2.Equals(u) || gi.InvitedUser3.Equals(u));
-            return gameInvitations;
+            return (from bu in gc.GameInvitations
+                    where bu.InvitedUser1 == u || bu.InvitedUser2 == u || bu.InvitedUser3 == u
+                    select bu);
         }
 
         public static GameInvitation getGameInvitation(User u, User invitedUser1, User invitedUser2, User invitedUser3, GameContext gc)

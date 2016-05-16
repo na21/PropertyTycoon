@@ -1,4 +1,4 @@
-﻿@model String[]
+﻿@model PropertyTycoon.Models.InvitationViewModel
 @using DataLayer
 
 @{
@@ -11,9 +11,9 @@
         <table>
             <tr>
                 <th>Username</th>
-                <th></th>
+                <th></th>f
             </tr>
-
+           
             @{
                 GameContext gc = new GameContext();
                 var users = gc.Users.ToArray();
@@ -23,7 +23,7 @@
                 {
                     User u = users[i];
 
-                    if ((currentUser != u) && (!Model.Contains(u.UserName)))
+                    if ((currentUser != u) && (!Model.friendRequests.Contains(u.UserName)))
                     {
                         <tr>
                             <td>@u.UserName</td>
@@ -64,7 +64,7 @@
         <table>
             <tr>
                 <th>Username</th>
-                <th>@if (Model.Any())
+                <th>@if (Model.friendRequests.Any())
                     {
                         using (Html.BeginForm("CreateInvitation", "Home", FormMethod.Post))
                         {
@@ -75,7 +75,7 @@
                 </th>
             </tr>
 
-            @foreach (var item in Model)
+            @foreach (var item in Model.friendRequests)
             {
                 <tr>
                     <td>@item</td>
@@ -86,9 +86,6 @@
                             <input type="hidden" name="friendUsername" value="@item">
                             <button type="submit" name="DeleteFriend" value="DeleteFriend">Delete Friend</button>
                         }
-                    </td>
-                    <td>
-                        
                     </td>
                 </tr>
             }
@@ -108,15 +105,15 @@
             <th></th>
             <th></th>
         </tr>
-        @if (((Array)ViewData["FriendRequests"] == null) && (ViewData["GameInvitations"] == null))
+        @if (Model.friendRequests == null && Model.gi == null)
         {
             <tr>
                 <td>No new invitations</td>
             </tr>
         }
-        @if ((Array)ViewData["FriendRequests"] != null)
+        @if (Model.friendRequests != null)
         {
-            foreach (var item in (ViewData["FriendRequests"] as Array))
+            foreach (var item in Model.friendRequests)
             {
                 <tr>
                     <td>@item sent you friend request!</td>
@@ -139,10 +136,10 @@
                 </tr>
             }
         }
-
-        @if (false && (ViewData["GameInvitations"] != null))
+        s
+        @if (false)
         {
-            foreach (var item in (ViewData["GameInvitations"] as IEnumerable<GameInvitation>))
+            foreach (GameInvitation item in Model.gi)
             {
                 <tr>
                     <td>@item.UserName sent you a game invite!</td>
@@ -167,6 +164,9 @@
                             <input type="hidden" name="invitedUser3" value="@item.InvitedUser3.UserName">
                             <button type="submit" name="DeclineGameInvitation" value="DeclineGameInvitation">Decline</button>
                         }
+                    </td>
+                    <td>
+                        <input type="checkbox" id="checkbox" name="invitedUsers" value="@item" />
                     </td>
                 </tr>
             }
