@@ -185,6 +185,23 @@ namespace PropertyTycoon.Controllers
                 new_board.minSkillRange = board.minSkillRange;
                 new_board.maxSkillRange = board.maxSkillRange;
 
+                Stat s = db.GetUserStats(User.Identity.Name);
+                s.GamesCreated++;
+
+                if (s.GamesCreated == 5)
+                {
+                    Badge b = new Badge()
+                    {
+                        User = u,
+                        UserName = u.UserName,
+                        Date = DateTime.Now,
+                        Name = "Game Maker",
+                        Desc = "User created 5 games."
+                    };
+
+                    u.Badges.Add(b);
+                }
+
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -229,6 +246,24 @@ namespace PropertyTycoon.Controllers
             }
 
             board.PlayerForfeit(u);
+
+            Stat s = db.GetUserStats(User.Identity.Name);
+            s.GamesForfeit++;
+
+            if(s.GamesForfeit == 3)
+            {
+                Badge b = new Badge()
+                {
+                    User = u,
+                    UserName = u.UserName,
+                    Date = DateTime.Now,
+                    Name = "Quitter",
+                    Desc = "User forfeit 3 games"
+                };
+
+                u.Badges.Add(b);
+            }
+
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -295,6 +330,7 @@ namespace PropertyTycoon.Controllers
                     gamesList.AddRange(completed.ToList());
             }
 
+            ViewBag.badges = u.Badges.ToList();
             ViewBag.userName = userName;
 
             return View(gamesList);

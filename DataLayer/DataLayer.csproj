@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Badge.cs" />
     <Compile Include="Board.cs" />
     <Compile Include="BoardUser.cs" />
     <Compile Include="FriendRequest.cs" />
@@ -105,6 +106,14 @@
     <Compile Include="Migrations\201605151820053_AddMoreUsersToSeedFunction.Designer.cs">
       <DependentUpon>201605151820053_AddMoreUsersToSeedFunction.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605160014196_AddBadges.cs" />
+    <Compile Include="Migrations\201605160014196_AddBadges.Designer.cs">
+      <DependentUpon>201605160014196_AddBadges.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201605160100030_AddedStatsAndBadges.cs" />
+    <Compile Include="Migrations\201605160100030_AddedStatsAndBadges.Designer.cs">
+      <DependentUpon>201605160100030_AddedStatsAndBadges.cs</DependentUpon>
+    </Compile>
     <Compile Include="PointsEarned.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.cs" />
     <Compile Include="Migrations\201604220213582_AddMaxPlayersToBoard.Designer.cs">
@@ -138,6 +147,7 @@
     <Compile Include="Move.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Property.cs" />
+    <Compile Include="Stat.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -198,6 +208,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201605151820053_AddMoreUsersToSeedFunction.resx">
       <DependentUpon>201605151820053_AddMoreUsersToSeedFunction.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605160014196_AddBadges.resx">
+      <DependentUpon>201605160014196_AddBadges.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605160100030_AddedStatsAndBadges.resx">
+      <DependentUpon>201605160100030_AddedStatsAndBadges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -22,6 +22,8 @@ namespace DataLayer
 
         public virtual DbSet<FriendRequest> FriendRequests { get; set; }
 
+        public virtual DbSet<Stat> Stats { get; set; }
+
         /// <summary>
         /// This function creates a new Board for a User.
         /// </summary>
@@ -77,6 +79,13 @@ namespace DataLayer
             return (from u in Users
                     where u.UserName == iUser.Identity.Name
                     select u).FirstOrDefault();
+        }
+
+        public Stat GetUserStats(string userName)
+        {
+            return (from s in Stats
+                    where s.UserName == userName
+                    select s).FirstOrDefault();
         }
     }
 }

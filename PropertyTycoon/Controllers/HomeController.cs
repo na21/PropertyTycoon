@@ -52,7 +52,31 @@ namespace PropertyTycoon.Controllers
                 User u = new User();
                 u.UserName = User.Identity.Name;
 
+                u.Badges = new List<Badge>();
+
+                Badge b = new Badge()
+                {
+                    Date = DateTime.Now,
+                    UserName = u.UserName,
+                    User = u,
+                    Name = "Registered"
+                };
+
+                u.Badges.Add(b);
+
                 gc.Users.Add(u);
+
+                Stat s = new Stat()
+                {
+                    User = u,
+                    UserName = u.UserName,
+                    GamesCreated = 0,
+                    GamesJoined = 0,
+                    GamesForfeit = 0
+                };
+
+                gc.Stats.Add(s);
+
                 gc.SaveChanges();
             }
 
