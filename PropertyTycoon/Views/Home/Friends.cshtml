@@ -11,7 +11,7 @@
         <table>
             <tr>
                 <th>Username</th>
-                <th></th>f
+                <th></th>
             </tr>
            
             @{
@@ -87,6 +87,9 @@
                             <button type="submit" name="DeleteFriend" value="DeleteFriend">Delete Friend</button>
                         }
                     </td>
+                    <td>
+                        <input type="checkbox" id="checkbox" name="invitedUsers" value="@item" />
+                    </td>
                 </tr>
             }
         </table>
@@ -136,7 +139,7 @@
                 </tr>
             }
         }
-        s
+    
         @if (false)
         {
             foreach (GameInvitation item in Model.gi)
@@ -164,9 +167,6 @@
                             <input type="hidden" name="invitedUser3" value="@item.InvitedUser3.UserName">
                             <button type="submit" name="DeclineGameInvitation" value="DeclineGameInvitation">Decline</button>
                         }
-                    </td>
-                    <td>
-                        <input type="checkbox" id="checkbox" name="invitedUsers" value="@item" />
                     </td>
                 </tr>
             }
