@@ -21,6 +21,9 @@ else
                 Host
             </th>
             <th>
+                Description
+            </th>
+            <th>
                 Your Turn
             </th>
             <th>
@@ -46,6 +49,9 @@ else
                 <td><a href="History?userName=@item.Host.UserName">
                     @item.Host.UserName
                     </a>
+                </td>
+                <td>
+                    @item.Description
                 </td>
                 <td>
                     @if (item.Status == "New")
@@ -131,6 +137,9 @@ else
                 Winner
             </th>
             <th>
+                Description
+            </th>
+            <th>
                 Players
             </th>
             <th>
@@ -167,6 +176,9 @@ else
                     <td><a href="History?userName=@item.Winner.UserName">
                         @item.Winner.UserName
                         </a>
+                    </td>
+                    <td>
+                        @item.Description
                     </td>
                     <td>
                         @item.Users.Count()
