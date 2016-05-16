@@ -52,14 +52,38 @@ namespace PropertyTycoon.Controllers
                 User u = new User();
                 u.UserName = User.Identity.Name;
 
+                u.Badges = new List<Badge>();
+
+                Badge b = new Badge()
+                {
+                    Date = DateTime.Now,
+                    UserName = u.UserName,
+                    User = u,
+                    Name = "Registered"
+                };
+
+                u.Badges.Add(b);
+
                 gc.Users.Add(u);
+
+                Stat s = new Stat()
+                {
+                    User = u,
+                    UserName = u.UserName,
+                    GamesCreated = 0,
+                    GamesJoined = 0,
+                    GamesForfeit = 0
+                };
+
+                gc.Stats.Add(s);
+
                 gc.SaveChanges();
             }
 
             return View();
         }
 
-        public ActionResult Ranking(string display)
+        public ActionResult Ranking(string display, int? n)
         {
             if (!User.Identity.IsAuthenticated)
                 return View("NotAuthorized");
@@ -67,53 +91,78 @@ namespace PropertyTycoon.Controllers
             User user = gc.GetUser(User.Identity.Name);
 
             //
-            // Display your rank and up to 9 users above you.
+            // Prep drop-down list box wiith these choices.
             //
-            if (display == null || display == "me")
+            List<SelectListItem> choices = new List<SelectListItem>();
+
+            choices.Add(new SelectListItem()
             {
+                Value = "alltime",
+                Text = "All-Time",
+                Selected = true
+            });
 
-                var usersAbove = (from u in gc.Users
-                                   where u.SkillPoints > user.SkillPoints
-                               orderby u.SkillPoints ascending
-                               select u).Take(9);
+            choices.Add(new SelectListItem()
+            {
+                Value = "week",
+                Text = "Week",
+                Selected = false
+            });
+            choices.Add(new SelectListItem()
+            {
+                Value = "month",
+                Text = "Month",
+                Selected = false
+            });
+            choices.Add(new SelectListItem()
+            {
+                Value = "today",
+                Text = "Today",
+                Selected = false
+            });
 
-                List<User> ul = new List<User>();
+            ViewBag.display = choices;
 
-                if (usersAbove != null)
-                {
-                    ul.AddRange(usersAbove.ToList());
-                    ul.Reverse();
-                }
-                
-                ul.Add(user);
+            List<SelectListItem> num = new List<SelectListItem>();
 
-                int aboveCount = usersAbove == null ? 0 : usersAbove.Count();
+            num.Add(new SelectListItem()
+            {
+                Value = "10",
+                Text = "10",
+                Selected = true
+            });
 
-                // If there aren't 9 users ranked above you, show 9 - n users ranked below.
-                if(aboveCount < 9)
-                {
-                    int n = 9 - aboveCount;
+            num.Add(new SelectListItem()
+            {
+                Value = "100",
+                Text = "100",
+                Selected = false
+            });
+            num.Add(new SelectListItem()
+            {
+                Value = "1000",
+                Text = "1000",
+                Selected = false
+            });
 
-                    var usersBelow = (from u in gc.Users
-                                   where u.SkillPoints <= user.SkillPoints && u.UserName != user.UserName
-                                   orderby u.SkillPoints descending
-                                   select u).Take(n);
+            ViewBag.n = num;
 
-                    if(usersBelow != null)
-                        ul.AddRange(usersBelow.ToList());
-                }
+            int take = n ?? 10;
 
-                return View(ul);
-            }
+            if (take < 0)
+                take = 10;
+
+            if (take > 1000)
+                take = 1000;
 
             //
             // Display all-time point leaders.
             //
-            else if(display == "alltime")
+            if (display == null || display == "alltime")
             {
                 var usersAllTime = (from u in gc.Users
                                 orderby u.SkillPoints descending
-                                select u).Take(10);
+                                select u).Take(take);
 
                 List<User> ul = new List<User>();
 
@@ -150,7 +199,7 @@ namespace PropertyTycoon.Controllers
                                 group pe by new { pe.UserName } into g
                                 select new { g.Key.UserName, Sum = g.Sum(pe => pe.Points) } into s
                                 orderby s.Sum descending
-                                select s).Take(10);
+                                select s).Take(take);
 
                 List<User> ul = new List<User>();
 

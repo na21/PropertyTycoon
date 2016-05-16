@@ -9,6 +9,17 @@ namespace BusinessLogic
 {
     public static class PropertyLogic
     {
+        public static int GetHouseCost(this Property p)
+        {
+            return (int)(p.Price * Property.HouseCostPercentage);
+        }
+
+
+        public static int GetHotelCost(this Property p)
+        {
+            return (int)(p.Price * Property.HotelCostPercentage);
+        }
+
         public static string ProcessChanceCard(this Property p, BoardUser bu)
         {
             string result = "";

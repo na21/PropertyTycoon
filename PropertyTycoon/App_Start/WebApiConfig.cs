@@ -22,6 +22,18 @@ namespace PropertyTycoon
             );
 
             config.Routes.MapHttpRoute(
+                name: "BuildHouseRoute",
+                routeTemplate: "api/Game/BuildHouse",
+                defaults: new { controller = "Game", action = "BuildHouse" }
+            );
+
+            config.Routes.MapHttpRoute(
+                name: "BuildHotelRoute",
+                routeTemplate: "api/Game/BuildHotel",
+                defaults: new { controller = "Game", action = "BuildHotel" }
+            );
+
+            config.Routes.MapHttpRoute(
                 name: "BuyPropertyRoute",
                 routeTemplate: "api/Game/BuyProperty",
                 defaults: new { controller = "Game", action = "BuyProperty" }

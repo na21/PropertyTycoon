@@ -37,11 +37,32 @@ namespace PropertyTycoon.Controllers
 
     public class ActivePlayerModel
     {
+        public Hashtable properties;
+
+        public Hashtable playerBalances;
+
         public PropertyActionModel propertyState { get; set; }
 
         public User user { get; set; }
 
         public bool HasRolled { get; set; }
+
+        public ActivePlayerModel(Board GameBoard)
+        {
+            properties = new Hashtable();
+
+            playerBalances = new Hashtable();
+
+            foreach (Property p in GameBoard.Properties)
+            {
+                properties[p.Position] = new { numHouses = p.NumHouses, numHotels = p.NumHotels };
+            }
+
+            foreach(BoardUser bu in GameBoard.BoardUsers)
+            {
+                playerBalances[bu.UserName] = bu.Money;
+            }
+        }
     }
 
     public class PropertyActionModel
@@ -57,7 +78,12 @@ namespace PropertyTycoon.Controllers
         public string PropertyName { get; set; }
 
         public bool CanBuildHouse { get; set; }
+
         public bool CanBuildHotel { get; set; }
+
+        public int HouseCost { get; set; }
+
+        public int HotelCost { get; set; }
     }
 
     public class BuyPropertyModel
@@ -102,7 +128,7 @@ namespace PropertyTycoon.Controllers
         {
             Board board = db.Boards.Find(id);
 
-            ActivePlayerModel response = new ActivePlayerModel();
+            ActivePlayerModel response = new ActivePlayerModel(board);
             response.user = board.ActiveBoardPlayer;
 
 
@@ -168,6 +194,10 @@ namespace PropertyTycoon.Controllers
             {
                 response.CanBuildHouse = bu.CanBuildHouse(property);
                 response.CanBuildHotel = bu.CanBuildHotel(property);
+
+                response.HouseCost = property.GetHouseCost();
+                response.HotelCost = property.GetHotelCost();
+
             }
 
             else
@@ -201,6 +231,15 @@ namespace PropertyTycoon.Controllers
             response.move = newMove;
             response.ActivePlayer = board.ActiveBoardPlayer;
 
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
+
             return CreatedAtRoute("DefaultApi", null, response);
         }
 
@@ -226,6 +265,15 @@ namespace PropertyTycoon.Controllers
             MoveResponseModel response = new MoveResponseModel();
             response.move = newMove;
             response.ActivePlayer = board.ActiveBoardPlayer;
+
+            try
+            {
+                db.SaveChanges();
+            }
+            catch (DbUpdateException)
+            {
+                throw;
+            }
 
             return CreatedAtRoute("DefaultApi", null, response);
         }

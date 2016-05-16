@@ -3,11 +3,33 @@
 @{
     ViewBag.Title = "History";
     string userName = (string)ViewBag.userName;
+    List<DataLayer.Badge> badges = (List<DataLayer.Badge>)ViewBag.badges;
     int wins = 0;
     int losses = 0;
 }
 
-<h2>History - @userName</h2>
+<h1>@userName</h1>
+
+@if(badges != null && badges.Any())
+{
+    <h2>Badges</h2>
+
+    <table class="table">
+
+        @foreach(var item in badges)
+        {
+        <tr style="background-color:skyblue">
+            <td style="color:yellow">&starf;</td>
+            <td>@item.Name</td>
+            <td>@item.Date</td>
+            <td>@item.Desc</td>
+        </tr>
+
+        }
+
+    </table>
+}
+<h2>History</h2>
 
 <table class="table">
     <tr>

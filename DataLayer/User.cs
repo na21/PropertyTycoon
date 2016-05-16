@@ -47,5 +47,9 @@ namespace DataLayer
                     return Friendships.Select(f => f.User1);
             }
         }
+
+        [JsonIgnoreAttribute]
+        public virtual ICollection<Badge> Badges { get; set; }
+
     }
 }

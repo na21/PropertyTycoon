@@ -235,7 +235,8 @@ namespace BusinessLogic
                 newMove.Description = player.UserName + "'s : First Move - Rolled " + newMove.Roll.ToString();
 
                 b.Moves.Add(newMove);
-                
+                bu.Position = 1;
+                bu.HasRolled = true;
                 return newMove;
             }
 

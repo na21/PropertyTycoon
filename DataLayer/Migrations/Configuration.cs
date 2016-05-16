@@ -27,11 +27,19 @@ namespace DataLayer.Migrations
             //    );
             //
 
-            
+            /*
             context.Users.AddOrUpdate(x => x.UserName,
-                new User() { UserName = "Joe" },
-                new User() { UserName = "Paul" },
-                new User() { UserName = "James" });
+                new User() { UserName = "Joe", SkillPoints = 25 },
+                new User() { UserName = "Paul", SkillPoints = 50 },
+                new User() { UserName = "James", SkillPoints = 75 },
+                new User() { UserName = "Randy", SkillPoints = 10 },
+                new User() { UserName = "Kyle", SkillPoints = 15 },
+                new User() { UserName = "Tom", SkillPoints = 15 },
+                new User() { UserName = "William", SkillPoints = 15 },
+                new User() { UserName = "Peter", SkillPoints = 90 },
+                new User() { UserName = "Sam", SkillPoints = 90 },
+                new User() { UserName = "Jimmy", SkillPoints = 7 },
+                new User() { UserName = "Rachel", SkillPoints = 18 });
 
             context.Boards.AddOrUpdate(x => x.Id,
                 new Board() { Id = 888 },
@@ -50,6 +58,7 @@ namespace DataLayer.Migrations
                 new PointsEarned() { Id = 108, Points = 90, UserName = "James", CreatedAt = DateTime.Now, BoardId = 890 },
                 new PointsEarned() { Id = 109, Points = 100, UserName = "Joe", CreatedAt = DateTime.Now, BoardId = 888 }
                 );
+                */
         }
     }
 }
