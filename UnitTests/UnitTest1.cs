@@ -38,7 +38,7 @@ namespace UnitTests
                 bc.Users.Add(player1);
 
                 // Test 1 - A player should be able to create a new Board.
-                var new_board = bc.CreateNewGameBoard(player1, 2);
+                var new_board = bc.CreateNewGameBoard(player1, 2, 20);
                 new_board.minSkillRange = Board.LowestSkillPoints;
                 new_board.maxSkillRange = Board.LowestSkillPoints + 500;
 
@@ -97,7 +97,7 @@ namespace UnitTests
                 bc.Users.Add(player1);
 
                 // Test 1 - A player should be able to create a new Board.
-                var new_board = bc.CreateNewGameBoard(player1, 2);
+                var new_board = bc.CreateNewGameBoard(player1, 2, 20);
                 new_board.minSkillRange = Board.LowestSkillPoints;
                 new_board.maxSkillRange = Board.LowestSkillPoints + 500;
 
@@ -273,7 +273,7 @@ namespace UnitTests
                 player1.UserName = "player1";
                 bc.Users.Add(player1);
 
-                var new_board = bc.CreateNewGameBoard(player1, 2);
+                var new_board = bc.CreateNewGameBoard(player1, 2, 20);
                 new_board.minSkillRange = Board.LowestSkillPoints;
                 new_board.maxSkillRange = Board.LowestSkillPoints + 500;
 

@@ -33,6 +33,13 @@ namespace PropertyTycoon.Controllers
         public Move move { get; set; }
 
         public User ActivePlayer { get; set; }
+
+        public bool HasRolled { get; set; }
+
+        public MoveResponseModel()
+        {
+            HasRolled = false;
+        }
     }
 
     public class ActivePlayerModel
@@ -53,15 +60,100 @@ namespace PropertyTycoon.Controllers
 
             playerBalances = new Hashtable();
 
+            Hashtable playerWorth = new Hashtable();
+
+            isGameOver = false;
+            int gameOverCount = 0;
+
+            foreach (BoardUser bu in GameBoard.BoardUsers)
+            {
+                playerWorth[bu.UserName] = bu.Money;
+
+                playerBalances[bu.UserName] = new { Money = bu.Money, RemainingRounds = GameBoard.MaximumRounds - bu.Rounds };
+
+                if (bu.UserName == GameBoard.ActiveBoardPlayer.UserName)
+                {
+                    isActivePlayerDone = bu.Rounds == GameBoard.MaximumRounds;
+                }
+
+                if (bu.Rounds == GameBoard.MaximumRounds)
+                {
+                    gameOverCount++;
+                }
+            }
+
+            if(gameOverCount == GameBoard.BoardUsers.Count())
+            {
+                isGameOver = true;
+            }
+
             foreach (Property p in GameBoard.Properties)
             {
                 properties[p.Position] = new { numHouses = p.NumHouses, numHotels = p.NumHotels };
+
+                if (p.UserName != null)
+                    playerWorth[p.UserName] = (int)(playerWorth[p.UserName]) + (int)(p.Price + p.GetHotelCost() * p.NumHotels + p.GetHouseCost() * p.NumHouses);
             }
 
-            foreach(BoardUser bu in GameBoard.BoardUsers)
+            if (isGameOver)
             {
-                playerBalances[bu.UserName] = bu.Money;
+                GameBoard.Status = "Completed";
+                User richestPlayer = null;
+                int maxMoney = 0;
+
+                foreach (BoardUser bu in GameBoard.BoardUsers)
+                {
+                    int playerMoney = (int)playerWorth[bu.UserName];
+
+                    if (playerMoney > maxMoney)
+                    {
+                        richestPlayer = bu.User;
+                        maxMoney = playerMoney;
+                    }
+                }
+
+                GameBoard.Winner = richestPlayer;
+                // Update skill points
+
+                foreach (BoardUser bu in GameBoard.BoardUsers)
+                {
+                    if (bu.User.UserName != GameBoard.Winner.UserName)
+                    {
+                        GameBoard.Winner.SkillPoints += (int)(bu.User.SkillPoints / 10) + 5;
+                        
+                        int pointsLost = (int)(bu.User.SkillPoints / 10) - 5;
+
+                        if (pointsLost < bu.User.SkillPoints)
+                        {
+                            bu.User.SkillPoints -= pointsLost;
+
+                            PointsEarned pl = new PointsEarned();
+                            pl.User = bu.User;
+                            pl.Points = -pointsLost;
+                            pl.CreatedAt = DateTime.Now;
+
+                            GameBoard.PointsEarned.Add(pl);
+                        }
+                            
+                    }   
+                }
+
+                PointsEarned pe = new PointsEarned();
+                pe.User = GameBoard.Winner;
+                pe.Points = GameBoard.Winner.SkillPoints;
+                pe.CreatedAt = DateTime.Now;
+
+                GameBoard.PointsEarned.Add(pe);
             }
+        }
+
+        public bool isGameOver;
+
+        public bool isActivePlayerDone;
+
+        public bool checkGameOver()
+        {
+            return true;
         }
     }
 
@@ -143,6 +235,17 @@ namespace PropertyTycoon.Controllers
 
             response.propertyState = SetPropertyState(property, bu);
 
+            if (response.isGameOver)
+            {
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch (DbUpdateException)
+                {
+                    throw;
+                }
+            }
             return response;
         }
 

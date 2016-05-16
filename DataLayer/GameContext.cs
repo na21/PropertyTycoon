@@ -30,11 +30,12 @@ namespace DataLayer
         /// This function creates a new Board for a User.
         /// </summary>
         /// <param name="u">User</param>
-        public Board CreateNewGameBoard(User player, int maxPlayers)
+        public Board CreateNewGameBoard(User player, int maxPlayers, int maxRounds)
         {
             var board = new Board();
             board.Status = "New";
             board.MaximumPlayers = maxPlayers;
+            board.MaximumRounds = maxRounds;
             board.Host = player;
 
             var boardUser = new BoardUser();
@@ -44,6 +45,7 @@ namespace DataLayer
             boardUser.Board = board;
             boardUser.BoardId = board.Id;
             boardUser.User = player;
+            boardUser.Rounds = 0;
             boardUser.Turn = -1;
             BoardUsers.Add(boardUser);
             board.BoardUsers.Add(boardUser);
@@ -63,6 +65,7 @@ namespace DataLayer
             boardUser.Position = 1;
             boardUser.Board = board;
             boardUser.User = player;
+            boardUser.Rounds = 0;
             boardUser.Turn = -1;
             board.BoardUsers.Add(boardUser);
 

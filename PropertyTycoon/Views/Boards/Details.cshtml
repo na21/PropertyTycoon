@@ -150,11 +150,12 @@
                             </tr>
                             <tr style="border:solid 2px black;">
                                 <td style="height: 300px;">
-                                    <div class="row" ng-if="'@Model.currentUsername' == activePlayer && !HasCurrentUserRolled">
+
+                                    <div class="row" ng-if="'@Model.currentUsername' == activePlayer && !HasCurrentUserRolled && !isActivePlayerDone">
                                         <dice dice1-model="$parent.dice1" dice2-model="$parent.dice2"></dice>
                                     </div>
                                     
-                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer && HasCurrentUserRolled">
+                                    <div style="margin-top: 20px;" class="row" ng-if="!isGameOver && '@Model.currentUsername' == activePlayer && (HasCurrentUserRolled || isActivePlayerDone)">
                                         <div class='col-md-4'>
                                             <button type='button' 
                                                     ng-click='endTurn()' class='btn btn-danger'>End Turn
@@ -162,16 +163,31 @@
                                         </div>
                                     </div>
 
-                                    <div ng-if="'@Model.currentUsername' != activePlayer" class="row">
-                                        <h3 class="col-md-12 text-center">It is not your turn right now.</h3>
+                                    <div ng-if="'@Model.currentUsername' == activePlayer && isActivePlayerDone" class="row">
+                                        <h3 class="col-md-12 text-center">Max rounds completed.</h3>
+                                    </div>
+                                        
+                                    <div ng-if="isGameOver" class="row">
+                                        <h3 class="col-md-12 text-center">GAME OVER</h3>
                                     </div>
 
-                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer && HasCurrentUserRolled">
+                                    <div ng-if="'@Model.currentUsername' != activePlayer" class="row">
+                                        <h3 class="col-md-12 text-center">It is not your turn right now.</h3>
+                                        <div class='col-md-offset-3 col-md-4'>
+                                            <button type='button'
+                                                    ng-click='refreshPage()' class='btn btn-success'>
+                                                Refresh Board
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div style="margin-top: 20px;" class="row" ng-if="'@Model.currentUsername' == activePlayer && HasCurrentUserRolled && !isActivePlayerDone">
                                         <div ng-if="propertyState.isPropertyPurchasable" class='col-md-12'>
-                                             <h5>Purchase 
-                                                 <strong>{{ propertyState.PropertyName }} </strong>
-                                            for ${{propertyState.PropertyCost}} ?</h5>  
-                                             <button type="submit" class="btn btn-default" ng-click="BuyProperty()">Buy</button>
+                                            <h5>
+                                                Purchase
+                                                <strong>{{ propertyState.PropertyName }} </strong>
+                                                for ${{propertyState.PropertyCost}} ?
+                                            </h5>
+                                            <button type="submit" class="btn btn-default" ng-click="BuyProperty()">Buy</button>
                                         </div>
 
                                         <div ng-if="propertyState.CanBuildHouse" class='col-md-12'>
@@ -192,8 +208,8 @@
                                             <button type="submit" class="btn btn-default" ng-click="BuildHotel()">Build</button>
                                         </div>
                                     </div>
-                                        
-                                </td>
+
+</td>
                             </tr>
                         </table>
                     </td>
@@ -370,7 +386,8 @@
                         <h3 class="panel-title">@bu.UserName</h3>
                     </div>
                     <div class="panel-body">
-                        <div>Current Balance: $ {{ playerBalances["@bu.UserName"] }} </div>
+                        <div>Current Balance: $ {{ playerBalances["@bu.UserName"].Money }} </div>
+                        <div>Rounds Remaining: {{ playerBalances["@bu.UserName"].RemainingRounds }} </div>
                     </div>
                 </div>
             </div>
@@ -426,6 +443,8 @@
             $scope.HasCurrentUserRolled = false;
             $scope.properties = null;
             $scope.playerBalances = null;
+            $scope.isGameOver = false;
+            $scope.isActivePlayerDone = false;
 
             $scope.GetActivePlayer = function(){
 
@@ -440,6 +459,8 @@
                     $scope.HasCurrentUserRolled = response.data.HasRolled;
                     $scope.properties = response.data.properties;
                     $scope.playerBalances = response.data.playerBalances;
+                    $scope.isGameOver = response.data.isGameOver;
+                    $scope.isActivePlayerDone = response.data.isActivePlayerDone;
 
                 }, function errorCallback(response) {
                     console.log(response);
@@ -544,6 +565,7 @@
                     console.log(response);
                     $scope.activePlayer = response.data.ActivePlayer.UserName;
                     $scope.moves.push(response.data.move);
+                    $scope.HasCurrentUserRolled = response.data.HasRolled;
 
                 }, 
                 function(response){
@@ -634,13 +656,15 @@
                     }
 
                     $scope.GetActivePlayer();
-                    // $window.location.reload();
                 }, 
                 function(response){
                     console.log(response);
                 });
             }
             
+            $scope.refreshPage = function(){
+                $window.location.reload();
+            }
             function getPlayerIndexFromUsername(username){
                 return "#player" + String($scope.boardUserNames.indexOf(username) + 1);
             }

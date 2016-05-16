@@ -18,7 +18,7 @@ namespace BusinessLogic
         public static void CreateNewInvitation(User u, User[] invitedUsers, GameContext gc)
         {
             var invitation = new GameInvitation();
-            Board b = gc.CreateNewGameBoard(u, invitedUsers.Length);
+            Board b = gc.CreateNewGameBoard(u, invitedUsers.Length, 20);
             invitation.Board = b;
             invitation.UserName = u.UserName;
             

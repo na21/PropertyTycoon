@@ -56,7 +56,7 @@ namespace BusinessLogic
         {
             return (from bu in b.BoardUsers
                                    orderby bu.Turn ascending
-                                   where bu.User != b.ActiveBoardPlayer
+                                   where bu.User != b.ActiveBoardPlayer && bu.Rounds < b.MaximumRounds
                                    select bu.User).FirstOrDefault();
         }
 
@@ -93,6 +93,7 @@ namespace BusinessLogic
         {
             // Check if all the players on the board have made their
             // first turns.
+
             if(b.Moves == null)
             {
                 return b.ActiveBoardPlayer;
@@ -177,7 +178,9 @@ namespace BusinessLogic
                 b.Moves = new Collection<Move>();
             }
 
-            b.ActiveBoardPlayer = b.GetUserWithNextTurn();
+            var nextPlayer = b.GetUserWithNextTurn();
+            if(nextPlayer != null)
+                b.ActiveBoardPlayer = nextPlayer;
 
             var otherPlayer = b.GetUserWithNextFirstTurn(player);
             if (otherPlayer != null)
@@ -279,6 +282,7 @@ namespace BusinessLogic
             if (newMove.HasPassedGo())
             {
                 bu.Money += Board.PassGoMoney;
+                bu.Rounds += 1;
                 newMove.Description += " Passed Go! Collect $200.";
             }
 

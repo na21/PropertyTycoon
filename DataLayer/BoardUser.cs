@@ -25,6 +25,8 @@ namespace DataLayer
         [ForeignKey("BoardId")]
         public virtual Board Board { get; set; }
 
+        public int Rounds { get; set; }
+
         public int Turn { get; set; }
 
         public int Position { get; set; }

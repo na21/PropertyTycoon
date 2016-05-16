@@ -34,7 +34,7 @@ namespace ConsoleGame
             db.Users.Add(p2);
 
             // adds board to db.Boards and calls SaveChanges()
-            Board board = db.CreateNewGameBoard(p1, numPlayers);
+            Board board = db.CreateNewGameBoard(p1, numPlayers, 20);
 
             board.minSkillRange = 0;
             board.maxSkillRange = 500;

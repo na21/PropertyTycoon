@@ -179,7 +179,7 @@ namespace PropertyTycoon.Controllers
             {
                 User boardOwner = db.getUserFromIdentity(User);
                
-                Board new_board = db.CreateNewGameBoard(boardOwner, board.MaximumPlayers);
+                Board new_board = db.CreateNewGameBoard(boardOwner, board.MaximumPlayers, board.MaximumRounds);
                 new_board.GenerateBoardProperties();
 
                 new_board.minSkillRange = board.minSkillRange;
