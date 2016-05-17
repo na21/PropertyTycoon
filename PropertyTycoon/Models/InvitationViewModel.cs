@@ -10,12 +10,15 @@ namespace PropertyTycoon.Models
     {
         public string[] friendRequests;
 
+        public string[] friendsList;
+
         public IEnumerable<GameInvitation> gi;
 
-        public InvitationViewModel(string [] newFriends, IEnumerable<GameInvitation> invites)
+        public InvitationViewModel(string [] fr, string [] allFriends, IEnumerable<GameInvitation> invites)
         {
-            friendRequests = newFriends;
+            friendRequests = fr;
             gi = invites;
+            friendsList = allFriends; 
         }
     }
 }

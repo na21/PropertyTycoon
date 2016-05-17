@@ -64,7 +64,7 @@
         <table>
             <tr>
                 <th>Username</th>
-                <th>@if (Model.friendRequests.Any())
+                <th>@if (Model.friendsList.Any())
                     {
                         using (Html.BeginForm("CreateInvitation", "Home", FormMethod.Post))
                         {
@@ -75,7 +75,7 @@
                 </th>
             </tr>
 
-            @foreach (var item in Model.friendRequests)
+            @foreach (var item in Model.friendsList)
             {
                 <tr>
                     <td>@item</td>
